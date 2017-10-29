@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xp:this.resources>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	<xc:ccLayoutDividirPantalla>
+		<xc:this.contentPane_center>
+			<xc:contentPane_center cP_region="center" cP_splitter="true"
+				cP_minSize="1" cP_maxSize="2" cP_styleClass="centerCustomClass">
+			</xc:contentPane_center>
+		</xc:this.contentPane_center>
+		<xc:this.contentPane_top>
+			<xc:contentPane_top cP_region="center" cP_splitter="true"></xc:contentPane_top>
+		</xc:this.contentPane_top>
+		<xp:this.facets>
+			<xc:ccGeneralMail xp:key="contentPane_trailing_bodycontent" id="idCCGeneralMail">
+			</xc:ccGeneralMail>
+			<xc:ccFrm_Prop xp:key="contentPane_center_bodycontent" property_PantallaDividida="true">
+			</xc:ccFrm_Prop>
+			<xc:ccAS400 xp:key="contentPane_bottom_bodycontent"
+				id="ccAS400_DivPan">
+
+			</xc:ccAS400>
+			<xp:label
+				value="Esto está oculto porque tiene la propiedad Region con el valor Center, igual que el Body."
+				id="label1" xp:key="contentPane_top_bodycontent"
+				style="width:245.0px;height:63.0px">
+			</xp:label>
+			<xp:label xp:key="contentPane_leading_bodycontent"
+				id="Leading" value="Leading">
+			</xp:label>
+		</xp:this.facets>
+		<xc:this.borderContainer>
+			<xc:borderContainer bC_gutters="true"
+				bC_liveSplitters="true" bC_design="sidebar" bC_parseOnLoad="false"
+				bC_persist="true">
+			</xc:borderContainer>
+		</xc:this.borderContainer>
+		<xc:this.contentPane_bottom>
+			<!-- Estas son las propiedades del bottom en donde esta ccAS400 -->
+			<xc:contentPane_bottom cP_region="bottom" cP_splitter="true"
+				cP_maxSize="400" cP_minSize="10">
+			</xc:contentPane_bottom>
+		</xc:this.contentPane_bottom>
+		<xc:this.contentPane_trailing>
+			<!-- Estas son las propiedades del trailing en donde esta ccGeneralMail -->
+			<xc:contentPane_trailing cP_region="trailing"
+				cP_splitter="true" cP_styleClass="trailingCustomClass"
+				cP_minSize="200" cP_maxSize="600">
+			</xc:contentPane_trailing>
+		</xc:this.contentPane_trailing>
+	</xc:ccLayoutDividirPantalla>
+</xp:view>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex" xmlns:xc="http://www.ibm.com/xsp/custom">
+	
+	<xp:this.data>
+		<xp:dominoDocument formName="Mail" var="documentMail" />
+	</xp:this.data>
+	<xp:this.resources>
+		<xp:dojoModule name="dijit.Dialog"></xp:dojoModule>
+	</xp:this.resources>
+	
+	<xc:oneuiLayout>
+		<xp:this.facets>
+			<xc:ccFrm_Mail xp:key="facet_2"></xc:ccFrm_Mail>
+			<xc:ccDialogNuevaOperacion xp:key="facet_1" propertyCreatedFrom="Mail">
+				<xc:this.propertyFechaEnvio><![CDATA[#{javascript:var dt = documentMail.getItemValueDate("fechaEnvio_nro");
+if(dt == null) {
+	return "datetime is empty or doesn't exist."
+} else {
+return dt.toLocaleDateString();
+}}]]></xc:this.propertyFechaEnvio>
+			</xc:ccDialogNuevaOperacion>
+			<xc:ccDialogAdjuntarEnPropuesta xp:key="facet_3"></xc:ccDialogAdjuntarEnPropuesta>
+			</xp:this.facets>
+	</xc:oneuiLayout>
+</xp:view>

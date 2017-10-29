@@ -1,0 +1,19 @@
+'++LotusScript Development Environment:2:5:(Options):0:74
+%REM
+	Library JSC.GeneralFunctions
+	Created Oct 28, 2013 by Fernando Rodriguez/axin
+	Description: Comments for Library
+%END REM
+Option Public
+Option Declare
+
+
+'++LotusScript Development Environment:2:5:(Forward):0:1
+
+'++LotusScript Development Environment:2:5:(Declarations):0:10
+
+'++LotusScript Development Environment:2:1:cs_validarFechas:0:8
+%REM
+	Function cs_validarFechas
+	Description: Comments for Function
+%END REM

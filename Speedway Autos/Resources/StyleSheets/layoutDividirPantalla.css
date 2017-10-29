@@ -1,0 +1,23 @@
+html, 
+body {
+	padding: 0px !important;
+	margin: 0px !important;
+	height: 100%;
+}
+
+div[id*="djBorderContainer_layout"][dojotype="dijit.layout.BorderContainer"] {
+	height: 97%;
+	width: 100%;
+}
+
+div[dojotype="dijit.layout.ContentPane"][region="leading"] {
+	width: 250px;
+	background-color: #d2dfef;
+}
+
+div[class~="menuItem"] {
+	margin-bottom: 5px;
+}
+.centerCustomClass, .trailingCustomClass {
+	overflow-y:scroll!important;
+}

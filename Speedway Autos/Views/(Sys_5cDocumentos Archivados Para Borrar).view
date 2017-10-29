@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<note class='view' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.0'
+ replicaid='03257E5A006E447C'>
+<noteinfo noteid='812a' unid='71D34EDE6FD34B5703257E880057C3B8' sequence='10'>
+<created><datetime>20150720T125837,36-03</datetime></created>
+<modified><datetime>20170829T080902,14-03</datetime></modified>
+<revised><datetime>20170829T080902,13-03</datetime></revised>
+<lastaccessed><datetime>20170829T080902,13-03</datetime></lastaccessed>
+<addedtofile><datetime>20150720T125838,13-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name
+>CN=Pepe Administrator/O=axin</name><name>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name='$FormulaClass' sign='true'><text>1</text></item>
+<item name='TmpViewDesignCollation' sign='true'><text>es-AR</text></item>
+<item name='$TITLE' sign='true'><text>(Sys\Documentos Archivados Para Borrar)|v.Sys.Documentos.Archivados.Para.Borrar</text></item>
+<item name='$Index' sign='true'><text/></item>
+<item name='$Formula' summary='true' sign='true'><formula compiled='true'>
+cgAFABQADwABAAkAJENvbmZsaWN0AAQABAAAAEYABQAVAEVsaW1pbmFyRG9jdW1lbnRvX2NvZABo
+AQUAFQBFbGltaW5hckRvY3VtZW50b19jb2QAAQABADEACgIcAgMABwASAAwACUwxUzVTNlM3UzhT
+</formula></item>
+<item name='$Collation' summary='true'>
+<rawitemdata type='2'>
+DwABAABEgGYAAAACACQ1
+</rawitemdata></item>
+<item name='$ViewFormat' summary='true' sign='true'>
+<rawitemdata type='5'>
+AQABAAkACgAAAFZDAQACAAQAEgAHAN4ABQAACAAAAAAAAAAAAAICAAAAJDVVTklEEgACABAAAgAk
+NQEAAQAxAAMAAQUBAAEAMSYAAQAAAAEBAAkBAAAKAQEOCgAAAQCtKwEAAQABAAAAAAAAAAAAV0MB
+AQAJAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAA//8AAAAAAAAAAAAAAAAAAEIAAAAAAAEA////AAUA
+////AAEAAAAAAAAAAAAAAAAAAQD///8AAQD///8AAAABAAAAAAABAAAAAAABAAAAAAAAAAgAAAAA
+AAEA
+</rawitemdata></item>
+<item name='$Fonts'><textlist><text>5</text><text>38</text><text>Verdana</text></textlist></item>
+<item name='$Comment' sign='true'><text/></item>
+<item name='$Flags'><text>Y</text></item>
+<item name='$DesignerVersion' sign='true'><text>8.5.3</text></item>
+<item name='$V5ACTIONS' sign='true'>
+<rawitemdata type='1'>
+vRwRAAAAAQABAAAAAQAAAAAAAAAAAAAACAACAHn/bAABAOzp2AABAAAAAAAJAAAAAAABAOzp2AAA
+AB8AAAAAAAAAAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAPz/OgAAAAAAAQAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAEAAAAAAAAAAAAAAAAAAAA=
+</rawitemdata></item></note>
+

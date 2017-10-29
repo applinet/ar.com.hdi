@@ -1,0 +1,11 @@
+body { background: #eee; }
+
+#wrapper { 
+	background: #fff;
+	border: 1px solid #ccc;
+	margin: 20px auto;
+	padding: 10px;
+	width: 80%; 
+}
+
+.xspMessage { display: block; }

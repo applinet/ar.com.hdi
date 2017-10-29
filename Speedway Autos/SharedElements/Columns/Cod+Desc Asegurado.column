@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='utf-8'?>
+<note class='view' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.0'
+ replicaid='03257E5A006E447C'>
+<noteinfo noteid='d8e' unid='21CD21D90C69E42203257D5D00485FF7' sequence='6'>
+<created><datetime>20140924T101031,59-03</datetime></created>
+<modified><datetime>20170829T080835,93-03</datetime></modified>
+<revised><datetime>20170829T080835,92-03</datetime></revised>
+<lastaccessed><datetime>20170829T080835,92-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170442,69-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Pepe Administrator/O=axin</name><name
+>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name='$FormulaClass' sign='true'><text>1</text></item>
+<item name='$TITLE' sign='true'><text>Cod+Desc Asegurado</text></item>
+<item name='$Index' sign='true'><text/></item>
+<item name='$Formula' summary='true' sign='true'><formula compiled='true'>
+jAACAFIAEQBjb2RfZGVzX2FzZWd1cmFkbwAFABEAc29sX2FzZWd1cmFkb19jb2QAAQADACAtIAAi
+AgUAEQBzb2xfYXNlZ3VyYWRvX2RlcwAiAgMABQAsACgAAwARAAkABABjb2RfZGVzX2FzZWd1cmFk
+byRDb25mbGljdCRSRUYEAAQAAAAIAGYAAwA=
+</formula></item>
+<item name='$Collation' summary='true'>
+<rawitemdata type='2'>
+BgAAAABE
+</rawitemdata></item>
+<item name='$ViewFormat' summary='true' sign='true'>
+<rawitemdata type='5'>
+AQABAAEACAAAAFZDAAARABEAZAAAAFAAAQAACgAAAAAAAAAAAAICAAAAY29kX2Rlc19hc2VndXJh
+ZG9jb2RfZGVzX2FzZWd1cmFkb2QAAgBSABEAY29kX2Rlc19hc2VndXJhZG8ABQARAHNvbF9hc2Vn
+dXJhZG9fY29kAAEAAwAgLSAAIgIFABEAc29sX2FzZWd1cmFkb19kZXMAIgIDAAcAEAAJAAkxUzJT
+M1M0UwAmAAEAAAABAQAJAQAACgEBDgoAAAEArSsBAAEAAQAAAAAAAAAAAFdDAQEACQAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAP//AAAAAAAAAAAAAAAAAABCABAAAAABAP///wAFAP///wABAAAAAAAA
+AAAAAAAAAAEA////AAEA////AAAAAQAAAAAAAQAAAAAAAQAAAAAAAAAIAAAAAAABAA==
+</rawitemdata></item>
+<item name='$Comment' sign='true'><text/></item>
+<item name='$Flags'><text>P^Y</text></item>
+<item name='$DesignerVersion'><text>8.5.3</text></item></note>
+

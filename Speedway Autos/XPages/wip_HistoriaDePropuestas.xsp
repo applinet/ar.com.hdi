@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex">
+	<xe:navigator id="outline" expandable="true">
+		<xe:this.treeNodes>
+			<xe:repeatTreeNode loaded="true" indexVar="index" var="crrView" value="#{javascript:return database.getAgents();}">
+				<xe:this.children>
+					<xe:basicLeafNode label="#{javascript:crrView;}" loaded="true" image="/70.gif" onClick="alert('Hola');" selected="false">
+					</xe:basicLeafNode>
+				</xe:this.children>
+			</xe:repeatTreeNode>
+		</xe:this.treeNodes>
+	</xe:navigator>
+</xp:view>

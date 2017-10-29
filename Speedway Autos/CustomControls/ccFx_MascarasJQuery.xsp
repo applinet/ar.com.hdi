@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<xp:view xmlns:xp="http://www.ibm.com/xsp/core">
+	 <!-- Con este control cargo las librerias JQuery en cada Xpage -->
+	    <xp:this.resources>
+	        <xp:script src="js/jquery-1.7.1.min.js"
+	            clientSide="true">
+	        </xp:script>
+	        <xp:script src="js/x$.js"
+	            clientSide="true">
+	        </xp:script>
+	        <xp:script src="js/jquery.maskedinput-1.3.min.js"
+	            clientSide="true">
+	        </xp:script>
+	    </xp:this.resources>
+	</xp:view>

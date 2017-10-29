@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xe="http://www.ibm.com/xsp/coreex" dojoForm="true">
+
+	<xp:this.resources>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	
+
+
+	<xp:this.beforePageLoad><![CDATA[#{javascript:if (currentDocument.getDocument().getItemValueString("Form") == "Propuesta") {
+	viewScope.put("strDocTagsArray",currentDocument.getDocument().getItemValue("sol_Documentacion_des"));
+} else {
+	viewScope.put("strDocTagsArray",currentDocument.getDocument().getItemValue("mai_Documentacion_des"));
+}}]]></xp:this.beforePageLoad>
+	<xp:table role="presentation">
+		<xp:tr>
+			<xp:td>
+				<xp:label value="#{compositeData.Titulo}">
+
+				<xp:this.rendered><![CDATA[#{javascript:if (currentDocument.getItemValueString("Form") == "Propuesta" && currentDocument.isEditable() == false && currentDocument.getDocument().getItemValueString("sol_Documentacion_des").isEmpty() == true) {
+	return false;
+} else {
+	return true;
+}}]]></xp:this.rendered></xp:label>
+				&#160;
+				<xe:valuePicker id="valuePickerDocumentacion"
+					dialogTitle="Documentación faltante" for="djextListTextBoxTagsDoc"
+					listWidth="30%" dojoType="extlib.dijit.PickerCheckbox">
+					<xe:this.dataProvider>
+						<xe:simpleValuePicker>
+							<xe:this.valueList><![CDATA[#{javascript:var strOpciones = getOpcionesClave("Documentacion_Tags");
+var strResult:Array = new Array();
+if (strOpciones != null && strOpciones[0] != "") {
+	for(var i = 0; i < strOpciones.length; i++) {
+		if (strOpciones[i].indexOf("|") != -1) {
+			strResult.push(strOpciones[i].left(strOpciones[i].indexOf("|")));
+		}
+	}
+}
+strResult;}]]></xe:this.valueList>
+						</xe:simpleValuePicker>
+					</xe:this.dataProvider>
+					<xe:this.rendered><![CDATA[#{javascript:if (currentDocument.isEditable() == true && currentDocument.getDocument().getItemValueString("Form") == "Propuesta") {
+	return true;
+} else {
+	return false;
+}}]]></xe:this.rendered>
+					<xe:this.pickerIcon><![CDATA[#{javascript:"/Tag sin borde.png"}]]></xe:this.pickerIcon>
+				</xe:valuePicker>
+			</xp:td>
+			<xp:td>
+				<xe:djextListTextBox id="djextListTextBoxTagsDoc"
+					title="Documentación" displayLabel="false" multipleTrim="true"
+					multipleSeparator="," value="#{viewScope.strDocTagsArray}">
+					<xe:this.readOnly><![CDATA[#{javascript:if (currentDocument.isEditable() == true)
+	return false;
+else
+	return true;}]]></xe:this.readOnly>
+					<xp:eventHandler event="onMouseDown"
+						submit="false">
+						<xe:this.script><![CDATA[XSP._setDirty(false,"");]]></xe:this.script>
+					</xp:eventHandler>
+					<xp:eventHandler event="onChange" submit="true"
+						refreshMode="norefresh">
+						<xe:this.action><![CDATA[#{javascript:if (currentDocument.getItemValueString("Form") == "Mail") {
+	currentDocument.replaceItemValue("mai_Documentacion_des", getComponent("djextListTextBoxTagsDoc").getValue());
+	currentDocument.save();
+}}]]></xe:this.action>
+					</xp:eventHandler>
+				</xe:djextListTextBox>
+			</xp:td>
+			<xp:td></xp:td>
+		</xp:tr>
+	</xp:table>
+	<xp:span style="font-weight:bold"></xp:span>
+<xp:span style="font-weight:bold"></xp:span>
+	</xp:view>

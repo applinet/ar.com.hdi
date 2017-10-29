@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Esta es una Barra de acciones para la vista de Mostrador-->
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core">
+	<xp:this.resources>
+		<xp:styleSheet href="/hdi_buttons.css"></xp:styleSheet>
+	</xp:this.resources>
+	<xp:panel>
+		<xp:button id="button2" value="Cargar Vehiculo">
+			<xp:eventHandler event="onclick" submit="true"
+						refreshMode="complete">
+						<xp:this.action><![CDATA[#{javascript:context.redirectToPage("xfDocComponente.xsp?OpenXPage&login&action=newDocument&sol=" + currentDocument.getDocument().getUniversalID(), true);}]]></xp:this.action>
+			</xp:eventHandler></xp:button>
+		
+	</xp:panel>
+</xp:view>

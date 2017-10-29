@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex" xmlns:xpt="http://www.openntf.org/xsp/xpt"
+	xmlns:xp_1="http://www.webgate.biz/xsp/poi">
+	<xp:this.data>
+		<xp:dominoView var="DSv_RastAsocComponente" viewName="v.UI.RasAsocComponente_EmbView" categoryFilter="#{javascript:viewScope.VehSelectedUNID;}">
+		</xp:dominoView>
+	</xp:this.data>
+	<xp:this.resources>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	<xp:panel style="width:500px;">
+		<div id="div_btn_NuevoRastreador">
+			<xp:button id="btn_NuevoRastreador" styleClass="solRasAdd">
+				<xp:this.rendered><![CDATA[#{javascript:if(getComponent("dataTableGrilla").getRowCount() > 0)
+	return false;
+return documentPropuesta.isEditable()}]]></xp:this.rendered>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="norefresh"
+					onComplete="XSP.openTooltipDialog('#{id:tooltipDlg_rastreador}', '#{id:btn_NuevoRastreador}');">
+					<xp:this.action><![CDATA[#{javascript:viewScope.RasNoteId="NEW";}]]></xp:this.action>
+				</xp:eventHandler>
+			</xp:button>
+			<xe:tooltip id="tooltipButtonNuevoRastreador" for="btn_NuevoRastreador" label="Nuevo Rastreador" position="below">
+			</xe:tooltip>
+		</div>
+		<xp:dataTable id="dataTableGrilla" rows="3" var="rowData" indexVar="idxData" value="#{javascript:DSv_RastAsocComponente}" cellspacing="12">
+			<xp:column></xp:column>
+			<xp:column id="column2" style="vertical-align:top; width:300px;">
+				<xp:link escape="true" id="link1">
+					<xp:this.text><![CDATA[#{javascript:var x:String= rowData.getColumnValue("ras_proveedor_opt");
+
+var vOpciones:NotesView = getDbCfg().getView ("v.Sys.Opciones.Clave");
+var entryCol:NotesViewEntryCollection = vOpciones.getAllEntriesByKey("AURastreador_des");
+var entryOpt:NotesViewEntry = entryCol.getFirstEntry();
+var result:String = "ERROR";
+while (entryOpt != null) {
+	if(entryOpt.getDocument().getItemValueString("opt_Codigo_des") == x){
+		result = entryOpt.getDocument().getItemValueString("opt_Nombre_des")
+	}
+	
+	var tmpentry:NotesViewEntry = entryCol.getNextEntry(entryOpt);
+	entryOpt.recycle();
+	entryOpt = tmpentry;		
+}
+return result}]]></xp:this.text>
+					<xp:eventHandler event="onclick" submit="true" refreshMode="norefresh" onComplete="XSP.openTooltipDialog('#{id:tooltipDlg_rastreador}', '#{id:link1}')">
+						<xp:this.action><![CDATA[#{javascript:viewScope.RasNoteId=rowData.getNoteID();}]]></xp:this.action>
+					</xp:eventHandler>
+				</xp:link>
+			</xp:column>
+			<xp:column id="column1" style="vertical-align:top; width:280px;">
+				<xp:text id="computedField1" escape="false">
+					<xp:this.value><![CDATA[#{javascript:var x:String= rowData.getColumnValue("ras_estado_opt");
+print (x);
+var vOpciones:NotesView = getDbCfg().getView ("v.Sys.Estados");
+var entryCol:NotesViewEntryCollection = vOpciones.getAllEntriesByKey("Rastreador");
+var entryOpt:NotesViewEntry = entryCol.getFirstEntry();
+var result:String = "ERROR";
+while (entryOpt != null) {
+	if(entryOpt.getDocument().getItemValueString("est_Codigo_des") == x)
+	{
+		result = entryOpt.getDocument().getItemValueString("est_Nombre_des")
+	}
+	
+	var tmpentry:NotesViewEntry = entryCol.getNextEntry(entryOpt);
+	entryOpt.recycle();
+	entryOpt = tmpentry;		
+}
+return result}]]></xp:this.value>
+				</xp:text>
+			</xp:column>
+			<xp:column id="column3" style="vertical-align:top; width:260px;">
+				<xp:text escape="false" id="computedField2">
+					<xp:this.value><![CDATA[#{javascript:var x:String= rowData.getColumnValue("log");
+x}]]></xp:this.value>
+				</xp:text>
+			</xp:column>
+		</xp:dataTable>
+	</xp:panel>
+	<xe:tooltipDialog id="tooltipDlg_rastreador">
+		<xp:panel id="PNL_RastInputForm">
+			<xp:this.data>
+				<xp:dominoDocument var="DSf_Rastreador" formName="Rastreador"
+					action="#{javascript:return viewScope.RasNoteId=='NEW'?'createDocument':'editDocument';}"
+					documentId="#{javascript:viewScope.RasNoteId=='NEW'?'':viewScope.RasNoteId}" ignoreRequestParams="true" computeWithForm="onsave">
+					<xp:this.querySaveDocument><![CDATA[#{javascript:if(viewScope.get("VehSelectedUNID").equals(null)){
+var strIdVeh:String = "";
+}else{
+var strIdVeh:String = viewScope.get("VehSelectedUNID");
+};
+var docRastreador:NotesDocument = DSf_Rastreador.getDocument();
+if (docRastreador.isNewNote()){
+docRastreador.replaceItemValue( "idPadre_cod" ,strIdVeh);
+docRastreador.replaceItemValue("idPropuesta_cod" ,context.getUrlParameter("documentId"));
+docRastreador.replaceItemValue( "ras_estado_opt" ,getComponent("comboBox1").getValue());
+}
+dBar.info("ACC_FINQuerySave");}]]></xp:this.querySaveDocument>
+				</xp:dominoDocument>
+			</xp:this.data>
+			<xp:table>
+				<xp:tr>
+					<xp:td valign="top" style="width:100.0px">
+						<xp:label id="label_acc_nombre_des" for="Ras_nombre_des" value="Provedor"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xe:djFilteringSelect id="ras_proveedor_optSelect" value="#{DSf_Rastreador.ras_proveedor_opt}" required="true"
+							defaultValue=" ">
+							<xp:selectItems id="selectItems3">
+								<xp:this.value><![CDATA[#{javascript:var strOpciones = getOpcionesClave("AURastreador_des");
+var strResult:Array = new Array();
+if (strOpciones != null && strOpciones[0] != "") {
+	for(var i = 0; i < strOpciones.length; i++) {
+		if (strOpciones[i].indexOf("|") != -1) {
+			strResult.push(strOpciones[i]);
+		}
+	}
+}
+strResult;}]]></xp:this.value>
+							</xp:selectItems>
+						</xe:djFilteringSelect>
+					</xp:td>
+					<xp:td></xp:td>
+					<xp:td></xp:td>
+					<xp:td style="display:none;">
+						<xp:comboBox id="comboBox1" readonly="true" value="#{DSf_Rastreador.ras_estado_opt}">
+							<xp:this.defaultValue><![CDATA[#{javascript:myStatusConfig = statusConfig ("RastreadorLJ");
+return myStatusConfig.getDefaultCod;}]]></xp:this.defaultValue>
+							<xp:selectItems>
+								<xp:this.value><![CDATA[#{javascript:myStatusConfig = statusConfig ("RastreadorLJ");
+return myStatusConfig.getArrLabel + "|" + myStatusConfig.getArrCod;}]]></xp:this.value>
+							</xp:selectItems>
+						</xp:comboBox>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td></xp:td>
+					<xp:td>
+					</xp:td>
+					<xp:td></xp:td>
+					<xp:td></xp:td>
+					<xp:td></xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td></xp:td>
+					<xp:td></xp:td>
+					<xp:td></xp:td>
+					<xp:td></xp:td>
+					<xp:td></xp:td>
+				</xp:tr>
+			</xp:table>
+			<xp:panel style="text-align:right" id="PNL_accButtons">
+				<xe:djButton label="Guardar" id="djButtonSave" disabled="#{javascript:!DSf_Rastreador.isEditable()}">
+					<xe:this.rendered><![CDATA[#{javascript:getComponent("dataTableGrilla").getRowCount() == 0
+}]]></xe:this.rendered>
+					<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+						<xp:this.action>
+							<xp:actionGroup>
+								<xp:saveDocument></xp:saveDocument>
+								<xp:executeScript>
+									<xp:this.script><![CDATA[#{javascript:var strCode:String = viewScope.VehSelectedUNID;
+var entrada: NotesDocument = database.getDocumentByUNID(strCode);
+var curr : NotesDocument= currentDocument.getDocument();
+if (entrada != null) 
+{
+	entrada.replaceItemValue("idRastreador_cod", curr.getUniversalID());
+	//curr.replaceItemValue("log", new Date());
+	entrada.save(true, true)
+	
+}
+
+getComponent("tooltipDlg_rastreador").hide("dataTableGrilla");
+
+}]]></xp:this.script>
+								</xp:executeScript>
+							</xp:actionGroup>
+						</xp:this.action>
+						<xp:this.onComplete><![CDATA[XSP.partialRefreshGet("#{id:btn_NuevoRastreador}");]]></xp:this.onComplete>
+					</xp:eventHandler>
+				</xe:djButton>
+				<xe:djButton label="Borrar" id="djButton4" disabled="#{javascript:DSf_Rastreador.isNewNote()}">
+					<xe:this.rendered><![CDATA[${javascript:var string1: string =database.getDocumentByUNID(viewScope.VehSelectedUNID).getItemValueString("idRastreador_cod");
+var string2:string = currentDocument.getDocument().getUniversalID();
+var sol_status_cod:String = viewScope.get("docxProp").getDocument().getItemValueString("sol_status_cod");
+if(sol_status_cod.equals("85") || sol_status_cod.equals("87")){return false};
+string1==string2 && currentDocument.getItemValueString("ras_estado_opt") == "1"; }]]></xe:this.rendered>
+					<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+						<xp:this.action>
+							<xp:actionGroup>
+								<xp:deleteDocument name="" message="Está seguro que quiere eliminar este Rastreador?"></xp:deleteDocument>
+								<xp:executeScript>
+									<xp:this.script><![CDATA[#{javascript:var docVeh:NotesDocument = database.getDocumentByUNID(viewScope.VehSelectedUNID);
+if (docVeh != null) {
+	docVeh.replaceItemValue("idRastreador_cod", "");
+	docVeh.save(true, true);
+}
+getComponent("tooltipDlg_rastreador").hide("dataTableGrilla");}]]></xp:this.script>
+								</xp:executeScript>
+							</xp:actionGroup>
+						</xp:this.action>
+					</xp:eventHandler>
+				</xe:djButton>
+				<xe:djButton label="Baja" id="djButton1" disabled="#{javascript:DSf_Rastreador.isNewNote()}">
+					<xe:this.rendered><![CDATA[${javascript:var string1: string =database.getDocumentByUNID(viewScope.VehSelectedUNID).getItemValueString("idRastreador_cod");
+var string2:string = currentDocument.getDocument().getUniversalID();
+var sol_status_cod:String = viewScope.get("docxProp").getDocument().getItemValueString("sol_status_cod");
+if(sol_status_cod.equals("85") || sol_status_cod.equals("87")){return false};
+string1==string2 && currentDocument.getItemValueString("ras_estado_opt") == "2"; }]]></xe:this.rendered>
+					<xp:eventHandler event="onClick" submit="true" refreshMode="complete">
+						<xe:this.action>
+							<xp:actionGroup>
+								<xp:confirm message="Está seguro que quiere dar de baja el Rastreador?"></xp:confirm>
+								<xp:executeScript>
+									<xp:this.script><![CDATA[#{javascript:var docVeh:NotesDocument = database.getDocumentByUNID(viewScope.VehSelectedUNID);
+if (docVeh != null) {
+	docVeh.replaceItemValue("idRastreador_cod", "");
+	docVeh.save(true, true);
+	currentDocument.replaceItemValue("ras_estado_opt", "3");
+	currentDocument.save();
+}
+getComponent("tooltipDlg_rastreador").hide("dataTableGrilla");}]]></xp:this.script>
+								</xp:executeScript>
+							</xp:actionGroup>
+						</xe:this.action>
+					</xp:eventHandler>
+				</xe:djButton>
+				<xe:djButton label="Cancelar" id="djButton3">
+					<xp:eventHandler event="onclick" submit="true" immediate="true">
+						<xp:this.action>
+							<xp:actionGroup>
+								<xp:executeScript>
+									<xp:this.script><![CDATA[#{javascript:getComponent("tooltipDlg_rastreador").hide()}]]></xp:this.script>
+								</xp:executeScript>
+							</xp:actionGroup>
+						</xp:this.action>
+					</xp:eventHandler>
+				</xe:djButton>
+			</xp:panel>
+		</xp:panel>
+	</xe:tooltipDialog>
+</xp:view>

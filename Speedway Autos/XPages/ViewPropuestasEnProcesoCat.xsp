@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--Solo contiene la vista 
+Utilizado en xvUI_Por_Estado-->
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:debug="http://www.openntf.org/xsp/debugtoolbar">
+	<xp:this.data>
+		<xp:dominoView var="DSviewPropuestasEnProceso">
+			<xp:this.categoryFilter><![CDATA[#{javascript:sessionScope.get("OrdenesPorEstadoCat");}]]></xp:this.categoryFilter>
+			<xp:this.viewName><![CDATA[#{javascript:sessionScope.containsKey("OrdenesPorEstadoCatOrdenadoPor") ? sessionScope.get("OrdenesPorEstadoCatOrdenadoPor"): "V_propuestas_Proceso_Cat_Status";}]]></xp:this.viewName>
+		</xp:dominoView>
+	</xp:this.data>
+	<xp:this.resources>
+		<xp:styleSheet href="/hdi_gerling.css"></xp:styleSheet>
+	</xp:this.resources>
+	<!-- ACA ESTABA ccAB_viewPropuestasEnProceso SE SACA POR ISSUE 8058881956 -->
+	<xp:panel id="PNL_PropuestasEnProceso">
+		
+		
+		
+		<xc:ccFx_BotonCambiarEstadoView property_ButtonLabel="Enviar a...">
+			<xc:this.property_Opciones><![CDATA[#{javascript:var vOpciones:NotesView = getDbCfg().getView ("v.Sys.LK_EstadosCodigo");
+if (sessionScope.containsKey("OrdenesPorEstadoCat")){
+	var dc:NotesDocumentCollection = vOpciones.getAllDocumentsByKey(sessionScope.OrdenesPorEstadoCat);
+	var doc:NotesDocument = dc.getFirstDocument();
+	while (doc != null) {
+		return doc.getItemValue("est_Siguientes_cod");
+	}
+}}]]></xc:this.property_Opciones>
+			<xc:this.property_EstadoActual><![CDATA[#{javascript:(sessionScope.containsKey("OrdenesPorEstadoCat")) ? sessionScope.OrdenesPorEstadoCat : ""}]]></xc:this.property_EstadoActual>
+			<xc:this.property_viewPanel><![CDATA[#{javascript:return "viewPanelPropuestas";}]]></xc:this.property_viewPanel>
+			<xc:this.property_OcultarEnEstados><![CDATA[#{javascript:if (!sessionScope.containsKey("OrdenesPorEstadoCat")) return false;
+return isStatusCheckFlag(sessionScope.OrdenesPorEstadoCat, "est_MostrarEnvioBulk_opt");}]]></xc:this.property_OcultarEnEstados>
+		</xc:ccFx_BotonCambiarEstadoView>						
+		<xp:radioGroup id="radioGroup1" value="#{sessionScope.OrdenesPorEstadoCatOrdenadoPor}" defaultValue="V_propuestas_Proceso_Cat_Status" style="display:inline">
+			<xp:selectItem itemLabel="Fecha ingreso" itemValue="V_propuestas_Proceso_Cat_Status"></xp:selectItem>
+			<xp:selectItem itemLabel="Vigencia Desde " itemValue="V_propuestas_Proceso_Cat_Status_VigDesdeOpe"></xp:selectItem>
+			<xp:selectItem itemLabel="Tipo Movimiento" itemValue="V_propuestas_Proceso_Cat_Status_TipoMovimiento"></xp:selectItem>
+			<xp:eventHandler event="onchange" submit="true" refreshMode="complete"></xp:eventHandler>
+			<xp:eventHandler event="onclick" submit="true" refreshMode="complete"></xp:eventHandler>
+		</xp:radioGroup>
+		<xp:viewPanel value="#{DSviewPropuestasEnProceso}" id="viewPanelPropuestas" pageName="/xfdocPropuesta.xsp" var="rowData" rows="17"
+			showColumnHeader="false">
+			<xp:viewColumn columnName="Fecha" id="viewColumnFecha" showCheckbox="true" style="text-align:left;width:91.0px">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Fecha" xp:key="header" id="viewColumnHeaderFecha" style="margin-left:10.0px" styleClass="SWTituloViewColumn">
+					</xp:viewColumnHeader>
+				</xp:this.facets>
+			</xp:viewColumn>
+			<xp:viewColumn id="viewColumnIcon" style="text-align:center;width:auto" columnName="Icon" displayAs="hidden">
+				<xp:this.facets></xp:this.facets>
+				<xp:this.iconSrc><![CDATA[#{javascript:var url:XSPUrl = new XSPUrl(database.getHttpURL());
+var path = "/icons/vwicn";
+//var idx = rowData.getColumnValues().get(3);
+var idx = rowData.getColumnValue("icon");
+if (idx < 10)
+path += ("00"+idx).left(3);
+else if (idx < 100)
+path += ("0"+idx).left(3);
+else
+path += idx;
+path += ".gif";
+url.setPath(path);
+url.removeAllParameters();
+return url.toString();}]]></xp:this.iconSrc>
+				<xp:this.iconAlt><![CDATA[#{javascript:var idx = rowData.getColumnValue("icon");
+switch(idx){
+	case "114": return "Nueva - Art. " + rowData.getColumnValue("sol_articulo_cod");
+	break;
+	case "117": return "Renovación - Art. " + rowData.getColumnValue("sol_articulo_cod");
+	break;
+	case "120": return "Endoso - Art. " + rowData.getColumnValue("sol_articulo_cod");
+	break;
+	case "115": return "Anulación - Art. " + rowData.getColumnValue("sol_articulo_cod");
+	break;
+	case "119": return "Rehabilitación - Art. " + rowData.getColumnValue("sol_articulo_cod");
+	break;
+	default: return "Resto";
+	break;
+}}]]></xp:this.iconAlt>
+				<xp:viewColumnHeader id="viewColumnHeaderIcon" styleClass="SWTituloViewColumn" style="text-align:justify"></xp:viewColumnHeader>
+			</xp:viewColumn>
+			<xp:viewColumn id="viewColumn9" style="text-align:center" columnName="Icon" displayAs="hidden">
+				<xp:this.facets></xp:this.facets>
+				<xp:this.iconSrc><![CDATA[#{javascript:var url:XSPUrl = new XSPUrl(database.getHttpURL());
+var path = "/icons/vwicn";
+//var idx = rowData.getColumnValues().get(3);
+var idx = rowData.getColumnValue("web_icon_cod");
+if(idx == "") return "";
+if (idx < 10)
+path += ("00"+idx).left(3);
+else if (idx < 100)
+path += ("0"+idx).left(3);
+else
+path += idx;
+path += ".gif";
+url.setPath(path);
+url.removeAllParameters();
+return url.toString();}]]></xp:this.iconSrc>
+				<xp:viewColumnHeader id="viewColumnHeader9" styleClass="SWTituloViewColumn" style="text-align:justify" value="Icon"></xp:viewColumnHeader>
+			</xp:viewColumn>
+			<xp:viewColumn id="viewColumnRama" style="text-align:center" columnName="sol_poliza_nro">
+				<xp:this.facets>
+					<xp:viewColumnHeader xp:key="header" id="ColumnHeaderRama" value="Nro Póliza" style="text-align:left" styleClass="SWTituloViewColumn">
+					</xp:viewColumnHeader>
+				</xp:this.facets>
+				<xp:this.converter>
+					<xp:convertNumber type="number" integerOnly="true"></xp:convertNumber>
+				</xp:this.converter>
+			</xp:viewColumn>
+			<xp:viewColumn id="viewColumnEvaluateIcon" style="text-align:center" columnName="Icon" displayAs="hidden">
+				<xp:this.facets></xp:this.facets>
+				<xp:this.iconSrc><![CDATA[#{javascript:var url:XSPUrl = new XSPUrl(database.getHttpURL());
+var path = "/icons/vwicn";
+
+if (rowData.getUniversalID() == ""){return ""};
+var vecEvaluar:java.util.Vector = evaluarRegla(rowData.getDocument(), "UI.View.Icono.Status_1");
+if (!vecEvaluar.elementAt(0)){
+	vecEvaluar = evaluarRegla(rowData.getDocument(), "UI.View.Icono.Status_2");
+}
+if (!vecEvaluar.elementAt(0)){
+	vecEvaluar = evaluarRegla(rowData.getDocument(), "UI.View.Icono.Status_3");
+}
+if (!vecEvaluar.elementAt(0)){
+	return "";
+}
+
+var idx = vecEvaluar.elementAt(1).toString();
+if(idx == "") return "";
+if (idx < 10)
+path += ("00"+idx).left(3);
+else if (idx < 100)
+path += ("0"+idx).left(3);
+else
+path += idx;
+path += ".gif";
+url.setPath(path);
+url.removeAllParameters();
+return url.toString();
+}]]></xp:this.iconSrc>
+				<xp:this.iconAlt><![CDATA[#{javascript:var vecEvaluar:java.util.Vector = evaluarRegla(rowData.getDocument(), "UI.View.Icono.Status");
+if (!vecEvaluar.elementAt(0)){
+	vecEvaluar = evaluarRegla(rowData.getDocument(), "UI.View.Icono.Status_2");
+}
+if (!vecEvaluar.elementAt(0)){
+	vecEvaluar = evaluarRegla(rowData.getDocument(), "UI.View.Icono.Status_3");
+}
+if (!vecEvaluar.elementAt(0)){
+	return "";
+}
+return vecEvaluar.elementAt(2).toString();}]]></xp:this.iconAlt>
+				<xp:viewColumnHeader id="viewColumnHeader1"
+					styleClass="SWTituloViewColumn" style="text-align:justify"
+					value="Icon">
+				</xp:viewColumnHeader>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="sol_Icono_cod" id="viewColumnClasificacion" contentType="html">
+				<xp:this.facets>
+					<xp:viewColumnHeader xp:key="header"
+						value="Sol_ icono_cod">
+
+
+
+
+
+
+
+
+					</xp:viewColumnHeader>
+				</xp:this.facets>
+
+
+
+				
+				
+			<xp:this.value><![CDATA[#{javascript:var url:XSPUrl = new XSPUrl(database.getHttpURL());
+var path = "/icons/vwicn";
+var idx = rowData.getColumnValue("sol_Icono_cod");
+
+if (idx == "" || idx == null) {
+	return "";
+} else {
+	//Obtiene el texto alternativo para la imagen
+	//Obtiene la base Configuracion
+	var dbConf:NotesDatabase = getDbCfg();
+	if (dbConf != null) {
+		//Obtiene el documento de configuracion del icono
+		var viewIconos:NotesView = dbConf.getView("v.Sys.IconosClave");
+		var idx = rowData.getColumnValue("sol_Icono_cod");
+		var docIcono:NotesDocument = viewIconos.getDocumentByKey(idx.toString(), true);
+		var strAlt = "";
+		if (docIcono != null) {
+			strAlt = docIcono.getItemValue("ico_ToolTip_des")[0];
+		}
+	}
+
+	//Obtiene la url del icono
+	path += ("00"+idx).right(3);
+	path += ".gif";
+	url.setPath(path);
+	url.removeAllParameters();
+	var strIcon = '<img src="' + url.toString() + '" alt="' + strAlt + '" title="' + strAlt + '">';
+	
+	if (typeof(strIcon) == "object") {
+		return strIcon.join(" ");
+	} else {
+		return strIcon;	
+	}
+}}]]></xp:this.value></xp:viewColumn>
+			<xp:viewColumn contentType="html" styleClass="accordionContent .quicklinks" style="text-align:center" id="viewColumn3" rendered="false">
+				<xp:this.value><![CDATA[#{javascript:if (!rowData.isCategory())
+"<a href='" + facesContext.getExternalContext().getRequestContextPath() + "/xfdocPropuesta.xsp?documentId="+rowData.getUniversalID()+"&action=openDocument'>"
++rowData.getColumnValue("Form")+"</a>"}]]></xp:this.value>
+				<xp:viewColumnHeader value="Form" id="viewColumnHeader3"></xp:viewColumnHeader>
+			</xp:viewColumn>
+			<xp:viewColumn id="viewColumnNroSOLN" contentType="html" styleClass="accordionContent .quicklinks" style="text-align:center">
+				<xp:this.value><![CDATA[#{javascript:if (!rowData.isCategory())
+"<a href='" + facesContext.getExternalContext().getRequestContextPath() + "/xfdocPropuesta.xsp?documentId="+rowData.getUniversalID()+"&action=openDocument'>"
++rowData.getColumnValue("orden_nro")+"</a>"}]]></xp:this.value>
+				<xp:viewColumnHeader id="viewColumnHeaderNroSOLN" value="Nro solicitud" styleClass="SWTituloViewColumn"></xp:viewColumnHeader>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="sol_status_des" style="text-align:left;font-weight:bold" id="viewColumn4"
+				rendered="#{javascript:sessionScope.OrdenesPorEstadoCat == null;}">
+				<xp:this.facets>
+					<xp:viewColumnHeader xp:key="header" id="viewColumnHeader4" style="text-align:left" styleClass="SWTituloViewColumn" value="Estado">
+					</xp:viewColumnHeader>
+				</xp:this.facets>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="productor" style="text-align:left" id="viewColumn5">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Productor" xp:key="header" id="viewColumnHeader5" styleClass="SWTituloViewColumn"></xp:viewColumnHeader>
+				</xp:this.facets>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="cod_des_asegurado" style="text-align:left" id="viewColumn6">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Asegurado" xp:key="header" id="viewColumnHeader6" styleClass="SWTituloViewColumn"></xp:viewColumnHeader>
+				</xp:this.facets>
+			</xp:viewColumn>
+			<xp:viewColumn id="viewColumn2" value=" " rendered="false">
+				<xp:this.facets>
+					<xp:viewColumnHeader xp:key="header" id="viewColumnHeader2" value="Action" styleClass="SWTituloViewColumn"></xp:viewColumnHeader>
+				</xp:this.facets>
+				<xp:button value="Vehiculo" id="button3">
+					<xp:eventHandler event="onclick" submit="true" refreshMode="complete" id="eventHandler1">
+						<xp:this.action>
+							<xp:createResponse name="/xfDocComponente.xsp" parentId="#{javascript:rowData.getUniversalID()}"></xp:createResponse>
+						</xp:this.action>
+					</xp:eventHandler>
+				</xp:button>
+			</xp:viewColumn>
+			<xp:this.facets>
+				<xp:viewTitle xp:key="viewTitle" id="viewTitle1" panelPosition="top">
+					<xp:this.value><![CDATA[#{javascript:if(sessionScope.OrdenesPorEstadoCat == null){"Todas"
+}else{
+getStatusLabel(sessionScope.OrdenesPorEstadoCat)
+}}]]></xp:this.value>
+				</xp:viewTitle>
+				<xp:pager partialRefresh="true" layout="Previous Group Next" xp:key="footerPager" id="pager2"></xp:pager>
+			</xp:this.facets>
+		</xp:viewPanel>
+	</xp:panel>
+</xp:view>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex" xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xp:this.data>
+		<xp:dominoView var="view1" viewName="(Sys\EstadosOrdenadosPorOrden)   -   v.Sys.LK_EstadosOrdenados">
+			<xp:this.databaseName><![CDATA[#{javascript:var docConfig: NotesDocument = database.getView("Configuracion").getDocumentByKey("Configuracion");
+return docConfig.getItemValueString("conf_path");}]]></xp:this.databaseName>
+		</xp:dominoView>
+	</xp:this.data>
+	<xp:this.resources>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	
+	<xe:navigator id="navigatorAutomoviles" expandable="true">
+		<xe:this.treeNodes>
+			<xe:repeatTreeNode loaded="true" indexVar="index" var="crrView">
+				<xe:this.children>
+					<xe:basicLeafNode loaded="true">
+						<xe:this.label><![CDATA[#{javascript:var pipeidx = crrView.indexOf("|");//Obtengo el indice del pipe
+crrView.left(pipeidx);}]]></xe:this.label>
+						<xe:this.submitValue><![CDATA[#{javascript:var pipeidx = crrView.indexOf("|");//Obtengo el indice del pipe
+@Trim(crrView.mid(pipeidx+1, 3))}]]></xe:this.submitValue>
+						<xe:this.selected><![CDATA[#{javascript:var pipeidx = crrView.indexOf("|");//Obtengo el indice del pipe
+if (sessionScope.OrdenesPorEstadoCat != null){
+var vOpciones:NotesView = getDbCfg().getView ("v.Sys.vLK_EstadosOrdenados");
+var docOpt:NotesDocument = vOpciones.getDocumentByKey(sessionScope.OrdenesPorEstadoCat);
+crrView.left(pipeidx).equals(docOpt.getItemValueString("est_Nombre_des"));
+}}]]></xe:this.selected>
+					</xe:basicLeafNode>
+				</xe:this.children>
+				<xe:this.value><![CDATA[#{javascript:var vOpciones:NotesView = getDbCfg().getView ("v.Sys.LK_EstadosOrdenados");
+var entryCol:NotesViewEntryCollection = vOpciones.getAllEntries()
+var entryOpt:NotesViewEntry = entryCol.getFirstEntry();
+var docOpt:NotesDocument;
+
+var arrOpts:Array = new Array ();
+
+while (entryOpt != null) {
+	docOpt = entryOpt.getDocument();
+	if(!docOpt.getItemValueString("est_OcultarNavega_opt").equals("1")){//Se excluyen los ocultos
+		arrOpts.push(docOpt.getItemValueString("est_Nombre_des") + "|" + docOpt.getItemValueString("est_Codigo_des"));
+	}
+	entryOpt = entryCol.getNextEntry(entryOpt);
+}
+return arrOpts}]]></xe:this.value>
+			</xe:repeatTreeNode>
+		</xe:this.treeNodes>
+		<xp:eventHandler event="onItemClick" submit="true" refreshMode="partial" refreshId="PNL_PropuestasEnProceso">
+			<xp:this.onComplete><![CDATA[XSP.partialRefreshGet("#{id:navigatorAutomoviles}");]]></xp:this.onComplete>
+			<xe:this.action><![CDATA[#{javascript:sessionScope.OrdenesPorEstadoCat =context.getSubmittedValue()}]]></xe:this.action>
+		</xp:eventHandler>
+	</xe:navigator>
+</xp:view>

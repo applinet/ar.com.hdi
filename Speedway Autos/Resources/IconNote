@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='utf-8'?>
+<note default='true' class='icon' xmlns='http://www.lotus.com/dxl' version='9.0'
+ maintenanceversion='1.0' replicaid='03257E5A006E447C'>
+<noteinfo noteid='11a' unid='1E1DD092D0A98CCD03257CF6003AC4DF' sequence='116'>
+<created><datetime>20140613T074154,87-03</datetime></created>
+<modified><datetime>20170607T162534,47-03</datetime></modified>
+<revised><datetime>20170607T162534,46-03</datetime></revised>
+<lastaccessed><datetime>20170607T162534,46-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170425,64-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Pepe Administrator/O=axin</name><name
+>CN=Fernando Rodriguez/O=axin</name><name>CN=Pepe Administrator/O=axin</name><name
+>CN=Fernando Rodriguez/O=axin</name><name>CN=Pepe Administrator/O=axin</name><name
+>CN=Juan Candia/O=axin</name><name>CN=Nicolas Laurenzano/O=axin</name><name
+>CN=Fernando Rodriguez/O=axin</name><name>CN=Pepe Administrator/O=axin</name></updatedby>
+<item name='IconBitmap' summary='true'>
+<rawitemdata type='6'>
+AiAgAQAA///////wD///4Af//8AD//4AAH/8AAA/+AAAH/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAA
+D+AAAAfAAAADgAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAcAAAAPwAAAP8AAAD/AAAA/wAAAP
++AAAH/wAAD//8A////gf//////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAA/////wAAAAAAAAAAAAAA
+DxERERHwAAAAAAAAAAAAAPEd3d3RHwAAAAAAAAAAD//x3Xd33R//8AAAAAAAAPEREdd3d30RER8A
+AAAAAA8R3d3Xd3d93d0R8AAAAADxHXd913d3fdd30R8AAAAA8dd3fdd3d33Xd30fAAAAAPHXd33X
+d3d913d9HwAAAADx13d913d3fdd3fR8AAAAA8dd3fdd3d33Xd30fAAAAAPHXd33Xd3d913d9HwAA
+AA/x13d913d3fdd3fR/wAADxEdd3fdd3d33Xd30RHwAPEd13d33Xd3d913d33RHw8R13d3d913d3
+fdd3d3fRH/HXd3d3fdd3d33Xd3d3fR/x13d3d33Xd3d913d3d30f8dd3d3fR13d3fR13d3d9H/Ed
+3d3dEdd3d30R3d3d0R8PEREd3dEd3d3RHd3RERHwAP/x13d9Ed3dEdd3fR//AAAA8dd3fR13d9HX
+d30fAAAAAPHXd33Xd3d913d9HwAAAADx13d913d3fdd3fR8AAAAA8R3d0dd3d30d3dEfAAAAAA8R
+EREdd3fRERER8AAAAAAA////Ed3dEf///wAAAAAAAAAAAPERER8AAAAAAAAAAAAAAAAP///wAAAA
+AAAAUEECICABAAD/////+A4DgA==
+</rawitemdata></item>
+<item name='$DefaultFrameset'><text>principal</text></item>
+<item name='$SoftDeleteExpireHours'><number>980</number></item>
+<item name='$DefaultXPage'><text>Bienvenido.xsp</text></item>
+<item name='$LaunchXPageRunOnServer'><text>0</text></item>
+<item name='$FlagsNoRefresh'><text/></item>
+<item name='$TemplateServerName'><text>CN=Pepe Administrator/O=axin</text></item>
+<item name='$TITLE'><text>Autos Desa
+Speedway
+#2desa</text></item>
+<item name='$PIRCRefreshModTime'><datetime>20170607T162534,24-03</datetime></item>
+<item name='$TemplateModTime'><datetime>20170607T162508,99-03</datetime></item>
+<item name='$TemplateFileName'><text>L:\Data\Notes9\au_propuestas20170607.ntf</text></item>
+<item name='$DefaultLanguage'><text>es-AR</text></item>
+<item name='$Daos'><text>0</text></item>
+<item name='$LargeSummary'><text>0</text></item>
+<item name='$Flags'><text>7Jz1Zq2F!M4</text></item></note>
+

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xf="http://www.ibm.com/xsp/xflow" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:xe="http://www.ibm.com/xsp/coreex">
+	<xp:this.rendered><![CDATA[#{javascript:var v:Array = database.queryAccessRoles(session.getEffectiveUserName());
+@IsMember("[Desarrollo]", v)}]]></xp:this.rendered>
+	<xp:this.data>
+		<xp:dominoDocument var="documentDau" ignoreRequestParams="true"
+			formName="dau">
+			<xp:this.databaseName><![CDATA[#{javascript:var dbDau:NotesDatabase = getDbDau();
+if (dbDau != null) {
+	dbDau.getFilePath();
+}}]]></xp:this.databaseName>
+		</xp:dominoDocument>
+	</xp:this.data>
+	<xp:button value="Solicitar Autorización" id="btn_DAU">
+		<xp:this.rendered><![CDATA[#{javascript://Si existen datos de workflow, se muestra el botón
+var workflow = viewScope.get("dauWorkflow");
+return workflow.nivel != 0;}]]></xp:this.rendered>
+		<xp:eventHandler event="onclick" submit="true"
+			refreshMode="partial"
+			onComplete="XSP.openTooltipDialog('#{id:tooltipDialogFrmDau}', '#{id:btn_DAU}');"
+			refreshId="addDauDialog">
+			<xp:this.action><![CDATA[#{javascript:getComponent('addDauDialog').show();}]]></xp:this.action>
+		</xp:eventHandler>
+	</xp:button>
+	<xe:tooltip id="tooltip1" for="btn_DAU">
+		<xe:this.label><![CDATA[#{javascript://Obtiene la lista de reglas que cumple la propuesta
+var workflow = viewScope.get("dauWorkflow");
+if (workflow.nivel != 0) {
+	//Muestra el detalle de cada regla cumplida por la propuesta
+	return "Debe solicitar autorización de esta orden por las siguientes condiciones: " + workflow.detalles.join(" ");
+} else {
+	return "";
+}}]]></xe:this.label>
+	</xe:tooltip>
+
+	<xe:dialog id="addDauDialog" title="El Comentario es obligatorio">
+		<xe:dialogContent id="dialogContent2" style="width:400px">
+			<table width="100%">
+				<tr>
+					<td style="vertical-align:top; width:7em">Comentario:</td>
+					<td>
+						<xp:inputTextarea value="#{viewScope.dialogComment}" style="width: 100%" rows="5"></xp:inputTextarea>
+					</td>
+				</tr>
+			</table>
+		</xe:dialogContent>
+		<xe:dialogButtonBar id="dialogButtonBar3">
+			<xp:button id="buttonComentarioComun" value="Aceptar" type="submit" styleClass="lotusFormButton">
+				<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="addDauDialog">
+					<xp:this.action>
+						<xp:actionGroup>
+
+
+							<xp:executeScript>
+								<xp:this.script><![CDATA[#{javascript:var docPropuesta:NotesDocument = viewScope.get("docxProp").getDocument();
+var dbDau:NotesDatabase = getDbDau();
+
+if (dbDau != null) {
+	var viewNiveles:NotesView = dbDau.getView("v.Sys.Niveles");
+	
+	//Aca ejecutamos la funcion de workflow y cargamos los campos del docDAU
+	var workflow = viewScope.get("dauWorkflow");
+	
+	//Evita que le vista se refresque automaticamente
+	viewNiveles.isAutoUpdate = false;
+	
+	var collNiveles:NotesViewEntryCollection = viewNiveles.getAllEntriesByKey("Autos", true);
+	var docEntryNivel:NotesViewEntry = collNiveles.getFirstEntry();
+	
+	var columnArray:Array = [];
+	var aprobadoresArray:Array = [];
+	var user = context.getUser();
+	var strTitulo:String = "";
+	
+	while (docEntryNivel != null) {
+		columnArray = docEntryNivel.getColumnValues();
+		if (workflow.nivel >= columnArray[1]) {
+			//Aun no se alcanzo el nivel de aprobacion requerido
+			//Se agrega el aprobador al documento Dau
+			aprobadoresArray.push(columnArray[2]);
+			docEntryNivel = collNiveles.getNextEntry(docEntryNivel);
+		} else {
+			//Ya se alcanzo el nivel de aprobacion requerido
+			docEntryNivel = null;
+		}
+	}
+	
+	//Deja la vista con su configuracion original
+	viewNiveles.isAutoUpdate = true;
+	
+	//Creación de los campos en el documento Dau, si se obtuvieron aprobadores 
+	if (aprobadoresArray.toString().trim() != "") {
+		//Detalle de cada regla cumplida por la propuesta
+		documentDau.replaceItemValue("dau_mensajeAprobadores_des", workflow.detalles);
+		//Se guarda el listado de aprobadores, eliminando los duplicados
+		documentDau.replaceItemValue("dau_aprobadores_des", @Unique(aprobadoresArray));
+		documentDau.replaceItemValue("dau_status_cod", "0")
+		documentDau.replaceItemValue("dau_solicitante_des", user.getDistinguishedName());
+		documentDau.replaceItemValue("idPadre_cod", docPropuesta.getUniversalID());
+		strTitulo = user.getCommonName() + " solicitó aprobación por:\n" + workflow.detalles.join("\n");
+		documentDau.replaceItemValue("dau_titulo_des",strTitulo);
+		documentDau.replaceItemValue("log_des",strTitulo + "\nComentarios: " + viewScope.get("dialogComment"));
+		
+		documentDau.save();
+		context.reloadPage()
+	} else {
+		//Si no se obtuvieron aprobadores
+		print("No se encontraron aprobadores para la propuesta.");
+	}
+}}]]></xp:this.script>
+							</xp:executeScript>
+						</xp:actionGroup>
+					</xp:this.action>
+					<xp:this.script><![CDATA[XSP._setDirty(false,"");]]></xp:this.script>
+				</xp:eventHandler>
+				
+				</xp:button>
+			<xp:button value="Cancelar" id="button10" styleClass="lotusFormButton">
+				<xp:eventHandler event="onclick" submit="false">
+					<xp:this.script><![CDATA[XSP.closeDialog('#{id:addDauDialog}')]]></xp:this.script>
+				</xp:eventHandler>
+			</xp:button>
+		</xe:dialogButtonBar>
+	</xe:dialog>
+</xp:view>

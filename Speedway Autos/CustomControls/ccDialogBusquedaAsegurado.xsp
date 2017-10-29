@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex" xmlns:xpt="http://www.openntf.org/xsp/xpt" xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xp:image url="/AG_add_button24x24.png" id="image1" style="height:20.0px;width:20.0px">
+		<xp:this.rendered><![CDATA[#{javascript:if(getComponent("sol_tipoMovimiento_cod") == null && currentDocument.isEditable()) return true;
+currentDocument.isEditable() && (getComponent("sol_tipoMovimiento_cod").getValue() == "1" || getComponent("sol_tipoMovimiento_cod").getValue() == "2" || (getComponent("sol_tipoMovimiento_cod").getValue() == "3" &&  getComponent("sol_tipoOperacion_cod").getValue() == "80"))}]]></xp:this.rendered>
+		<xp:eventHandler event="onclick" submit="true" refreshMode="partial" immediate="true" refreshId="divErrMsg">
+			<xp:this.action>
+				<![CDATA[#{javascript:var sol_productor_cod:String = getComponent("sol_productor_cod").getValue();
+if(sol_productor_cod != null && sol_productor_cod != ""){
+getComponent('dialogPatente').show()
+}else{
+facesContext.addMessage("messagesCollect", new javax.faces.application.FacesMessage("Para seleccionar el asegurado primero ingrese el productor."))
+}}]]>
+			</xp:this.action>
+			<xp:this.onStart><![CDATA[XSP.startAjaxLoading()]]></xp:this.onStart>
+			<xp:this.onComplete><![CDATA[XSP.endAjaxLoading()]]></xp:this.onComplete>
+			<xp:this.onError><![CDATA[XSP.endAjaxLoading()]]></xp:this.onError>
+		</xp:eventHandler>
+	</xp:image>
+	<xp:image url="/AG_add_button24x24.png" id="image2" style="height:20.0px;width:20.0px">
+		<xp:this.rendered><![CDATA[#{javascript:if(getComponent("sol_tipoMovimiento_cod") == null ) return false;
+if(!viewScope.containsKey('docxProp')) return false;
+!currentDocument.isEditable() && @Left(getComponent("sol_status_cod").getValue() ,2) == "25" && getIsGroupMember("spwAU.N2.CONT.USR_CRU") &&
+(getComponent("sol_tipoMovimiento_cod").getValue() == "1" || getComponent("sol_tipoMovimiento_cod").getValue() == "2" || (getComponent("sol_tipoMovimiento_cod").getValue() == "3" &&  getComponent("sol_tipoOperacion_cod").getValue() == "80"))}]]></xp:this.rendered>
+		<xp:eventHandler event="onclick" submit="true" refreshMode="partial" immediate="true" refreshId="divErrMsg">
+			<xp:this.action>
+				<![CDATA[#{javascript:var sol_productor_cod:String = getComponent("sol_productor_cod").getValue();
+if(sol_productor_cod != null && sol_productor_cod != ""){
+getComponent('dialogPatente').show()
+}else{
+facesContext.addMessage("messagesCollect", new javax.faces.application.FacesMessage("Para seleccionar el asegurado primero ingrese el productor."))
+}}]]>
+			</xp:this.action>
+			<xp:this.onStart><![CDATA[XSP.startAjaxLoading()]]></xp:this.onStart>
+			<xp:this.onComplete><![CDATA[XSP.endAjaxLoading()]]></xp:this.onComplete>
+			<xp:this.onError><![CDATA[XSP.endAjaxLoading()]]></xp:this.onError>
+		</xp:eventHandler>
+	</xp:image>
+	<xp:div id="divCargaPatente">
+		<xe:dialog id="dialogPatente" title="#{javascript:compositeData.propertyTitle}">
+			<xp:div id="divValidacion">
+				<xp:table style="margin-left:1.0%;margin-top:1.0%;margin-bottom:1.0%;width:314.0px">
+					<xp:tr>
+						<xp:td valign="top" colspan="2" style="height:auto">
+							<tr />
+							<xe:djComboBox id="seleccionAsegurado" style="width:95.0%" disableModifiedFlag="true"
+								invalidMessage="El productor no tiene asegurados vinculados" uppercase="true" tooltip="Nombre" tooltipPosition="auto" title="Nombre">
+								<xe:this.dojoAttributes>
+									<xp:dojoAttribute name="placeHolder" value="Nombre"></xp:dojoAttribute>
+								</xe:this.dojoAttributes>
+								<xp:selectItems id="selectItems4" rendered="false">
+									<xp:this.value><![CDATA[#{javascript:importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+var doc:NotesDocument = database.createDocument()
+doc.appendItemValue("sol_productor_cod", compositeData.property_codigoProductor);
+jce.getSelectAS("solTB_SEHASE", doc);}]]></xp:this.value>
+								</xp:selectItems>
+							</xe:djComboBox>
+							</xp:td>
+					</xp:tr>
+				</xp:table>
+				<xp:panel id="PNL_ErrorMessages"></xp:panel>
+			</xp:div>
+			<xp:panel style="text-align:right" id="PNL_bonButtons">
+				<xp:button value="Aceptar" id="buttonValidar" styleClass="lotusAction">
+					<xp:eventHandler event="onclick" submit="true"
+						refreshMode="partial" refreshId="div_asegurado">
+						<xp:this.onComplete><![CDATA[XSP.partialRefreshGet("#{id:sol_asegurado_des}");]]></xp:this.onComplete>
+						<xp:this.action><![CDATA[#{javascript:var dfnomb = new String(getComponent("seleccionAsegurado").value);
+SplitName = dfnomb.split("~");
+getComponent("sol_asegurado_des").value = SplitName[0];
+if(dfnomb.contains("~")) {
+	var strCodigoAsegurado = SplitName[1];
+	getComponent("sol_asegurado_cod").value = strCodigoAsegurado;
+	//Tengo Asegurado de Gaus cargar domicilio si property = true
+	if(compositeData.property_booCargarDomicilio) {
+		var arr_result = getDatosDomicilioAsegurado(SplitName[1]);		
+		getComponent("ins_AsegDomDir_des1").value = arr_result[0];
+		getComponent("ins_AsegDomCodPostal_des1").value = arr_result[1];
+		getComponent("ins_AsegDomLoc_des1").value = arr_result[2];
+		getComponent("ins_AsegDomProv_des1").value = arr_result[3];		
+	}
+	if(compositeData.property_booEjecutaWsAnulFP) {
+	//Consume WS de Anulacion por falta de pago por asegurado
+		var strWsResult:String = wsanuxfp(strCodigoAsegurado);
+		switch(strWsResult.toUpperCase()) {
+		    case "N":
+		        getComponent("sol_requiereAprobCobranzas_cod").setValue("0");
+		        break;
+		    case "S":
+		    	getComponent("sol_requiereAprobCobranzas_cod").setValue("1");
+		        break;
+		    default:
+		    	getComponent("sol_requiereAprobCobranzas_cod").setValue("");
+		    	print("No se ha podido recuperar la información del asegurado por el Web Service wsanuxfp.");
+		}
+		//Busca el workflow para la propuesta en la base Dau
+		var workflow = getWorkflow(documentPropuesta.getDocument(), "Cobranzas");
+		//Se guarda el objeto en la variable Scope
+		viewScope.put("dauWorkflow", workflow);
+	}
+} else {
+	getComponent("sol_asegurado_cod").value="0";
+	getComponent("sol_requiereAprobCobranzas_cod").setValue("");
+}
+getComponent('dialogPatente').hide();
+
+if(viewScope.containsKey("docxProp")) {
+	var docxProp:NotesXspDocument = viewScope.get("docxProp");
+	if(!docxProp.isEditable() && docxProp.getItemValueString("Form") == "Propuesta" && !docxProp.isNewNote()) {
+		docxProp.setValue("sol_asegurado_cod", SplitName[1])
+		docxProp.setValue("sol_asegurado_des", SplitName[0])
+		docxProp.save()
+	}
+}}]]></xp:this.action>
+						<xp:this.script><![CDATA[var dfnomb = new String(XSP.getElementById("#{id:seleccionAsegurado}").value);
+SplitName = dfnomb.split("~");
+XSP.getElementById("#{id:sol_asegurado_des}").value = SplitName[0];
+XSP.getElementById("#{id:sol_asegurado_cod}").value = SplitName[1];]]></xp:this.script>
+					</xp:eventHandler>
+				</xp:button>
+			</xp:panel>
+			<br />
+		</xe:dialog>
+	</xp:div>
+</xp:view>

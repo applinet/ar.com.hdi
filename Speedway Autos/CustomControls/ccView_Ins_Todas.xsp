@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core">
+
+	<xp:this.data>
+		<xp:dominoView var="vInsAll" viewName="v.UI.Ins.All">
+		</xp:dominoView>
+	</xp:this.data>
+
+	<xp:this.resources>
+		<xp:styleSheet href="/views.css"></xp:styleSheet>
+	</xp:this.resources>
+	
+	
+	<xp:panel>
+		<xp:pager layout="Previous Group Next" partialRefresh="true" id="pager1" for="repeat1"></xp:pager>
+		<xp:panel styleClass="PanelBox" id="PNL_Listing">
+		<xp:br></xp:br>
+		<xp:br></xp:br>
+		<xp:table cellpadding="5" cellspacing="0" border="0">
+			<xp:tr styleClass="ViewTitle">
+				<xp:td>Número</xp:td>
+				<xp:td>Inspector</xp:td>
+				<xp:td>Combinada</xp:td>
+				<xp:td>Estado</xp:td>
+				<xp:td>Cobertura</xp:td>
+				<xp:td>Asegurado</xp:td>
+				<xp:td>Productor</xp:td>
+				<xp:td>Patente</xp:td>
+			</xp:tr>
+
+			<xp:repeat id="repeat1" rows="20" value="#{vInsAll}"
+				var="repeatColInspec" indexVar="repeatIndexInspec">
+
+				<xp:tr id="rowInspeccion" styleClass="ViewRow">
+					<xp:td align="center" style="text-align:center">
+						<xp:text escape="true" id="computedField1">
+							<xp:this.converter>
+								<xp:convertNumber type="number"></xp:convertNumber>
+							</xp:this.converter>
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_Consecutivo_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>
+					<xp:td style="text-align:center">
+						<xp:text escape="true" id="computedField2">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_Inspect_opt");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>
+					<xp:td style="text-align:center">
+						<xp:text escape="true" id="computedField3">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_iFecha_dat");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>
+					<xp:td style="text-align:center">
+						<xp:text escape="true" id="computedField4">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_iEst_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>
+					<xp:td style="text-align:center">
+						<xp:text escape="true" id="computedField5">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_iCobAprob_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>					
+					<xp:td style="text-align:center">
+						<xp:text escape="true" id="computedField6">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_Aseg_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>
+					<xp:td style="text-align:center">
+						<xp:text escape="true" id="computedField7">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_Prod_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>
+					<xp:td style="text-align:center">
+						<xp:text escape="true" id="computedField8">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_VehPatNro_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>
+					<xp:eventHandler event="onclick" submit="true"
+						refreshMode="complete">
+						<xp:this.action>
+							<xp:openPage name="/xfDocInspeccion.xsp"
+								target="openDocument"
+								documentId="#{javascript:repeatColInspec.getUniversalID();}">
+							</xp:openPage>
+						</xp:this.action>
+					</xp:eventHandler>
+				</xp:tr>
+			</xp:repeat>
+		</xp:table>
+	</xp:panel></xp:panel>
+	
+	<xp:br></xp:br>
+	
+
+	</xp:view>

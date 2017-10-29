@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" dojoParseOnLoad="true" dojoTheme="true" xmlns:xc="http://www.ibm.com/xsp/custom"><xp:this.resources>
+		<xp:script src="/JSS.MailingFunctions.jss" clientSide="false"></xp:script>
+	</xp:this.resources><xp:this.data>
+		<xp:dominoView var="viewPropuestasPorCodigo" viewName="v.Sys.Prop.Cod">
+			<xp:this.keys><![CDATA[#{javascript:viewScope.get("SearchThis")}]]></xp:this.keys>
+		</xp:dominoView>
+		<xp:dominoView var="viewPropuestasPorWeb" viewName="v.Sys.Prop.Web">
+			<xp:this.keys><![CDATA[#{javascript:viewScope.get("SearchWeb")}]]></xp:this.keys>
+		</xp:dominoView>
+		<xp:dominoDocument var="documentMail" formName="Mail"></xp:dominoDocument>
+	</xp:this.data><div id="myDialogAdjuntarEnPropuesta" dojoType="dijit.Dialog" style="display:none" title="Asociar mail a propuesta... "><xp:panel id="PanelName">
+			<xp:table>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Por número de Orden:  " id="label2" style="font-weight:bold"></xp:label>
+						
+						<xc:viewpicklist rowsPerPage="5" searchBar="true" searchButtonText="Buscar" datasrc="viewPropuestasPorCodigo"
+							dialogID="dialogOrden" dialogWidth="700px" dialogTitle="Seleccione una propuesta" typeAheadBar="false" select="Column"
+							onReturn="Set Scope Value" selectField="appid" fieldName="inputText1" tableClass="tablecellgreen" searchVar="viewScope.SearchThis"
+							typeAheadVar="sessionScope.typethis" rowClass="odd, even" headerClass="headerclass" searchButtonClass="button2" buttonImage="./add.png"
+							pagerStyleFirst="navbutton1" pagerStyleCurrent="navbutton4" pagerStyleLast="navbutton3" pagerStyleNext="navbutton2"
+							pagerStylePrevious="navbutton2" searchBarClass="headerclass" bottomBarClass="bottomround headerclass"
+							cancelButtonClass="button2 floatthisright" cancelButtonText="Cancel" type="Single Value" finishButtonText="Finish"
+							finishButtonClass="button2 floatthisright" picklistButtonClass="button2" picklistButtonText="Pick the Field Value" refreshID="inputText1"
+							multiSelectButtonAddText="add" multiSelectButtonRemoveText="remove" selectWith="Link" openDialogWith="Link" linkImg="./add.png"
+							picklistLinkImg="./add.png" clearSearchImg="./cross.png" SelectCellWidth="25" cancelButtonImg="/AG_delete_button24x24.png"
+							varName="viewScope.AdjuntarPropuestaNro" selectColumn="1">
+							<xc:this.viewColumn>
+								<xp:value>0</xp:value>
+								<xp:value>2</xp:value>
+								<xp:value>3</xp:value>
+								<xp:value>4</xp:value>
+								<xp:value>5</xp:value>
+							</xc:this.viewColumn>
+						</xc:viewpicklist></xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td><xp:label value="Por cotización web:  " id="label1" style="font-weight:bold"></xp:label>
+						<xc:viewpicklist rowsPerPage="5" searchBar="true" searchButtonText="Buscar" datasrc="viewPropuestasPorWeb"
+							dialogID="dialogWeb" dialogWidth="700px" dialogTitle="Seleccione una propuesta" typeAheadBar="false" select="Column" onReturn="Set Scope Value"
+							selectField="appid" fieldName="inputText1" tableClass="tablecellgreen" searchVar="viewScope.SearchWeb" rowClass="odd, even"
+							headerClass="headerclass" searchButtonClass="button2" buttonImage="./add.png" pagerStyleFirst="navbutton1" pagerStyleCurrent="navbutton4"
+							pagerStyleLast="navbutton3" pagerStyleNext="navbutton2" pagerStylePrevious="navbutton2" searchBarClass="headerclass"
+							bottomBarClass="bottomround headerclass" cancelButtonClass="button2 floatthisright" cancelButtonText="Cancel" type="Single Value"
+							finishButtonText="Finish" finishButtonClass="button2 floatthisright" picklistButtonClass="button2" picklistButtonText="Pick the Field Value"
+							refreshID="inputText1" multiSelectButtonAddText="add" multiSelectButtonRemoveText="remove" selectWith="Link" openDialogWith="Link"
+							linkImg="./add.png" picklistLinkImg="./add.png" clearSearchImg="./cross.png" SelectCellWidth="25" cancelButtonImg="/AG_delete_button24x24.png"
+							varName="viewScope.AdjuntarPropuestaNro" selectColumn="1">
+							<xc:this.viewColumn>
+								<xp:value>0</xp:value>
+								<xp:value>2</xp:value>
+								<xp:value>6</xp:value>
+								<xp:value>3</xp:value>
+								<xp:value>4</xp:value>
+								<xp:value>5</xp:value>
+							</xc:this.viewColumn>
+						</xc:viewpicklist></xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						&#160;&#160;
+						<xp:inputText id="inputText1" style="width:133.0px" showReadonlyAsDisabled="true" disabled="true">
+							<xp:this.value><![CDATA[#{javascript:var temp = viewScope.get("AdjuntarPropuestaNro");
+if (temp == null || temp.equals ("")) {
+temp = "";
+}else{
+@Word(temp, "|", 1);
+};
+}]]></xp:this.value>
+							<xp:eventHandler event="onchange" submit="true" refreshMode="partial" refreshId="button1" id="eventHandler1">
+							</xp:eventHandler>
+						</xp:inputText>
+						<xp:br></xp:br>
+						
+						<xp:br></xp:br>
+						
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td></xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:br></xp:br>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:button value="Adjuntar..." id="button1" style="text-align:center" icon="/sol_add24x24.png">
+
+						<xp:eventHandler event="onclick" submit="true"
+							refreshMode="complete">
+							<xp:this.action><![CDATA[#{javascript:var vs:String = viewScope.get("AdjuntarPropuestaNro");
+if (vs == null || vs.equals ("")) {
+	var x="alert('SE HA CANCELADO EL PROCESO.\\n\\nDebe asociar un número de propuesta.\\n\\nPor favor ingrese el número de propuesta para continuar.');";
+	view.postScript(x);
+} else {
+	documentMail.replaceItemValue("MyMailAction", "Propuestas");
+	linkMailWithDoc (documentMail, @Word(viewScope.get("AdjuntarPropuestaNro"), "|", 2), true, false, true);
+	
+	//Compara tags de documentación del mail y la propuesta, para corregir la propuesta
+	verificarTagsDocumentacion(documentMail);
+	context.redirectToPage("/xvUI_Por_Estado.xsp?OpenXPage");
+}}]]></xp:this.action>
+						</xp:eventHandler></xp:button>
+						<xp:button value="Cancelar" id="button10" styleClass="lotusFormButton" icon="/AG_delete_button24x24.png">
+							<xp:eventHandler event="onclick" submit="true" refreshMode="complete" id="eventHandler3">
+								<xp:this.script><![CDATA[XSP.closeDialog('#{id:myDialogAdjuntarEnPropuesta}')]]></xp:this.script>
+								<xp:this.action><![CDATA[#{javascript:viewScope.AdjuntarPropuestaNro = "";
+viewScope.SearchThis = "";}]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+					</xp:td>
+				</xp:tr>
+			</xp:table>
+			<xp:br></xp:br>
+			<xp:br />
+		</xp:panel>
+	</div>
+	</xp:view>

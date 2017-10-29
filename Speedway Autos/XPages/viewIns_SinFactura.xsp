@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom">
+
+	<xc:oneuiLayout><xp:this.facets>
+	<xc:ccView_Ins_SinFactura xp:key="facet_2"></xc:ccView_Ins_SinFactura>
+	
+	<xc:ccNavIns xp:key="facet_3" ccPropEstado="SINFACT"></xc:ccNavIns>
+
+
+
+</xp:this.facets></xc:oneuiLayout></xp:view>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><note class="filter" maintenanceversion="1.0" replicaid="03257E5A006E447C" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="46e" sequence="22" unid="A00DA130FBE6799A03257CF6003B2454">
+<created><datetime>20140613T074559,24-03</datetime></created>
+<modified><datetime>20170829T080816,32-03</datetime></modified>
+<revised><datetime>20170829T080816,31-03</datetime></revised>
+<lastaccessed><datetime>20170829T080816,31-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170430,33-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name="$TITLE" sign="true"><text>seqNum.jss</text></item>
+<item name="$Flags"><text>.5834Q</text></item>
+<item name="$PublicAccess" sign="true"><text>1</text></item>
+<item name="$DesignerVersion" sign="true"><text>8.5.3</text></item>
+
+<item name="$POID"><datetime>20170112T110844,07-03</datetime></item></note>

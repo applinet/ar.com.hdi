@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='utf-8'?>
+<note class='view' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.0'
+ replicaid='03257E5A006E447C'>
+<noteinfo noteid='1f2' unid='A15A1608A6F85CD603257CF6003ADAE5' sequence='22'>
+<created><datetime>20140613T074251,25-03</datetime></created>
+<modified><datetime>20170829T080802,54-03</datetime></modified>
+<revised><datetime>20170829T080802,53-03</datetime></revised>
+<lastaccessed><datetime>20170829T080802,53-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170426,92-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name
+>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name
+>CN=Pepe Administrator/O=axin</name><name>CN=Fernando Rodriguez/O=axin</name><name
+>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name
+>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name='$FormulaClass' sign='true'><text>1</text></item>
+<item name='TmpViewDesignCollation' sign='true'><text>es-AR</text></item>
+<item name='$TITLE' sign='true'><text>UI\Rastreadores\AsociadasEnComponente|v.UI.RasAsocComponente_EmbView</text></item>
+<item name='$Index' sign='true'><text/></item>
+<item name='$Formula' summary='true' sign='true'><formula compiled='true'>
+kAACAAwAAgAkM2kAAwAFAFIATgAHAAsAEQAOAAMAAgAJAAQAaWRQYWRyZV9jb2RyYXNfcHJvdmVl
+ZG9yX29wdHJhc19lc3RhZG9fb3B0bG9nJDMkQ29uZmxpY3QkUkVGBAAEAAAAHgAFAAQARm9ybQEA
+CgBSYXN0cmVhZG9yCgIDAAcADgAIAAlMMVMyUzNT
+</formula></item>
+<item name='$Collation' summary='true'>
+<rawitemdata type='2'>
+MAACAABECGYHAAALAIFmAAsAEQBpZFBhZHJlX2NvZHJhc19wcm92ZWVkb3Jfb3B0
+</rawitemdata></item>
+<item name='$Collation1' summary='true'>
+<rawitemdata type='2'>
+DwABAABEgGYAAAACACQz
+</rawitemdata></item>
+<item name='$ViewFormat' summary='true' sign='true'>
+<rawitemdata type='5'>
+AQAFAAkAiAQAAFZDAwQLAAkAAAAAAEMAAQEACgABAAAAAAAAAAICAAAAVkMFABEACwAAAAAAagAB
+AAAKAAAAAAAAAAEAAgIAAABWQwAADgAJAAAAAABmAAEAAAoAAAAAAAAAAAACAgAAQFZDAAADAAgA
+AAAAAGYAAQAACgAAAAAAAAAAAAICAABAVkMAAQIADQAOAAAAewABAAAKAAAAAAAAAAAAAgIAAABp
+ZFBhZHJlX2NvZFVuaWRQYWRyZXJhc19wcm92ZWVkb3Jfb3B0UmFzUHJvdmVkb3JyYXNfZXN0YWRv
+X29wdFJhc0VzdGFkb2xvZ1Jhc0ZlY2hhJDNDcmVhdGlvbiBEYXRlDgACAAwAAgAkM2kAAwAmAAEA
+AAABAQAJAQAACgEBDgoAABUArSsBAAEAAQAAAAAAAAAAAFdDAQEACQAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAP//AAAAAAAAAAAAAAAAAABXQwEBAAkAAAAAAAAAAAAAAAAAAAAAAADEAAAAAAD//wAA
+AAAAAAAAAAAAAAAAV0MBAQAJAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAA//8AAAAAAAAAAAAAAAAA
+AFdDAQEACQAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAP//AAAAAAAAAAAAAAAAAABXQwEBAAkAAAAA
+AAAAAAAAAAAAAAAAAAAEAAAAAAD//wAAAAAAAAAAAAAAAAAAQgAAAAAAAQD///8AAQDd/+kAAQAA
+AAAAAAAAAAAAAAABAP///wABAIj/rgAAAAEAAAAAAAEAAAAAAAEAAAAAAAAACAAAAAAAAQBYQwAM
+gAMAAAAAAAECAgIBAQEBBwQCAAAAAAAAAAAgLy86WUMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+</rawitemdata></item>
+<item name='$Comment' sign='true'><text>vUI_RastreadoresAsociadasEnComponente</text></item>
+<item name='$Flags'><text>Y</text></item>
+<item name='$DesignerVersion' sign='true'><text>8.5.3</text></item></note>
+

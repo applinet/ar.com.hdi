@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='utf-8'?>
+<note class='form' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.0'
+ replicaid='03257E5A006E447C'>
+<noteinfo noteid='622' unid='98BE4691D84C0B2703257CF6003B5C08' sequence='20'>
+<created><datetime>20140613T074821,84-03</datetime></created>
+<modified><datetime>20170829T080826,60-03</datetime></modified>
+<revised><datetime>20170829T080826,59-03</datetime></revised>
+<lastaccessed><datetime>20170829T080826,59-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170433,19-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name
+>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name
+>CN=Pepe Administrator/O=axin</name><name>CN=Fernando Rodriguez/O=axin</name><name
+>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name
+>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name='$TITLE'><text>$DBIcon</text></item>
+<item name='$Flags'><text>34Ci~Q</text></item>
+<item name='$ImagesWide' sign='true'><number>1</number></item>
+<item name='$ImagesHigh' sign='true'><number>1</number></item>
+<item name='$ImagesColorize' sign='true'><number>0</number></item>
+<item name='$FileSize' sign='true'><number>1922</number></item>
+<item name='$ImageData' sign='true'>
+<rawitemdata type='1'>
+mQAcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAH0AHAAAAAIAAAAAAIIHAAABAAAAAQAAAAAAAAB8
+AIwHAACCB4IHiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAHSUlEQVR4nM2XeVDT
+ZxrHmd3ubDttd7oeKIegbCsil1xJCCDBhCqHgCAeLaNY5FC5FPAARFErpoIWXCysFmnrSQ1FuaRl
+oSsiqFxCAiZcIZKEhEC4itqufPf3C8dMt7ok5Z99Zj7zA+b5Pc/nfd/nTQYtrf+zeGNxcnHRX5JK
+8FZCMUGRxrxzuBjzDhcWkLV+j8C7ZPO5Rnl7P94+kJ9P1PujpgILyZWTcatNitsEhU/6ZoXMKyAg
+QyvipupZ8kSOt/ZrLqFNbiMZRXwpSvl9KBXIZofII/NVAlH5EChGJ2u0yTSWmBEoa5fhh045ytWA
+zCPzVQLR+ZCPvUCDZOh3ScwIlHfIUdHVj0o1IPPI/GmBX16+RLdyHPVTEqXEcag7E9pvTglUdvfj
+X0IF7qoBmUeKTB4BR/UkJcidECjGZgbzrwkFhVqz3I4ZgSqi6L2eAVSrAZl3t1uhei8wr1E1B+RO
+qCB/nhpM8ooSPd5VS+C+aAA1TwdRqyZkfo/yp/95PcnjJXosVEvgAVH0Ya8Sj9SEzCXfqRVNCj2Y
+QvU7ARlvTgpoqyVQJx5SDVGDhtT/F3VipQqNBZr6hlU8niPTdTQWaJGNqODOkek6Ggu09Y+ilaBt
+jkzX0FiAvL98AsEcma6hvkD8pEDn4JjadA2MzpqjEojXQEBI3OnZkPJ58HeiwUlXDwxDQ9S4uKL/
+fBpkN3IwyGtEflExvissBOdWAcqKb4N14Az27QnJOBgTwY6NDj9VlJ2W9loBsVgKEV+Ap8Pjr0Qq
+F6OnqwVZZxNRWFiAtPQMXLl8GTlfpCI2KhhXT8dCLO1V5fYSvGoHBu8VRL9WoJfXAm7cMUhGnv0G
+xfAAXr4YQXd7Ky5lncXusFCkpqQg/2ouMlMTwT55EOfZ+9BwLRNclheanNZgrI0Hk6Mc5EYFd56L
+CB0sSNnf1nT7Kv1X3Z0d7Zawj5zGwMkY9B8NR8fHm3Bt+w60FBRD/tNz9CmHMTA2jPa2+8gitjrj
+81RknL+AVl4XSgs4yMo4hRNJ0eCkJ+FOegKqvXzBDdqGrlQ2ng0pEXe5An25aXhx6TgunIjDsYRD
+5jPNO5OjVoq3ef27f892KNNTUE35EIsXLMQifX3ozV8Ak/eXozTjOHhHdiFvy3oU79sFwfWraM25
+iAb2UZRFhSAnYCPk8Tuh3B+IoeRw8OgMPDsTibqUGIjLOBiu4GDoeurEzz/kIjF8x8T3GZ8+UDUX
+An+oPxU39ryhekJRXo7yZRRsMliBRUv04WFlDXuj5dBfrIOx9FgIowPQG+ILQfBmiPeHocrXB19b
+OOC4jikEOzdAcTgSA5lsiLzd0R+3HW5rHRHkxsQvuScwfvMcPov6BJXZxJxEBCE9OtxdJcBPjsyW
+Z6VgoLYaJQarUGVgj6OGZrhnSEWrvj2a9ShE022Q7PSDNNgfQ0f2osbTG/+0okLAZKHVejVxXJuh
+/DoNPw+OQPzVl3hC3A5O2BYsfd8IO/1YqCCGNe9KJsytLdF6MxvhQVvJUXtD69uaL/8siQ2GMDYQ
+dz6goNGGCf5SZ3SZrUE3jYUet3V46uMB6RY3DH92GL1Rkbi73A7tFBY6zRjoXMFAlzUTLZ9GYEDQ
+gb7GRtRRqehwoYMdshGrGfZwc7FHxZl4lHD+gXl6iycGb19EXJAvW7X6vBWro1bOX4TKv9miwckT
+ndbOEG9whXijK6T+ayHZtA6SDSyMXvo7hHsPoNnVE1I/H+LvnlCE+UMS6oPuiI8h/yoD45Ie1DIc
+0GJHg8iDgQ1MBxhbmsDKxgwXYkLAPn4I5lZmz2XVhaYzw9fo5s25Y0ydqFtmA5GdI7pdHCFkOkPk
+yoDI60OIiJWMfJEGYXwC2sJ2Q7bNG/IAT8h2+EK2eyuGDuzC/Y980Jq4F/UsFzy2tAOXZg9ZoDeY
+xLuuniy4M2gIZNHh6LcJC7UXLPnV1Wu2oXHvOnthRCyBvLgI0vTPIdyzG91ubuhhrIZoLYNYZQB4
+HwVAejAUfUmRkLET0X/uNBSXstF7JBkmC3RAma+LFjNbcB0cwXdnQhHqh/XrmTA0WopDmz2Qk5EG
+8p+e33wUVzm5ShrcvdEVexCy3MtQPnyE58R0yPJugLt2PfgriaOxpkMethXK5CgMXzyNsRu5GOdc
+w/i3V1C7zg9nTe1RbmyDZjodrcQOPiEE+gJ94Ey3xSo7K+hHn1c11zlWMvra74LvvNwtONZW+259
+YH6r0nB5V70FBY8MKKg1sEWHHR1CRyeImC4QbfZBz55P8NTDFT0uTqizoOExfR0aiW1vJnK4zg7g
+uTpPdPu6wduFCr1l+meI8kyCNQRWBO+9UmAq/jSVoG2io2v0jaVtQKahacI3y8xPFplYFz4wteXf
+X+UIHpWFOk9/NFk64KGh3USNGRUNFPuJRqo9mgjqHBwHy1yoScbGxrpTK57mvakecwtd7UXzrhtZ
+rPnRnBb0vRm14pENtanKilb0ozUl5roTw0yTWv8BpbDWT7urBUgAAAAASUVORK5CYII=
+</rawitemdata></item>
+<item name='$MimeType' sign='true'><text>image/png</text></item>
+<item name='$FileModDT' sign='true'><datetime>20140613T074811,78-03</datetime></item>
+<item name='$ImageNames' sign='true'><text>C:\Users\rodrigfer\Desktop\dbIconPropuestas32x32.png</text></item>
+<item name='$DesignerVersion' sign='true'><text>8.5.3</text></item></note>
+

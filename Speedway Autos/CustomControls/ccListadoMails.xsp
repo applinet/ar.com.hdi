@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xp:this.data>
+		<xp:dominoView var="vistaDocAsociados" viewName="vPR_idPadre">
+		</xp:dominoView>
+	</xp:this.data>
+	<xp:div id="mainContainer">
+		<xp:repeat id="repeatDocAsociados" rows="10" var="uName" value="#{vistaDocAsociados}">
+		<p style="margin-top:1em;">
+			<xp:link escape="true" id="link1">
+				<xp:this.text><![CDATA[#{javascript:uName.getColumnValue("$1")}]]></xp:this.text>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="userContainer">
+					<xp:this.action><![CDATA[#{javascript:var docid = uName.getUniversalID();
+viewScope.put("userId",docid);}]]></xp:this.action>
+				</xp:eventHandler>
+			</xp:link>
+			</p>
+		</xp:repeat>
+	</xp:div>
+</xp:view>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config>
+  <faces-config-extension>
+    <namespace-uri>http://www.ibm.com/xsp/custom</namespace-uri>
+    <default-prefix>xc</default-prefix>
+  </faces-config-extension>
+  <composite-component>
+    <component-type>oneuiLayout</component-type>
+    <composite-name>oneuiLayout</composite-name>
+    <composite-file>/oneuiLayout.xsp</composite-file>
+    <composite-extension>
+      <designer-extension>
+        <in-palette>true</in-palette>
+      </designer-extension>
+    </composite-extension>
+    <property>
+      <property-name>placeBarActions</property-name>
+      <property-class>java.util.Collection</property-class>
+      <property-extension>
+        <property-item-class>com.ibm.xsp.extlib.tree.ITreeNode</property-item-class>
+        <collection-property>true</collection-property>
+      </property-extension>
+    </property>
+    <icon>
+      <small-icon/>
+    </icon>
+  </composite-component>
+</faces-config>

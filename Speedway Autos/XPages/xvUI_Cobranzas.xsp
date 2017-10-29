@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		DataSource Vista de propuestas en proceso; Con Boton de Nueva Propuesta en pageTreeNode Vista: V_propuestas_Proceso XPage: ViewPropuestas (Se referencia a otra Xpage para separar la vista) Se
+		utiliza pageTreeNode de oneUI para dos botones: btn_NuevaPropuesta; btn_NuevoVehiculo Para cada boton se referencia a su xpage form correspondiente
+	-->
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:xe="http://www.ibm.com/xsp/coreex">
+	<xp:this.beforePageLoad><![CDATA[#{javascript:sessionScope.put('lastView', view.getPageName());}]]></xp:this.beforePageLoad>
+	<xc:oneuiLayout>
+		<xc:this.placeBarActions>
+			<xe:basicContainerNode label="Menu Desplegable">
+				<xe:this.children>
+					<xe:basicLeafNode label="Nueva Propuesta???" href="http://srvdesa/Speedway/au_propuestas.nsf/xvUI_Por_Estado.xsp"></xe:basicLeafNode>
+					<xe:basicLeafNode label="Nuevo Vehiculo???" href="http://srvdesa/Speedway/au_propuestas.nsf/xvUI_Por_Estado.xsp"></xe:basicLeafNode>
+				</xe:this.children>
+			</xe:basicContainerNode>
+		</xc:this.placeBarActions>
+		<xp:this.facets>
+			<xp:include pageName="/ViewPropuestasEnCobranzas.xsp" id="include1" xp:key="facet_2"></xp:include>
+		</xp:this.facets>
+	</xc:oneuiLayout>
+</xp:view>

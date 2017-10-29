@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='utf-8'?>
+<note class='view' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.0'
+ replicaid='03257E5A006E447C'>
+<noteinfo noteid='13f6' unid='8FE93B86A4FB17DE03257D2A004EEA0D' sequence='21'>
+<created><datetime>20140804T112157,25-03</datetime></created>
+<modified><datetime>20170829T080852,84-03</datetime></modified>
+<revised><datetime>20170829T080852,83-03</datetime></revised>
+<lastaccessed><datetime>20170829T080852,83-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170450,53-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Pepe Administrator/O=axin</name><name
+>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name
+>CN=Pepe Administrator/O=axin</name><name>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name='$FormulaClass' sign='true'><text>1</text></item>
+<item name='TmpViewDesignCollation' sign='true'><text>es-AR</text></item>
+<item name='$TITLE' sign='true'><text>(Sys\SoftDelete)|SoftDelete</text></item>
+<item name='$Index' sign='true'><text/></item>
+<item name='$Formula' summary='true' sign='true'><formula compiled='true'>
+ZAACAAwAAgAkM2kAAwACAAwAAgAkMqQAAwAFACIAHQAEAAQAAgACAAkAZm9ybSQzJDIkQ29uZmxp
+Y3QABAAEAAAAGAC/AFgBAAAAAAAAAMBjQA8CBAADAAcADAAFAAk1UzZTAA==
+</formula></item>
+<item name='$Collation' summary='true'>
+<rawitemdata type='2'>
+BgAAAABE
+</rawitemdata></item>
+<item name='$Collation1' summary='true'>
+<rawitemdata type='2'>
+EQABAABEgGYAAAAEAGZvcm0=
+</rawitemdata></item>
+<item name='$Collation2' summary='true'>
+<rawitemdata type='2'>
+DwABAABEgGYAAAACACQz
+</rawitemdata></item>
+<item name='$Collation3' summary='true'>
+<rawitemdata type='2'>
+DwABAABEgGYAAAACACQy
+</rawitemdata></item>
+<item name='$ViewFormat' summary='true' sign='true'>
+<rawitemdata type='5'>
+AQAEAAQAigQAAFZDAAACAAEACgAKABoAAQAACgAAAAAAAAAAAAICAAAAVkMAAQQABAAAAAAAcwAB
+AAAKAAAAAAAAAAAAAgIAAABWQwABAgAHAA4AAACCAAEAAAoAAAAAAAAAAAACAgAAAFZDAAECAAgA
+DgAAAIIAAQAACgAAAAAAAAAAAAICAAAAJDAjCgAAAAgAkgADAAEFAQAEAH9BMP9mb3JtRm9ybSQz
+Q3JlYXRlZA4AAgAMAAIAJDNpAAMAJDJNb2RpZmllZA4AAgAMAAIAJDKkAAMAJgABAAAAAQEACQEA
+AAoBAQ4KAAAVAK0rAQABAAEAAAAAAAAAAABXQwEBAAkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/
+/wAAAAAAAAAAAAAAAAAAV0MBAQAJAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAA//8AAAAAAAAAAAAA
+AAAAAFdDAQEACQAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAP//AAAAAAAAAAAAAAAAAABXQwEBAAkA
+AAAAAAAAAAAAAAAAAAAAAAAEAAAAAAD//wAAAAAAAAAAAAAAAAAAQgAAAAAAAQD///8AAQDd/+kA
+AQAAAAAAAAAAAAAAAAABAP///wABAIj/rgAAAAEAAAAAAAEAAAAAAAEAAAAAAAAACAAAAAAAAQA=
+</rawitemdata></item>
+<item name='$Comment' sign='true'><text/></item>
+<item name='$DesignerVersion' sign='true'><text>8.5.3</text></item>
+<item name='$V5ACTIONS' sign='true'>
+<rawitemdata type='1'>
+vRyVAAAAAQABAAAAAQAAAAAAAAAAAAAACAACAHn/bAABAACcMwABAAAAAAAJAAAAAAABAN3/6QAA
+AB8AAAAAAAAAAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAPz/OgAAAAAAAQAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAEAAAAAAAAAAAAAAAAAAAC+/y4AAAABAJEAnwEAAAcAAAAAAAAAUmVzdG9yZQAQAAoA
+BAAAAAoA+wAMAQMA
+</rawitemdata></item>
+<item name='$Flags'><text>Yl</text></item></note>
+

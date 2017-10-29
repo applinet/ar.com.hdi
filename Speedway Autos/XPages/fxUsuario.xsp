@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:xe="http://www.ibm.com/xsp/coreex" onClientLoad="checkLogin() ">
+	<xp:this.resources>
+		<xp:script src="/JS.control.FE.v01.js" clientSide="true"></xp:script>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+		<xp:script src="/ControlAcceso.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	<xc:oneuiLayout>
+		<xp:this.facets>
+			<xp:panel xp:key="facet_2">
+			<xc:ccRolDesarrollo_Data></xc:ccRolDesarrollo_Data>
+				<p>
+					<xp:panel>
+					<xp:table style="width:100.0%">
+						<xp:tr>
+							<xp:td style="width:40%">
+								<div class="lotusMessage lotusError">
+									<xp:span style="font-weight:bold;font-size:12pt;color:rgb(255,0,0)"></xp:span>
+									<xp:label id="label1" style="color:rgb(0,128,0);font-size:14pt;font-weight:bold">
+										<xp:this.value><![CDATA[#{javascript:function convertAccessLevel() {
+switch (database.getCurrentAccessLevel()) {
+case NotesACL.LEVEL_DEPOSITOR : return "depositor";
+case NotesACL.LEVEL_READER : return "reader";
+case NotesACL.LEVEL_AUTHOR : return "author";
+case NotesACL.LEVEL_EDITOR : return "editor";
+case NotesACL.LEVEL_DESIGNER : return "designer";
+case NotesACL.LEVEL_MANAGER : return "manager";
+}
+}
+var currAcc:String = convertAccessLevel();
+if(currAcc == "reader") return "Actualmente se encuenta como usuario de consultas.";
+return "Bienvenido " + session.createName(session.getEffectiveUserName()).getCommon();}]]></xp:this.value>
+									</xp:label>
+									<xp:br></xp:br>
+									<xp:span style="font-weight:bold;font-size:12pt;color:rgb(255,0,0)">
+										Grupos a los que pertenece este usuario:
+									</xp:span>
+									<xp:inputTextarea id="inputTextarea1">
+										<xp:this.value><![CDATA[#{javascript:var groups = context.getUser().getGroups().toArray();
+
+if(groups.length > 0) {
+	for(var i=0; i<groups.length; i++) {
+		var groupsOut = groupsOut + "\n " + groups[i];
+	}
+	return groupsOut
+	
+} else {
+	return "No pertenece a ningún grupo"
+}
+
+}]]></xp:this.value>
+									</xp:inputTextarea>
+									<xp:br></xp:br>
+								</div>
+							</xp:td>
+							<xp:td style="width:15.0px"></xp:td>
+							<xp:td style="width:40.0%">
+								<div class="lotusMessage lotusError">
+									<xp:span style="font-weight:bold;font-size:12pt;color:rgb(255,0,0)"></xp:span>
+									<xc:ccSistemasDocLock></xc:ccSistemasDocLock>
+								</div>
+							</xp:td>
+							<xp:td></xp:td>
+						</xp:tr>
+					</xp:table>
+					</xp:panel>
+					<xp:button id="buttonFTI" rendered="false">
+						<xp:this.value><![CDATA[#{javascript:var title = database.getTitle();
+if (database.isFTIndexed()) {
+var dt:NotesDateTime = database.getLastFTIndexed();
+devolver = "Database \"" + title + "\" last full-text indexed on " + dt.getDateOnly();
+} else {
+devolver = "Database \"" + title + "\" is not full-text indexed"
+}
+
+
+if(requestScope.dbFTstatus == null){"Full Text Test"}else{devolver + " - " + requestScope.dbFTstatus}}]]></xp:this.value>
+						<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="buttonFTI">
+							<xp:this.action><![CDATA[#{javascript:if (database.isFTIndexed()) {
+if (database.getFTIndexFrequency() == NotesDatabase.FTINDEX_DAILY) {
+database.setFTIndexFrequency(NotesDatabase.FTINDEX_HOURLY);
+requestScope.dbFTstatus = "Index frequency set to hourly";
+} else if (database.getFTIndexFrequency() == NotesDatabase.FTINDEX_HOURLY) {
+database.setFTIndexFrequency(NotesDatabase.FTINDEX_IMMEDIATE);
+requestScope.dbFTstatus = "Index frequency set to immediate";
+} else if (database.getFTIndexFrequency() == NotesDatabase.FTINDEX_IMMEDIATE) {
+database.setFTIndexFrequency(NotesDatabase.FTINDEX_SCHEDULED);
+requestScope.dbFTstatus = "Index frequency set to scheduled";
+} else {
+database.setFTIndexFrequency(NotesDatabase.FTINDEX_DAILY);
+requestScope.dbFTstatus = "Index frequency set to daily";
+}
+} else {
+requestScope.dbFTstatus = "Database not full-text indexed";
+}}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					&#160;
+					
+					<xc:ccLoginDialog></xc:ccLoginDialog>
+					</p>
+			</xp:panel>
+		</xp:this.facets>
+	</xc:oneuiLayout>
+</xp:view>

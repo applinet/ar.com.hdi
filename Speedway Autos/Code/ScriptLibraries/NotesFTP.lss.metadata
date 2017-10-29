@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><note class="filter" maintenanceversion="1.0" replicaid="03257E5A006E447C" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="dc6" sequence="17" unid="027834B183E56A0B03257D7A005ED1F1">
+<created><datetime>20141023T141541,29-03</datetime></created>
+<modified><datetime>20170829T080845,97-03</datetime></modified>
+<revised><datetime>20170829T080845,96-03</datetime></revised>
+<lastaccessed><datetime>20170829T080845,96-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170442,95-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name="$TITLE" sign="true"><text>NotesFTP</text></item>
+<item name="$Flags"><text>s34Q</text></item>
+<item name="$PublicAccess" sign="true"><text>1</text></item>
+
+
+<item name="$POID"><datetime>20170112T110836,03-03</datetime></item></note>

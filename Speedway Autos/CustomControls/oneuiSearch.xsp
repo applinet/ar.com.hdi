@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xc:oneuiSearchComputed id="ccCompute">
+		<xp:this.facets>
+			<xc:oneuiSearchVLK xp:key="oneuiSearchVLK"></xc:oneuiSearchVLK>
+			<xc:oneuiSearchIdx xp:key="oneuiSearchIdx"></xc:oneuiSearchIdx>
+		</xp:this.facets>
+	</xc:oneuiSearchComputed>
+</xp:view>

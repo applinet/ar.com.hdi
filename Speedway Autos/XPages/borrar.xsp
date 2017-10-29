@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:debug="http://www.openntf.org/xsp/debugtoolbar">
+	<debug:toolbar defaultCollapsed="false" collapseTo="left"></debug:toolbar>
+	Choose a model of car (try 'e' or 'm'):
+	<xp:br></xp:br>
+	<xp:inputText id="inputText1">
+		<xp:typeAhead var="startValue" valueMarkup="true">
+			<xp:this.valueList>
+				<![CDATA[#{javascript: 
+	 var cars = [ "Escape", "Explorer", "Focus" , "Mustang" , 
+	 "Thunderbird" , "Accord" , "Civic" , "Ridgeline" , 
+	 "Mazda 3" , "Mazda 6" , "RX-8" , 
+	 "Thomas The Tank Engine" ]; 
+	 var prices = [ "30", "55", "35" , "45" , 
+	 "20" , "20" , "35" , "50" , 
+	 "65" , "55" , "25" , "160" ]; 
+	 var result = "<ul>"; 
+	 for (i=0; i<12; i++) { 
+	 if( cars[i].toLowerCase().startsWith(startValue) ){ 
+	 result += '<li><span class="informal">Model: </span>' 
+	 + cars[i] 
+	 + '<span class="informal"><p style="color:green">'
+	 +'price: ' 
+	 + prices[i] 
+	 + '</p></span></li>'; 
+	 } 
+	 } 
+	 return result + "</ul>"; 
+	 }]]>
+			</xp:this.valueList>
+		</xp:typeAhead>
+	</xp:inputText>
+	<xp:br></xp:br>
+	<xp:br></xp:br>
+	<xc:ccNavPorConfigEstado propertyView="v.Sys.vLK_TodosEstadosOrdenados" propertyFormName="RastreadorLJ"></xc:ccNavPorConfigEstado>
+	<xp:panel id="PNL_PropuestasEnProceso"></xp:panel>
+</xp:view>

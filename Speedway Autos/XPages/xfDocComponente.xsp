@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xp:this.resources>
+		<xp:dojoModule name="dijit.Dialog"></xp:dojoModule>
+	</xp:this.resources>
+	<xc:oneuiLayout>
+		<xp:this.facets>
+			<xp:span xp:key="facet_2">
+				<xc:ccFrm_Componente></xc:ccFrm_Componente>
+				<xc:ccDialogNuevoComponente></xc:ccDialogNuevoComponente>
+			</xp:span>
+		</xp:this.facets>
+	</xc:oneuiLayout>
+	<xp:this.navigationRules>
+		<xp:navigationRule outcome="xsp-success" viewId="/xvUI_Por_Estado.xsp"></xp:navigationRule>
+	</xp:this.navigationRules>
+</xp:view>

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom">
+
+	<xp:this.data>
+		<xp:dominoView var="vIns" viewName="v.UI.Ins.SinFact">
+			<xp:this.keys><![CDATA[#{javascript:var strFiltroInspector:String = viewScope.get("filtroInspector");
+if (strFiltroInspector == null) return ("");
+if (strFiltroInspector.equals ("##Todos##")) return ("");
+
+return (strFiltroInspector);}]]></xp:this.keys>
+		</xp:dominoView>
+	</xp:this.data>
+
+	<xp:this.resources>
+		<xp:styleSheet href="/views.css"></xp:styleSheet>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+
+		<xp:script src="/JSS.InsFacturacion.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+
+
+	<xp:this.beforePageLoad><![CDATA[#{javascript:sessionScope.put("viewInsSelection", null);}]]></xp:this.beforePageLoad>
+	<xp:panel style="margin-bottom:20.0px">
+		Filtrar por Inspector&#160;
+		<xp:comboBox id="filtroInspector" defaultValue="##Todos##">
+
+			<xp:selectItem itemLabel="Todos" itemValue="##Todos##"></xp:selectItem>
+			<xp:selectItems>
+				<xp:this.value><![CDATA[#{javascript:var vIns:NotesView = getDbInspecciones ().getView ("v.UI.Ins.SinFact");
+var docIns:NotesDocument = vIns.getFirstDocument();
+var strInspector:String;
+var vecAllIns:Vector = new java.util.Vector();
+
+while (docIns != null) {
+	strInspector = docIns.getItemValueString("ins_Inspect_opt");
+		
+	if (vecAllIns.indexOf (strInspector) == -1) {
+		vecAllIns.add (strInspector);
+	}
+	
+	docIns = vIns.getNextDocument(docIns);
+}
+return (vecAllIns)}]]></xp:this.value>
+			</xp:selectItems>
+			<xp:eventHandler event="onchange" submit="true"
+				refreshMode="complete">
+				<xp:this.action><![CDATA[#{javascript:viewScope.put("filtroInspector", getComponent("filtroInspector").getValue());
+sessionScope.put("viewInsSelection", null);}]]></xp:this.action>
+			</xp:eventHandler>
+		</xp:comboBox>
+	</xp:panel>
+	<xp:panel>
+		<xp:pager layout="Previous Group Next" partialRefresh="true"
+			id="pager1" for="repeat1">
+		</xp:pager>
+		<xp:panel styleClass="PanelBox" id="PNL_Listing">
+			<xp:br></xp:br>
+			<xp:panel id="panelFacturar">
+				<xp:button value="Facturar" id="buttonFacturar">
+					<xp:this.rendered><![CDATA[#{javascript:if (sePuedeFacturar ()) return (true);
+else return (false);}]]></xp:this.rendered>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+					<xp:this.action>
+						<xp:openPage name="/xfDocInsFactura.xsp"
+							target="newDocument">
+						</xp:openPage>
+					</xp:this.action></xp:eventHandler></xp:button>
+				<xp:br></xp:br>
+				<xp:label value="Para HABILITAR la facturación, primero FILTRE un Inspector y SELECCIONE al menos una Inspecciones" id="labelButtonFacturar" style="font-family:Verdana,sans-serif;color:rgb(255,0,0);font-weight:bold;font-size:12pt"><xp:this.rendered><![CDATA[#{javascript:if (sePuedeFacturar ()) return (false);
+else return (true);}]]></xp:this.rendered></xp:label></xp:panel>
+			
+			<xp:br></xp:br>
+			<xp:table cellpadding="5" cellspacing="0" border="0">
+				<xp:tr styleClass="ViewTitle">
+
+					<xp:td>*</xp:td>
+					<xp:td>Inspector</xp:td>
+					<xp:td>Número</xp:td>
+					<xp:td>Asegurado</xp:td>
+					<xp:td>Patente</xp:td>
+					<xp:td>Valor</xp:td>
+					<xp:td>Productor</xp:td>
+				</xp:tr>
+
+
+				<xp:repeat id="repeat1" rows="30" value="#{vIns}"
+					var="repeatColInspec" indexVar="repeatIndexInspec">
+					<xp:tr id="rowInspeccion" styleClass="ViewRow">
+
+						<xp:td style="cursor:arrow;">
+							<xp:checkBox id="checkBoxIns"
+								checkedValue="#{javascript:repeatColInspec.getUniversalID()}">
+								<xp:this.uncheckedValue><![CDATA[#{javascript://Tengo que agregar UNCHECKED para que no aparesca todo seleccionado por defecto.
+"UNCHECKED" + repeatColInspec.getUniversalID()}]]></xp:this.uncheckedValue>
+								
+								<xp:this.disabled><![CDATA[#{javascript:if (seFiltroPorInspector ()) return false;
+return true;}]]></xp:this.disabled><xp:eventHandler event="onclick"
+									submit="true" refreshMode="partial" refreshId="panelFacturar">
+									<xp:this.action><![CDATA[#{javascript:var vecSelected:java.util.Vector = sessionScope.get("viewInsSelection");
+if (vecSelected == null) vecSelected = new java.util.Vector ();
+
+var checkBox1:com.ibm.xsp.component.xp.XspInputCheckbox = getComponent("checkBoxIns");
+var strUnid:String = checkBox1.getValueAsString();
+if (checkBox1.isChecked()) {
+	vecSelected.addElement (strUnid);
+}
+else {
+	//Tengo que sacar los primeros 9 caràcteres porque está la palabra UNCHECKED
+	vecSelected.removeElement (strUnid.substring(9));
+}
+sessionScope.put("viewInsSelection", vecSelected);}]]></xp:this.action>
+								</xp:eventHandler></xp:checkBox>
+						</xp:td>
+
+						<xp:td id="td1">
+							<xp:text escape="true"
+								id="computedField2">
+								<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_Inspect_opt");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+							</xp:text>
+							<xp:eventHandler event="onclick"
+								submit="true" refreshMode="complete">
+								<xp:this.action>
+									<xp:openPage
+										name="/xfDocInspeccion.xsp" target="openDocument"
+										documentId="#{javascript:repeatColInspec.getUniversalID();}">
+									</xp:openPage>
+								</xp:this.action>
+							</xp:eventHandler>
+						</xp:td>
+						<xp:td align="center" id="td2">
+							<xp:text escape="true"
+								id="computedField1">
+								<xp:this.converter>
+									<xp:convertNumber type="number"></xp:convertNumber>
+								</xp:this.converter>
+								<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_Consecutivo_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+							</xp:text>
+							<xp:eventHandler event="onclick"
+								submit="true" refreshMode="complete">
+								<xp:this.action>
+									<xp:openPage
+										name="/xfDocInspeccion.xsp" target="openDocument"
+										documentId="#{javascript:repeatColInspec.getUniversalID()}">
+									</xp:openPage>
+								</xp:this.action>
+							</xp:eventHandler>
+						</xp:td>
+						<xp:td id="td3">
+							<xp:text escape="true"
+								id="computedField3">
+								<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_Aseg_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+							</xp:text>
+							<xp:eventHandler event="onclick"
+								submit="true" refreshMode="complete">
+								<xp:this.action>
+									<xp:openPage
+										name="/xfDocInspeccion.xsp" target="openDocument"
+										documentId="#{javascript:repeatColInspec.getUniversalID()}">
+									</xp:openPage>
+								</xp:this.action>
+							</xp:eventHandler>
+						</xp:td>
+						<xp:td id="td4">
+							<xp:text escape="true"
+								id="computedField4">
+								<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_VehPatNro_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+							</xp:text>
+							<xp:eventHandler event="onclick"
+								submit="true" refreshMode="complete">
+								<xp:this.action>
+									<xp:openPage
+										name="/xfDocInspeccion.xsp" target="openDocument"
+										documentId="#{javascript:repeatColInspec.getUniversalID()}">
+									</xp:openPage>
+								</xp:this.action>
+							</xp:eventHandler>
+						</xp:td>
+						<xp:td id="td5">
+							<xp:text escape="true"
+								id="computedField5">
+								<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_iValor_nro").toString();
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+							</xp:text>
+							<xp:eventHandler event="onclick"
+								submit="true" refreshMode="complete">
+								<xp:this.action>
+									<xp:openPage
+										name="/xfDocInspeccion.xsp" target="openDocument"
+										documentId="#{javascript:repeatColInspec.getUniversalID()}">
+									</xp:openPage>
+								</xp:this.action>
+							</xp:eventHandler>
+						</xp:td>
+						<xp:td id="td6">
+							<xp:text escape="true"
+								id="computedField6">
+								<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_Prod_des");								
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+							</xp:text>
+							<xp:eventHandler event="onclick"
+								submit="true" refreshMode="complete">
+								<xp:this.action>
+									<xp:openPage
+										name="/xfDocInspeccion.xsp" target="openDocument"
+										documentId="#{javascript:repeatColInspec.getUniversalID()}">
+									</xp:openPage>
+								</xp:this.action>
+							</xp:eventHandler>
+						</xp:td>
+					</xp:tr>
+				</xp:repeat>
+			</xp:table>
+		</xp:panel>
+	</xp:panel>
+
+	<xp:br></xp:br>
+
+
+	
+	</xp:view>

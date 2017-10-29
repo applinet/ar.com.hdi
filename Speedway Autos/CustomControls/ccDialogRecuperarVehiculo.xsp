@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xf="http://www.ibm.com/xsp/xflow"
+	xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xe="http://www.ibm.com/xsp/coreex">
+	<xp:this.data>
+		<xp:dominoDocument var="documentPropuesta"></xp:dominoDocument>
+	</xp:this.data>
+	
+	<xe:dialog id="recuperarVehDialog"
+		title="Ingrese los datos de la póliza">
+		<xe:dialogContent id="dialogContent2" style="width:400px">
+			<xp:div id="divErrMsgRecuperar">
+				<xp:messages id="messagesCollectRecuperar" style="color:red">
+				</xp:messages>
+				</xp:div>
+			<table width="100%">
+				<tr>
+					<td style="vertical-align:top;color:red;" colspan="4">Con esta acción se eliminarán todos los vehículos asociados actualmente.</td>
+				</tr>
+				<tr>
+					<td style="vertical-align:top;">Artículo:</td>
+					<td>
+						<xp:comboBox id="dialogArticulo"
+							defaultValue="1203"
+							value="#{viewScope.dialogArticulo}">
+							<xp:selectItems id="selectItems_dialogArticulo">
+								<xp:this.value><![CDATA[#{javascript:importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+jce.getSelectAS("solTB_SET621");}]]>
+								</xp:this.value>
+							</xp:selectItems>
+							<xp:eventHandler event="onchange"
+								submit="true" refreshMode="partial"
+								id="eventHandler1" refreshId="dialogRama" disableValidators="true">
+							</xp:eventHandler>
+						</xp:comboBox>
+						<xp:comboBox value="#{viewScope.dialogRama}" id="dialogRama" style="display:none;color:rgb(79,79,79)">
+
+							<xp:selectItems id="selectItems2">
+								<xp:this.value><![CDATA[#{javascript:importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+var doc:NotesDocument = database.createDocument();
+doc.appendItemValue("sol_articulo_cod", getComponent("dialogArticulo").getValue());
+var result = jce.getSelectAS("solTB_SET621_rama", doc);
+doc.recycle();
+return result;}]]></xp:this.value>
+							</xp:selectItems>
+						</xp:comboBox>
+					</td>
+					<td style="vertical-align:top; width:9em">
+						Número de póliza:
+					</td>
+					<td>
+						<xp:inputText id="dialogNroPoliza"
+							value="#{viewScope.dialogNroPoliza}">
+						</xp:inputText>
+					</td>
+				</tr>
+			</table>
+		</xe:dialogContent>
+		<xe:dialogButtonBar id="dialogButtonBar3">
+			<xp:button id="buttonRecuperarVehAceptar" value="Aceptar"
+				type="submit" styleClass="lotusFormButton">
+				<xp:eventHandler event="onclick" submit="true"
+					refreshMode="complete">
+					<xp:this.action>
+						<xp:actionGroup>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+							<xp:executeScript>
+								<xp:this.script><![CDATA[#{javascript:var msg=new javax.faces.application.FacesMessage();
+if (viewScope.get("dialogNroPoliza") == "") {
+	facesContext.addMessage("Error", msg("El número de póliza es requerido." ));
+	return false;
+}
+
+importPackage(ar.com.hdi.autos.webservice);
+var docTemp:NotesDocument = viewScope.get("docxProp").getDocument();
+docTemp.replaceItemValue("sol_rama_cod", viewScope.get("dialogRama"));
+docTemp.replaceItemValue("sol_poliza_nro", viewScope.get("dialogNroPoliza"));
+// Tipo de movimiento "2" hace que se tome la suma asegurada actualizada
+docTemp.replaceItemValue("sol_tipoMovimiento_cod", "2");
+
+// Busca las tarifas actualizadas. Si la tarifa default está vacía, 
+// se carga "0" para que wsvehpol use la tarifa que viene de GAUS con los datos del vehículo
+var strTarifasArray = getTarifasWs();
+if(typeof(strTarifasArray) == "object") {
+	if (strTarifasArray[0] == "") {
+		docTemp.replaceItemValue("tarifa", "0");
+	} else {
+		docTemp.replaceItemValue("tarifa", strTarifasArray[0]);
+	}
+} else {
+	docTemp.replaceItemValue("tarifa", "0");
+}
+
+if (isWsActive("wsComponentesEnPoliza")) {
+	var strUrlCompleta:String = getFieldValueFromConfig("wsComponentesEnPoliza", "odbc_select_des");
+	strUrlCompleta = session.evaluate(strUrlCompleta, docTemp)[0];
+	//http://SOFTDESA:8050/wsrest/wsvehpol/A/CA/3/101600/2/0
+
+	var parsedxml:org.w3c.dom.Document = null;
+	var domfactory:javax.xml.parsers.DocumentBuilderFactory=javax.xml.parsers.DocumentBuilderFactory.newInstance(); 
+	var xmldocument:javax.xml.parsers.DocumentBuilder= domfactory.newDocumentBuilder();
+	var url:java.net.URL = new java.net.URL(strUrlCompleta + "/" + @Unique()); //Le agrego el @Unique para evitar cacheo.
+	var conn:java.net.URLConnection = url.openConnection();
+	
+	var uConn:java.net.HttpURLConnection = conn;
+	var is:org.xml.sax.InputSource = new org.xml.sax.InputSource(uConn.getInputStream());
+	is.setEncoding("ISO-8859-1");
+	var parsedxml= xmldocument.parse(is);
+	
+	if (getFieldValueFromConfig("wsComponentesEnPoliza", "odbc_MsgConsole_des") == "1") {
+		print("wsvehpol=" + strUrlCompleta);		
+	} else if	(getFieldValueFromConfig("wsComponentesEnPoliza", "odbc_MsgConsole_des") == "2") {
+		AgentLogAutos("wsvehpol",0,strUrlCompleta)
+	}
+	
+	var strErrMsg:String = isWsWithErrors(parsedxml);
+	if(!strErrMsg.equals ("")){
+		facesContext.addMessage("Error",msg("No se pudieron recuperar vehículos." ));
+		return false;
+	} else {
+		var wsvehpol:WsVehPol = new WsVehPol();
+		//Elimina los vehiculos actuales"
+		eliminarVehiculosEnPropuesta(docTemp.getUniversalID())
+		//Recupera los vehiculos de la poliza ingresada"
+		wsvehpol.comenzar("wsComponentesEnPoliza", docTemp);
+		
+		viewScope.put("dialogNroPoliza", "");
+		docTemp.recycle();
+	}
+	getComponent('recuperarVehDialog').hide();
+} else {
+	facesContext.addMessage("Error",msg("No se pudieron recuperar vehículos." ));
+	return false;
+}}]]></xp:this.script>
+							</xp:executeScript>
+						</xp:actionGroup>
+					</xp:this.action>
+					<xp:this.onComplete>
+						<![CDATA[XSP.partialRefreshGet("#{id:TBL_Componentes}");]]>
+					</xp:this.onComplete>
+					<xp:this.script><![CDATA[XSP._setDirty(false,"");]]></xp:this.script>
+				</xp:eventHandler>
+
+			</xp:button>
+			<xp:button value="Cancelar" id="buttonRecuperarVehCancelar"
+				styleClass="lotusFormButton">
+				<xp:eventHandler event="onclick" submit="false">
+					<xp:this.script><![CDATA[XSP.closeDialog('#{id:recuperarVehDialog}')]]></xp:this.script>
+				</xp:eventHandler>
+			</xp:button>
+			
+		</xe:dialogButtonBar>
+
+	</xe:dialog>
+	</xp:view>

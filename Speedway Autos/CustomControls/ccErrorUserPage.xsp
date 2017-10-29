@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.ibm.com/xsp/core xsdxp://localhost/xsp~core.xsd" pageTitle="${javascript:database.getTitle() + ' | Error'}"
+	xmlns:debug="http://www.openntf.org/xsp/debugtoolbar">
+	<debug:toolbar defaultCollapsed="false" collapseTo="left"></debug:toolbar>
+	<xp:div>
+		<xp:br></xp:br>
+		<xp:br></xp:br>
+		<style type="text/css">
+			#box { position: relative; width: 350px; background: #ddd; -moz-border-radius: 5px; border-radius: 5px; padding: 2em 1.5em; margin: 60px
+			auto; } #box:before, #box:after { z-index: -1; position: absolute; content: ""; bottom: 15px; left: 10px; width: 50%; top: 80%;
+			max-width:350px; background: rgba(0, 0, 0, 0.7); -webkit-box-shadow: 0 15px 10px rgba(0,0,0, 0.7); -moz-box-shadow: 0 15px 10px rgba(0, 0,
+			0, 0.7); box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7); -webkit-transform: rotate(-3deg); -moz-transform: rotate(-3deg); -o-transform:
+			rotate(-3deg); -ms-transform: rotate(-3deg); transform: rotate(-3deg); } #box:after { -webkit-transform: rotate(3deg); -moz-transform:
+			rotate(3deg); -o-transform: rotate(3deg); -ms-transform: rotate(3deg); transform: rotate(3deg); right: 10px; left: auto; }
+		</style>
+		<div id="box">
+			<h2>Oops... supuestamente esto no debería haber sucedido</h2>
+			<div style="margin-top:15px">
+				Por favor comunique a sistemas el código&#160;de este error:
+				<xp:br></xp:br>
+				<xp:br></xp:br>
+				<strong>Muchas Gracias!</strong>
+			</div>
+			<div style="margin-top:15px"></div>
+		</div>
+		<xp:br></xp:br>
+		<xp:panel id="displayErrors">
+    <xp:this.rendered>
+        <![CDATA[#{javascript:if (requestScope.containsKey("error")) {
+        return true;
+        } else {
+        return false;
+        }}]]>
+    </xp:this.rendered>
+    <p>
+        <b>Description of error:</b>
+        <xp:br></xp:br>
+        <xp:text escape="true" id="displayError" value="#{requestScope.error}"></xp:text>
+    </p>
+</xp:panel>
+		<xp:br></xp:br>un0
+		<xp:text escape="true" id="computedField1">
+			<xp:this.value>
+        <![CDATA[#{javascript:
+          var output = requestScope.error.toString()+"\n\n";
+          if(requestScope.error instanceof com.ibm.xsp.exception.XSPExceptionInfo){
+            var codeSnippet = requestScope.error.getErrorText(); 
+            var control = requestScope.error.getErrorComponentId();
+            var cause = requestScope.error.getCause();
+            output += "In the control : " + control + "\n\n";
+            if(cause instanceof com.ibm.jscript.InterpretException){
+              var errorLine = cause.getErrorLine();
+              var errorColumn = cause.getErrorCol();
+              output += "At line " + errorLine;
+              output += ", column " + errorColumn + " of:\n";
+            }else{
+              output += "In the script:\n";
+            }
+            output += codeSnippet;
+          }
+          return output;
+        }]]>
+      </xp:this.value>
+		</xp:text>
+		<xp:br></xp:br>
+		<xp:br></xp:br>dos
+		<xp:text escape="false" id="computedField" style="font-size:10pt">
+			<xp:this.value>
+        <![CDATA[#{javascript:var stackTrace = "";
+          var trace = requestScope.error.getStackTrace();
+          for(var i = 0; i < trace.length; i++){
+            stackTrace += trace[i] + "<br/>";
+          }
+          return stackTrace;
+        }]]>
+      </xp:this.value>
+		</xp:text>
+	</xp:div>
+</xp:view>

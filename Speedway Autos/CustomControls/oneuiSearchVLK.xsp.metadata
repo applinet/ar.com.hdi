@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="03257E5A006E447C" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="332" sequence="207" unid="A3D34F0552AF532A03257CF6003AFE72">
+<created><datetime>20140613T074422,26-03</datetime></created>
+<modified><datetime>20170829T080808,55-03</datetime></modified>
+<revised><datetime>20170829T080808,54-03</datetime></revised>
+<lastaccessed><datetime>20170829T080808,54-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170428,95-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name="$Flags"><text>gC~4;</text></item>
+<item name="$TITLE" sign="true"><text>oneuiSearchVLK.xsp</text></item>
+
+
+
+
+<item name="$FileNames" sign="true"><text>oneuiSearchVLK.xsp</text></item>
+
+
+
+<item name="$DesignerVersion" sign="true"><text>8.5.2</text></item>
+
+</note>

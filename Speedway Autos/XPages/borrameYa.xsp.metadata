@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="03257E5A006E447C" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="8e7c2" sequence="13" unid="80B1FC758EC04762032581540071059D">
+<created><datetime>20170705T173430,05-03</datetime></created>
+<modified><datetime>20170829T080909,05-03</datetime></modified>
+<revised><datetime>20170829T080909,04-03</datetime></revised>
+<lastaccessed><datetime>20170829T080909,04-03</datetime></lastaccessed>
+<addedtofile><datetime>20170705T173430,06-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name="$Flags"><text>gC~4KP</text></item>
+<item name="$TITLE"><text>borrameYa.xsp</text></item>
+
+
+
+<item name="$FileNames" sign="true"><text>borrameYa.xsp</text></item>
+<item name="$DesignerVersion"><text>8.5</text></item>
+
+
+
+</note>

@@ -1,0 +1,16 @@
+<theme extends="webstandard" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="platform:/plugin/com.ibm.designer.domino.stylekits/schema/stylekit.xsd" >
+	
+	<resource dojoTheme="true">
+		<content-type>text/css</content-type>
+		<href>/.ibmxspres/dojoroot/dijit/themes/claro/claro.css</href>
+	</resource>
+
+	<control>
+		<name>ViewRoot</name>
+		<property method="override">
+			<name>styleClass</name>
+			<value>xspView claro</value>
+		</property>
+	</control>
+	
+</theme>

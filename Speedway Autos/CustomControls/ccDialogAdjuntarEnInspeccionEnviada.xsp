@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" dojoParseOnLoad="true" dojoTheme="true" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:xp_1="http://www.ibm.com/xsp/coreex"
+	xmlns:debug="http://www.openntf.org/xsp/debugtoolbar">
+	<xp:this.data>
+		<xp:dominoView var="viewInspeccionesPorEstado" viewName="v.UI.Ins.Estado" keys="20"></xp:dominoView>
+		<xp:dominoDocument var="documentMail" formName="Mail"></xp:dominoDocument>
+	</xp:this.data>
+	<xp:this.resources>
+		<xp:script src="/JSS.MailingFunctions.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	<div id="myDialogAdjuntarEnInspeccion" dojoType="dijit.Dialog" style="display:none" title="Asociar mail a inspección... ">
+		<xp:panel id="PanelName">
+			<xp:br></xp:br>
+			<xp:table>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="La inspección seleccionada," id="label2" style="font-weight:bold"></xp:label>
+						<xp:br></xp:br>
+						<xp:label value="cambiará a Estado 'Inspeccionada':  " id="label1" style="font-weight:bold"></xp:label>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						&#160;&#160;<xp:inputText id="inputText1" style="width:133.0px" showReadonlyAsDisabled="true" disabled="true">
+							<xp:this.value><![CDATA[#{javascript:var temp = viewScope.get("AdjuntarInspeccionNro");
+if (temp == null || temp.equals ("")) {
+temp = "";
+}else{
+@Word(temp, "|", 1);
+};
+}]]></xp:this.value>
+							<xp:eventHandler event="onchange" submit="true" refreshMode="partial" refreshId="button1" id="eventHandler1">
+							</xp:eventHandler>
+						</xp:inputText>
+						<xc:viewpicklist rowsPerPage="5" searchBar="false" searchButtonText="Buscar" datasrc="viewInspeccionesPorEstado" dialogID="dialog1"
+							dialogWidth="700px" dialogTitle="Seleccione una inspección" typeAheadBar="false" select="Column" onReturn="Set Scope Value" selectField="appid"
+							fieldName="inputText1" tableClass="tablecellgreen" searchVar="viewScope.SearchThis" typeAheadVar="sessionScope.typethis" rowClass="odd, even"
+							headerClass="headerclass" searchButtonClass="button2" buttonImage="./add.png" pagerStyleFirst="navbutton1" pagerStyleCurrent="navbutton4"
+							pagerStyleLast="navbutton3" pagerStyleNext="navbutton2" pagerStylePrevious="navbutton2" searchBarClass="headerclass" bottomBarClass="bottomround headerclass"
+							cancelButtonClass="button2 floatthisright" cancelButtonText="Cancel" type="Single Value" finishButtonText="Finish" finishButtonClass="button2 floatthisright"
+							picklistButtonClass="button2" picklistButtonText="Pick the Field Value" refreshID="inputText1" multiSelectButtonAddText="add"
+							multiSelectButtonRemoveText="remove" selectWith="Link" openDialogWith="Link" linkImg="./add.png" picklistLinkImg="./add.png" clearSearchImg="./cross.png"
+							SelectCellWidth="25" cancelButtonImg="/AG_delete_button24x24.png" varName="viewScope.AdjuntarInspeccionNro" selectColumn="10">
+							<xc:this.viewColumn>
+								<xp:value>1</xp:value>
+								<xp:value>3</xp:value>
+								<xp:value>9</xp:value>
+								<xp:value>5</xp:value>
+							</xc:this.viewColumn>
+						</xc:viewpicklist>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td></xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:br></xp:br>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:button value="Adjuntar..." id="button1" style="text-align:center" icon="/sol_add24x24.png">
+							<xp:eventHandler event="onclick"
+								submit="true" refreshMode="complete">
+								<xp:this.action><![CDATA[#{javascript:var vs:String = viewScope.get("AdjuntarInspeccionNro");
+if (vs == null || vs.equals ("")) {
+var x="alert('SE HA CANCELADO EL PROCESO.\\n\\nDebe asociar un número de propuesta.\\n\\nPor favor ingrese el número de propuesta para continuar.');";
+view.postScript(x);
+}else{
+	//Actualizo campos de la Inspección
+	var unidInsp:String = @Word(vs, "|", 2);
+	var dbInsp:NotesDatabase = getDbInspecciones();
+	var docInsp:NotesDocument = dbInsp.getDocumentByUNID(unidInsp);
+	docInsp.replaceItemValue("ins_iEst_cod", "30");
+	docInsp.replaceItemValue("ins_iEst_des", "Inspeccionada");
+	var dt:NotesDateTime = session.createDateTime("Today 12");
+	dt.setNow();
+	docInsp.replaceItemValue("ins_iFechaInspeccionada_dat", dt);
+	var itemLog:NotesItem = docInsp.getFirstItem("ins_Log_des");
+	setLog (itemLog, "Mail adjuntado manualmente como Respuesta a una Inspección - Estado: Inspeccionada");
+	docInsp.save();
+	
+	//Actualizo campos del mail
+	documentMail.replaceItemValue("MyMailCode", session.evaluate("@Unique"));
+	documentMail.replaceItemValue("MyMailCat", docInsp.getItemValueString("ins_Componente_cod"));
+	documentMail.replaceItemValue("MyMailAction", "Mail adjuntado manualmente como Respuesta a una Inspección");
+	documentMail.replaceItemValue("Form", "MemoLinked");
+	linkMailWithDoc (documentMail, docInsp.getItemValueString("ins_Componente_cod"), true, false, true);
+	if(docInsp != null){docInsp.recycle()};
+	if(dbInsp != null){dbInsp.recycle()};
+	context.redirectToPage("/xfDocInspeccion.xsp?action=openDocument&documentId=" + unidInsp);
+}	 }]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+						<xp:button value="Cancelar" id="button10" styleClass="lotusFormButton" icon="/AG_delete_button24x24.png">
+							<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+								<xp:this.script><![CDATA[XSP.closeDialog('#{id:myDialogAdjuntarEnPropuesta}')]]></xp:this.script>
+								<xp:this.action><![CDATA[#{javascript:viewScope.AdjuntarInspeccionNro = "";
+viewScope.SearchThis = "";}]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+					</xp:td>
+				</xp:tr>
+			</xp:table>
+			<xp:br></xp:br>
+			<xp:br />
+		</xp:panel>
+	</div>
+</xp:view>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!-- Utilizado con "hdi_oneUI_green" -->
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex" xmlns:debug="http://www.openntf.org/xsp/debugtoolbar"
+	xmlns:xc="http://www.ibm.com/xsp/custom">
+	
+	<xp:this.beforePageLoad><![CDATA[#{javascript:var dbNavegador:NotesDatabase = getDbByKey("Navegador - No cambiar");
+var strURL:String;
+
+if (dbNavegador != null) {
+	var nameServer:NotesName = session.createName(dbNavegador.getServer()).getCommon();
+	var strPath:String = dbNavegador.getFilePath();
+	strPath = strPath.replace("\\", "/");
+	applicationScope.put("urlNavegador","http://" + nameServer + "/" + strPath);
+	
+} else {
+	applicationScope.put("urlNavegador","");
+}}]]></xp:this.beforePageLoad>
+	
+	
+	<xp:callback facetName="facet_1" id="callback1"></xp:callback>
+	<xp:this.afterPageLoad><![CDATA[#{javascript:if(compositeData.placeBarActions){
+	var uiLayout = getComponent("applicationLayout1");
+	var uiConfig = uiLayout.getConfiguration();
+	for(var i=0; i<compositeData.placeBarActions.length; i++){
+		uiConfig.addPlaceBarAction(compositeData.placeBarActions[i]);
+	}
+}}]]></xp:this.afterPageLoad>
+	<xp:this.resources>
+		<xp:script src="/execOnServer.js" clientSide="true"></xp:script>
+		<xp:script src="/ControlAcceso.jss" clientSide="false"></xp:script>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	<xe:applicationLayout id="applicationLayout1">
+		<xe:this.facets>
+			<xp:callback facetName="facetRight" id="facetRight" xp:key="RightColumn"></xp:callback>
+		</xe:this.facets>
+		<xp:callback facetName="facet_2" id="callback2">
+		</xp:callback>
+		<xp:this.facets>
+			<xp:callback facetName="facet_3" id="callback3" xp:key="LeftColumn"></xp:callback>
+		</xp:this.facets>
+		<xe:this.configuration>
+			<xe:oneuiApplication legalLogo="/oneUI_LogoFooter" productLogoHeight="" productLogoWidth="" legalLogoHeight="" legalLogoWidth=""
+				legalText="© HDI Seguros S.A." legalLogoAlt="© HDI Seguros S.A." productLogo="/HDI_39x35.gif" footer="false" placeBar="false">
+				<xe:this.footerLinks>
+					<xe:basicContainerNode label="Container 1">
+						<xe:this.children>
+							<xe:pageTreeNode label="Autos" page="/xvUI_Por_Estado.xsp"></xe:pageTreeNode>
+						</xe:this.children>
+					</xe:basicContainerNode>
+					<xe:basicContainerNode label="Container 2">
+						<xe:this.children>
+							<xe:pageTreeNode label="Riesgos Varios" page="/OtroSpeedway.xsp"></xe:pageTreeNode>
+						</xe:this.children>
+					</xe:basicContainerNode>
+					<xe:basicContainerNode label="Container 3">
+						<xe:this.children>
+							<xe:pageTreeNode label="Vida" page="/OtroSpeedway.xsp"></xe:pageTreeNode>
+						</xe:this.children>
+					</xe:basicContainerNode>
+				</xe:this.footerLinks>
+				<xe:this.bannerApplicationLinks>
+					<xe:basicLeafNode label="Automoviles">
+						<xe:this.href><![CDATA[#{javascript:applicationScope.get("urlNavegador")}]]></xe:this.href>
+					</xe:basicLeafNode>
+					<xe:separatorTreeNode></xe:separatorTreeNode>
+					<xe:basicLeafNode label="Riesgos Varios"></xe:basicLeafNode>
+					<xe:separatorTreeNode></xe:separatorTreeNode>
+					<xe:basicLeafNode label="Vida"></xe:basicLeafNode>
+				</xe:this.bannerApplicationLinks>
+				<xe:this.bannerUtilityLinks>
+					<xe:basicLeafNode>
+						<xe:this.href><![CDATA[#{javascript:var uName:NotesName = session.createName(session.getEffectiveUserName())
+if(uName.getCommon() == "Anonymous") {
+	href = facesContext.getExternalContext().getRequest().getContextPath() + 
+	"?opendatabase&login=1"
+} else {
+//	href = facesContext.getExternalContext().getRequest().getContextPath() + 
+//	"?Logout&redirectTo=" + facesContext.getExternalContext().getRequest().getContextPath()
+	href = facesContext.getExternalContext().getRequest().getContextPath() + 
+	"?Logout&redirectTo=" + applicationScope.get("urlNavegador");
+}}]]></xe:this.href>
+						<xe:this.label><![CDATA[#{javascript:var uName:NotesName = session.createName(session.getEffectiveUserName())
+if(uName.getCommon() == "Anonymous"){
+return "Login"
+}else{
+return "Desconectar a " + uName.getCommon()}
+}]]></xe:this.label>
+					</xe:basicLeafNode>
+				</xe:this.bannerUtilityLinks>
+				<xe:this.titleBarTabs>
+					<xe:basicLeafNode label="Inicio">
+						<xe:this.loaded><![CDATA[${javascript:session.createName(session.getEffectiveUserName()).getCommon() == "Anonymous" ||
+!sessionScope.containsKey('lastView')}]]></xe:this.loaded>
+						<xe:this.href><![CDATA[#{javascript:applicationScope.get("urlNavegador") + "/Bienvenido.xsp";}]]></xe:this.href>
+					</xe:basicLeafNode>
+					<xe:basicLeafNode label="Mis Tareas">
+						<xe:this.loaded><![CDATA[${javascript:getIsGroupMember("spwAU.N3.TECN.USR_CRUD") || getIsGroupMember("spwAU.N3.EMIS.USR_CRUD") || getIsGroupMember("spwAU.N5.ADMI.USR_CRUD")
+}]]></xe:this.loaded>
+					</xe:basicLeafNode>
+					<xe:basicLeafNode label="Mostrador">
+						<xe:this.loaded><![CDATA[${javascript:getIsGroupMember("spwAU.N3.MOST.USR_CRUD") || getIsGroupMember("spwAU.N5.ADMI.USR_CRUD")
+}]]></xe:this.loaded>
+						<xe:this.href><![CDATA[#{javascript:applicationScope.get("urlNavegador") + "/xvUI_Mostrador.xsp";
+
+
+}]]></xe:this.href>
+						<xe:this.submitValue><![CDATA[#{javascript:sessionScope.clear("searchQry");
+}]]></xe:this.submitValue>
+					</xe:basicLeafNode>
+					<xe:basicLeafNode label="Automoviles">
+						<xe:this.loaded><![CDATA[${javascript:getIsGroupMember("spwAU.N3.TECN.USR_CRUD") || getIsGroupMember("spwAU.N3.EMIS.USR_CRUD") || getIsGroupMember("spwAU.N5.ADMI.USR_CRUD")}]]></xe:this.loaded>
+						<xe:this.href><![CDATA[#{javascript:applicationScope.get("urlNavegador") + "/xvUI_Por_Estado.xsp";}]]></xe:this.href>
+					</xe:basicLeafNode>
+					<xe:basicLeafNode label="Inspecciones">
+						<xe:this.loaded><![CDATA[${javascript:getIsGroupMember("spwAU.N3.INSP.USR_CRUD") || getIsGroupMember("spwAU.N5.ADMI.USR_CRUD")}]]></xe:this.loaded>
+						<xe:this.href><![CDATA[#{javascript:applicationScope.get("urlNavegador") + "/viewIns_Todas.xsp?OpenXPage";}]]></xe:this.href>
+					</xe:basicLeafNode>
+					<xe:basicLeafNode label="Rastreadores">
+						<xe:this.href><![CDATA[#{javascript:applicationScope.get("urlNavegador") + "/viewRastreador_Todas.xsp?OpenXPage";}]]></xe:this.href>
+						<xe:this.loaded><![CDATA[${javascript:getIsGroupMember("spwAU.N3.RAST.USR_CRUD") || getIsGroupMember("spwAU.N5.ADMI.USR_CRUD")}]]></xe:this.loaded>
+					</xe:basicLeafNode>
+					<xe:basicLeafNode label="Cobranzas">
+						<xe:this.loaded><![CDATA[${javascript:getIsGroupMember("spwAU.N3.COBR.USR_CRUD") || getIsGroupMember("spwAU.N5.ADMI.USR_CRUD")}]]></xe:this.loaded>
+						<xe:this.href><![CDATA[#{javascript:applicationScope.get("urlNavegador") + "/xvUI_Cobranzas.xsp";}]]></xe:this.href>
+					</xe:basicLeafNode>
+					<xe:basicLeafNode label="Comercial">
+						<xe:this.loaded><![CDATA[${javascript:getIsGroupMember("spwAU.N2.COME.USR_CRU") || getIsGroupMember("spwAU.N5.ADMI.USR_CRUD")}]]></xe:this.loaded>
+						<xe:this.href><![CDATA[#{javascript:applicationScope.get("urlNavegador") + "/xvUI_Comercial.xsp";}]]></xe:this.href>
+					</xe:basicLeafNode>
+					<xe:basicLeafNode label="Contaduria">
+						<xe:this.loaded><![CDATA[${javascript:getIsGroupMember("spwAU.N2.CONT.USR_CRU") || getIsGroupMember("spwAU.N5.ADMI.USR_CRUD")}]]></xe:this.loaded>
+						<xe:this.href><![CDATA[#{javascript:applicationScope.get("urlNavegador") + "/xvUI_Contaduria.xsp";}]]></xe:this.href>
+					</xe:basicLeafNode>
+					<xe:basicLeafNode label="Jefe">
+						<xe:this.loaded><![CDATA[${javascript:getIsGroupMember("spwAU.N3.JEFE.USR_CRUD") ||
+getIsGroupMember("spwAU.N5.ADMI.USR_CRUD")}]]></xe:this.loaded>
+						<xe:this.href><![CDATA[#{javascript:applicationScope.get("urlNavegador") + "/xvUI_Jefe.xsp";}]]></xe:this.href>
+					</xe:basicLeafNode>
+					<xe:basicLeafNode label="Autorizaciones" rendered="false">
+						<xe:this.loaded><![CDATA[${javascript:getIsGroupMember("spwAU.N4.GERE.Z01_CRU") || 
+getIsGroupMember("spwAU.N5.ADMI.USR_CRUD")}]]></xe:this.loaded>
+						<xe:this.href><![CDATA[#{javascript:applicationScope.get("urlNavegador") + "/xvUI_Autorizaciones.xsp";}]]></xe:this.href>
+					</xe:basicLeafNode>
+					<xe:basicLeafNode label="Administración" rendered="false">
+						<xe:this.loaded><![CDATA[${javascript:getIsGroupMember("spwAU.N4.ADMI.USR_CRUD") || getIsGroupMember("spwAU.N5.ADMI.USR_CRUD")}]]></xe:this.loaded>
+						<xe:this.href><![CDATA[#{javascript:applicationScope.get("urlNavegador") + "/xvUI_Administracion.xsp";}]]></xe:this.href>
+					</xe:basicLeafNode>
+					<xe:basicLeafNode label="Sistemas">
+						<xe:this.loaded><![CDATA[${javascript:getIsGroupMember("spwAU.N5.ADMI.USR_CRUD")}]]></xe:this.loaded>
+						<xe:this.href><![CDATA[#{javascript:applicationScope.get("urlNavegador") + "/fxUsuario.xsp";}]]></xe:this.href>
+					</xe:basicLeafNode>
+					<xe:basicLeafNode label="Busquedas">
+						<xe:this.loaded><![CDATA[${javascript:getIsGroupMember("spwAU.N1.GRAL.USR_R")}]]></xe:this.loaded>
+						<xe:this.href><![CDATA[#{javascript:applicationScope.get("urlNavegador") + "/facetedSearch.xsp";}]]></xe:this.href>
+					</xe:basicLeafNode>
+				</xe:this.titleBarTabs>
+				<xe:this.placeBarActions></xe:this.placeBarActions>
+				<xe:this.searchBar>
+					<xe:appSearchBar queryParam="searchValue" pageName="Search" inactiveText="Buscar..." loaded="true" inputTitle="Search keywords"
+						scopeTitle="Search options" legend="Search options and keywords" optionsParam="searchOption">
+						<xe:this.options>
+							<xe:basicLeafNode label="Nro. Poliza" submitValue="VLK_SearchNroPoliza" title="titulo">
+								<xe:this.selected><![CDATA[#{javascript:context.getUrlParameter("searchOption").equals("VLK_SearchNroPoliza");}]]></xe:this.selected>
+							</xe:basicLeafNode>
+							<xe:basicLeafNode label="Nro. Orden" submitValue="VLK_SearchNroOrden">
+								<xe:this.selected><![CDATA[#{javascript:context.getUrlParameter("searchOption").equals("VLK_SearchNroOrden");}]]></xe:this.selected>
+							</xe:basicLeafNode>
+							<xe:basicLeafNode label="Nro. Web" submitValue="VLK_SearchNroWeb">
+								<xe:this.selected><![CDATA[#{javascript:context.getUrlParameter("searchOption").equals("VLK_SearchNroWeb");}]]></xe:this.selected>
+							</xe:basicLeafNode>
+							<xe:basicLeafNode label="Patente" submitValue="VLK_SearchPatente">
+								<xe:this.selected><![CDATA[#{javascript:context.getUrlParameter("searchOption").equals("VLK_SearchPatente");}]]></xe:this.selected>
+							</xe:basicLeafNode>
+							<xe:basicLeafNode label="Patente Clave" submitValue="VLK_SearchPatenteClave">
+								<xe:this.selected><![CDATA[#{javascript:context.getUrlParameter("searchOption").equals("VLK_SearchPatenteClave");}]]></xe:this.selected>
+							</xe:basicLeafNode>
+							<xe:basicLeafNode label="Nombre Productor" submitValue="ftiProductiva~FIELD sol_productor_des CONTAINS">
+								<xe:this.selected><![CDATA[#{javascript:context.getUrlParameter("searchOption").equals("sol_productor_des");}]]></xe:this.selected>
+							</xe:basicLeafNode>
+							<xe:basicLeafNode label="Código Productor" submitValue="ftiProductiva~FIELD sol_productor_cod CONTAINS">
+								<xe:this.selected><![CDATA[#{javascript:context.getUrlParameter("searchOption").equals("sol_productor_cod");}]]></xe:this.selected>
+							</xe:basicLeafNode>
+							<xe:basicLeafNode label="Nombre Asegurado" submitValue="ftiProductiva~FIELD sol_asegurado_des CONTAINS">
+								<xe:this.selected><![CDATA[#{javascript:context.getUrlParameter("searchOption").equals("sol_asegurado_des");}]]></xe:this.selected>
+							</xe:basicLeafNode>
+							<xe:basicLeafNode label="Código Asegurado" submitValue="ftiProductiva~FIELD sol_asegurado_cod CONTAINS">
+								<xe:this.selected><![CDATA[#{javascript:context.getUrlParameter("searchOption").equals("sol_asegurado_cod");}]]></xe:this.selected>
+							</xe:basicLeafNode>
+						</xe:this.options>
+					</xe:appSearchBar>
+				</xe:this.searchBar>
+			</xe:oneuiApplication>
+		</xe:this.configuration>
+		</xe:applicationLayout>
+</xp:view>

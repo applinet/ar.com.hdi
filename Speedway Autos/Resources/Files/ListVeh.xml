@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Request>
+	<Poliza nro="350225">
+		<ListaVehiculos>
+			<Vehiculo nro="1">
+				<VehStatus>ACTIVO</VehStatus>
+				<Marca>FORD</Marca>
+				<Modelo>FOCUS AMBIENTE</Modelo>
+				<Submodelo>1.6 8V 5P</Submodelo>
+				<Anio>2006</Anio>
+				<TipoDominio>NAC</TipoDominio>
+				<Dominio>FIS052</Dominio>
+				<CertMerc>JUAN PEREZ</CertMerc>
+				<Capitulo>AUTOM./CAM.RURALES</Capitulo>
+				<VarianteRC>1</VarianteRC>
+				<VarianteAIR>1</VarianteAIR>
+				<Carroceria>SEDAN</Carroceria>
+				<Averias>0</Averias>
+				<Tipo>AUTOMOVIL</Tipo>
+				<Origen>NACIONAL</Origen>
+				<Uso>PARTICULAR</Uso>
+				<Motor>6J464402</Motor>
+				<Chasis>8AFDZZFHAGJ464402</Chasis>
+				<Cobertura>C1 TERCEROS COMPLETOS+</Cobertura>
+				<AcreedorPrendario>FORD ARGENTINA S.A.</AcreedorPrendario>
+				<FechaIngreso>20121201</FechaIngreso>
+				<SuplementoIngreso>000</SuplementoIngreso>
+				<FechaEgreso></FechaEgreso>
+				<SuplementoEgreso></SuplementoEgreso>
+				<Clausulas>
+					<Clausula>45</Clausula>
+					<Clausula>E</Clausula>
+					<Clausula>F</Clausula>
+					<Clausula>H</Clausula>
+					<Clausula>3</Clausula>
+					<Clausula>11</Clausula>
+					<Clausula>14</Clausula>
+					<Clausula>15</Clausula>
+					<Clausula>19</Clausula>
+					<Clausula>22</Clausula>
+					<Clausula>25</Clausula>
+					<Clausula>26</Clausula>
+					<Clausula>29</Clausula>
+					<Clausula>31</Clausula>
+					<Clausula>52</Clausula>
+					<Clausula>57</Clausula>
+					<Clausula>59</Clausula>
+					<Clausula>63</Clausula>
+					<Clausula>71</Clausula>
+					<Clausula>75</Clausula>
+					<Clausula>89</Clausula>
+					<Clausula>113</Clausula>
+				</Clausulas>
+				<Accesorios>
+					<Accesorio secuencia="1">
+						<AccDescripcion>LLANTAS</AccDescripcion>
+						<AccValor>2000.00</AccValor>
+						<AccTipo>TARIFABLE</AccTipo>
+					</Accesorio>
+					<Accesorio secuencia="2">
+						<AccDescripcion>STEREO</AccDescripcion>
+						<AccValor>500.00</AccValor>
+						<AccTipo>TARIFABLE</AccTipo>
+					</Accesorio>
+					<Accesorio secuencia="3">
+						<AccDescripcion>ALERON DEPORTIVO</AccDescripcion>
+						<AccValor>1000.00</AccValor>
+						<AccTipo>TARIFABLE</AccTipo>
+					</Accesorio>
+					<Accesorio secuencia="4">
+						<AccDescripcion>ANTENA PARABOLICA</AccDescripcion>
+						<AccValor>5000.00</AccValor>
+						<AccTipo>NO TARIFABLE</AccTipo>
+					</Accesorio>
+				</Accesorios>
+				<Valores>
+					<Usado>50000</Usado>
+					<Suma0KM></Suma0KM>
+				</Valores>
+				<Limites>
+					<Lesiones></Lesiones>
+					<Acontecimiento>3000000</Acontecimiento>
+					<Cosas></Cosas>
+					<Exterior>100000</Exterior>
+				</Limites>
+				<Tarifacion>
+					<Tarifa>104</Tarifa>
+					<FechaInicio>17/03/2012</FechaInicio>
+					<TablaRC>3</TablaRC>
+					<TablaAIR>54</TablaAIR>
+					<Zona>1</Zona>
+					<Franquicia></Franquicia>
+					<ClausulaAjuste>20</ClausulaAjuste>
+				</Tarifacion>
+				<Primas>
+					<PrimaRc>735.68</PrimaRc>
+					<PrimaAcc>173.87</PrimaAcc>
+					<PrimaInc>173.87</PrimaInc>
+					<PrimaRobo>179.13</PrimaRobo>
+					<PrimaAcc></PrimaAcc>
+					<PrimaAju></PrimaAju>
+					<PrimaFcia></PrimaFcia>
+					<RcExterior>11.05</RcExterior>
+					<Asistencia>2.55</Asistencia>
+				</Primas>
+				<Beneficios grupo="BENEFICIOS COBERTURA C+ Zona 0 y 1">
+					<Beneficio id="001">
+						<BenefDesc>GASTOS DE GESTORIA</BenefDesc>
+						<BenefMoneda>PESOS</BenefMoneda>
+						<BenefImporte>1000.00</BenefImporte>
+					</Beneficio>
+					<Beneficio id="002">
+						<BenefDesc>GASTOS DE REMOLQUE</BenefDesc>
+						<BenefMoneda>PESOS</BenefMoneda>
+						<BenefImporte>100.00</BenefImporte>
+					</Beneficio>
+					<Beneficio id="003">
+						<BenefDesc>COPIA DE LLAVES</BenefDesc>
+						<BenefMoneda>PESOS</BenefMoneda>
+						<BenefImporte>2000.00</BenefImporte>
+					</Beneficio>
+					<Beneficio id="004">
+						<BenefDesc>REPOSICION DE CRISTALES</BenefDesc>
+						<BenefMoneda>PESOS</BenefMoneda>
+						<BenefImporte>5000.00</BenefImporte>
+					</Beneficio>
+					<Beneficio id="005">
+						<BenefDesc>GASTOS DE GESTORIA</BenefDesc>
+						<BenefMoneda>PESOS</BenefMoneda>
+						<BenefImporte>1000.00</BenefImporte>
+					</Beneficio>
+					<Beneficio id="006">
+						<BenefDesc>CERRADURAS</BenefDesc>
+						<BenefMoneda>PESOS</BenefMoneda>
+						<BenefImporte>2000.00</BenefImporte>
+					</Beneficio>
+					<Beneficio id="007">
+						<BenefDesc>GRANIZO</BenefDesc>
+						<BenefMoneda>PESOS</BenefMoneda>
+						<BenefImporte>50000</BenefImporte>
+					</Beneficio>
+				</Beneficios>
+			</Vehiculo>
+			<Vehiculo nro="2">
+				<VehStatus>ACTIVO</VehStatus>
+				<Marca>PEUGEOT</Marca>
+				<Modelo>308</Modelo>
+				<Submodelo>XRS 1.8 16V</Submodelo>
+				<Anio>2012</Anio>
+				<TipoDominio>NAC</TipoDominio>
+				<Dominio>ABC123</Dominio>
+				<CertMerc>JUAN GOME></CertMerc>
+				<Capitulo>AUTOM./CAM.RURALES</Capitulo>
+				<VarianteRC>1</VarianteRC>
+				<VarianteAIR>1</VarianteAIR>
+				<Carroceria>SEDAN</Carroceria>
+				<Averias>0</Averias>
+				<Tipo>AUTOMOVIL</Tipo>
+				<Origen>NACIONAL</Origen>
+				<Uso>PARTICULAR</Uso>
+				<Motor>6J464402545454</Motor>
+				<Chasis>8AFDZZFHAGJ4644025485</Chasis>
+				<Cobertura>D PLAN PROMO</Cobertura>
+				<AcreedorPrendario>CIRCULO DE INVERSORES S.R.L.</AcreedorPrendario>
+				<FechaIngreso>20121201</FechaIngreso>
+				<SuplementoIngreso>000</SuplementoIngreso>
+				<FechaEgreso></FechaEgreso>
+				<SuplementoEgreso></SuplementoEgreso>
+				<Clausulas>
+					<Clausula>45</Clausula>
+					<Clausula>E</Clausula>
+					<Clausula>F</Clausula>
+					<Clausula>H</Clausula>
+					<Clausula>3</Clausula>
+					<Clausula>11</Clausula>
+					<Clausula>14</Clausula>
+					<Clausula>15</Clausula>
+					<Clausula>19</Clausula>
+					<Clausula>22</Clausula>
+					<Clausula>25</Clausula>
+					<Clausula>26</Clausula>
+					<Clausula>29</Clausula>
+					<Clausula>31</Clausula>
+					<Clausula>52</Clausula>
+					<Clausula>57</Clausula>
+					<Clausula>59</Clausula>
+					<Clausula>63</Clausula>
+					<Clausula>71</Clausula>
+					<Clausula>75</Clausula>
+					<Clausula>89</Clausula>
+					<Clausula>113</Clausula>
+				</Clausulas>
+				<Accesorios>
+					<Accesorio secuencia="1">
+						<AccDescripcion>LLANTAS</AccDescripcion>
+						<AccValor>2000.00</AccValor>
+						<AccTipo>TARIFABLE</AccTipo>
+					</Accesorio>
+					<Accesorio secuencia="2">
+						<AccDescripcion>STEREO</AccDescripcion>
+						<AccValor>500.00</AccValor>
+						<AccTipo>TARIFABLE</AccTipo>
+					</Accesorio>
+					<Accesorio secuencia="3">
+						<AccDescripcion>ALERON DEPORTIVO</AccDescripcion>
+						<AccValor>1000.00</AccValor>
+						<AccTipo>TARIFABLE</AccTipo>
+					</Accesorio>
+					<Accesorio secuencia="4">
+						<AccDescripcion>ANTENA PARABOLICA</AccDescripcion>
+						<AccValor>5000.00</AccValor>
+						<AccTipo>NO TARIFABLE</AccTipo>
+					</Accesorio>
+				</Accesorios>
+				<Valores>
+					<Usado>126000</Usado>
+					<Suma0KM></Suma0KM>
+				</Valores>
+				<Limites>
+					<Lesiones></Lesiones>
+					<Acontecimiento>3000000</Acontecimiento>
+					<Cosas></Cosas>
+					<Exterior>100000</Exterior>
+				</Limites>
+				<Tarifacion>
+					<Tarifa>104</Tarifa>
+					<FechaInicio>17/03/2012</FechaInicio>
+					<TablaRC>3</TablaRC>
+					<TablaAIR>54</TablaAIR>
+					<Zona>1</Zona>
+					<Franquicia></Franquicia>
+					<ClausulaAjuste>20</ClausulaAjuste>
+				</Tarifacion>
+				<Primas>
+					<PrimaRc>735.68</PrimaRc>
+					<PrimaAcc>173.87</PrimaAcc>
+					<PrimaInc>173.87</PrimaInc>
+					<PrimaRobo>179.13</PrimaRobo>
+					<PrimaAcc></PrimaAcc>
+					<PrimaAju></PrimaAju>
+					<PrimaFcia></PrimaFcia>
+					<RcExterior>11.05</RcExterior>
+					<Asistencia>2.55</Asistencia>
+				</Primas>
+				<Beneficios grupo="BENEFICIOS COBERTURA C+ Zona 0 y 1">
+					<Beneficio id="001">
+						<BenefDesc>GASTOS DE GESTORIA</BenefDesc>
+						<BenefMoneda>PESOS</BenefMoneda>
+						<BenefImporte>1000.00</BenefImporte>
+					</Beneficio>
+					<Beneficio id="002">
+						<BenefDesc>GASTOS DE REMOLQUE</BenefDesc>
+						<BenefMoneda>PESOS</BenefMoneda>
+						<BenefImporte>100.00</BenefImporte>
+					</Beneficio>
+					<Beneficio id="003">
+						<BenefDesc>COPIA DE LLAVES</BenefDesc>
+						<BenefMoneda>PESOS</BenefMoneda>
+						<BenefImporte>2000.00</BenefImporte>
+					</Beneficio>
+					<Beneficio id="004">
+						<BenefDesc>REPOSICION DE CRISTALES</BenefDesc>
+						<BenefMoneda>PESOS</BenefMoneda>
+						<BenefImporte>5000.00</BenefImporte>
+					</Beneficio>
+					<Beneficio id="005">
+						<BenefDesc>GASTOS DE GESTORIA</BenefDesc>
+						<BenefMoneda>PESOS</BenefMoneda>
+						<BenefImporte>1000.00</BenefImporte>
+					</Beneficio>
+					<Beneficio id="006">
+						<BenefDesc>CERRADURAS</BenefDesc>
+						<BenefMoneda>PESOS</BenefMoneda>
+						<BenefImporte>2000.00</BenefImporte>
+					</Beneficio>
+					<Beneficio id="007">
+						<BenefDesc>GRANIZO</BenefDesc>
+						<BenefMoneda>PESOS</BenefMoneda>
+						<BenefImporte>50000</BenefImporte>
+					</Beneficio>
+				</Beneficios>
+			</Vehiculo>
+		</ListaVehiculos>
+	</Poliza>
+</Request>

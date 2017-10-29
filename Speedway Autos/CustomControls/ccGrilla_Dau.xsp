@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core">
+	<xp:this.data>
+		<xp:dominoView var="viewDauAsociados"
+			categoryFilter="#{javascript:documentPropuesta.getDocument().getUniversalID()}">
+
+			<xp:this.viewName><![CDATA[#{javascript:"v.UI.DauAsocPropuesta_EmbView"}]]></xp:this.viewName>
+			<xp:this.databaseName><![CDATA[#{javascript:var dbDau:NotesDatabase = getDbDau();
+if (dbDau != null) {
+	dbDau.getFilePath();
+}}]]></xp:this.databaseName>
+		</xp:dominoView>
+	</xp:this.data>
+	<xp:panel id="PanelDauAsociados" style="width:633.0px">
+
+
+
+		<xp:panel id="PanelDauAsociados_Content">
+			<xp:this.rendered><![CDATA[#{javascript:getComponent("repeatPropuestasAsociadas").getRowCount() == 0 ? false : true;}]]></xp:this.rendered>
+			<xp:table cellpadding="5" cellspacing="0" border="0"
+				style="width:100.0%" id="TBL_Dau">
+				<xp:tr styleClass="ViewTitle">
+					<xp:td>Estado</xp:td>
+					<xp:td>Regla</xp:td>
+				</xp:tr>
+				<xp:repeat id="repeatPropuestasAsociadas"
+					var="repeatDauRow" indexVar="repeatPropuestaIndex"
+					value="#{viewDauAsociados}">
+					<xp:tr id="rowPropuestas">
+						<xp:this.styleClass><![CDATA[#{javascript:if (!!viewScope.get("VehSelectedUNID")) { 
+	if (viewScope.get("VehSelectedUNID").equals(repeatDauRow.getUniversalID())) {
+		return "ViewRowSelected";
+	}
+}
+return "ViewRow";}]]></xp:this.styleClass>
+						<xp:td>
+							<xp:text escape="true"
+								id="grillaStatusDes">
+								<xp:this.value><![CDATA[#{javascript:repeatDauRow.getColumnValue("dau_status_cod");}]]></xp:this.value>
+							</xp:text>
+						</xp:td>
+						<xp:eventHandler event="onclick" submit="true"
+							refreshMode="norefresh" immediate="true">
+							<xp:this.action>
+								<xp:executeScript>
+									<xp:this.script><![CDATA[#{javascript:var dbDau:NotesDatabase = getDbDau();
+var path:String = dbDau.getFilePath();
+path = path.replace("\\", "/");
+
+//http://srvdesa/Desa/Speedway/dau.nsf/xfDau.xsp?action=openDocument&documentId=5DA478ACB12B060303257E1300574CE3
+
+redirectToOtherDb(path,"xfDau",repeatDauRow.getUniversalID(),"read");
+/*
+var server:String = session.getServerName();
+print("server:" + server);
+print("path:" + path);
+var url:String= server + path + "/xfDau.xsp?action=openDocument&documentId=5DA478ACB12B060303257E1300574CE3";
+facesContext.getExternalContext().redirect(url);
+*/}]]></xp:this.script>
+								</xp:executeScript>
+							</xp:this.action></xp:eventHandler>
+						<xp:eventHandler event="onmouseout"
+							submit="true" refreshMode="partial"
+							refreshId="PanelPropuestasAsociados">
+						</xp:eventHandler>
+						<xp:td>
+							<xp:text escape="true"
+								value="#{repeatDauRow.dau_regla_cod}" id="computedField1">
+							</xp:text>
+						</xp:td>
+					</xp:tr>
+				</xp:repeat>
+			</xp:table>
+		</xp:panel>
+	</xp:panel>
+</xp:view>

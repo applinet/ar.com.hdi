@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:xe="http://www.ibm.com/xsp/coreex">
+	<xp:this.afterPageLoad><![CDATA[#{javascript:if(sessionScope.AnulacionEmitidaPorReemplazo != null){	
+	var strStatusAnulacion:String = sessionScope.AnulacionEmitidaPorReemplazo.get(viewScope.get("docxProp").getDocument().getUniversalID());
+	if(strStatusAnulacion == "0"){
+		getComponent('dialogYesNo').show();		
+	}
+}}]]></xp:this.afterPageLoad>
+	<xc:oneuiLayout>
+		<xp:this.facets>
+			<xc:ccFrm_Prop xp:key="facet_2" property_PantallaDividida="false"></xc:ccFrm_Prop>
+			</xp:this.facets>
+	</xc:oneuiLayout>
+</xp:view>

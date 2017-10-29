@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" style="background-color:rgb(0,0,0)" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:debug="http://www.openntf.org/xsp/debugtoolbar">
+	<xp:this.resources>
+		<xp:script src="/JSS.AS400.jss" clientSide="false"></xp:script>
+		<xp:dojoModule name="extlib.dijit.ExtLib"></xp:dojoModule>
+		<xp:dojoModule name="extlib.dijit.Loading"></xp:dojoModule>
+	</xp:this.resources>
+	<xp:this.beforePageLoad><![CDATA[#{javascript:beforePageLoadAS400 ();}]]></xp:this.beforePageLoad>
+	<xp:div styleClass="lotusMessage lotusInfo" rendered="${not empty viewScope.infoMessage}">
+		<img src="images/info_16x16.png" width="16" height="16" style="margin:0px 5px 0px 0px" />
+		<xp:text tagName="span" style="line-height: 16px">
+			<xp:this.value><![CDATA[${javascript:var message = viewScope.infoMessage;
+viewScope.infoMessage = null;
+return message;}]]></xp:this.value>
+		</xp:text>
+	</xp:div>
+	<xp:panel id="PNL_All">
+		<xp:panel id="PNL_AllButIframe">
+			<xp:button style="float:right;" id="buttonRegresar" value="Regresar a Propuesta">
+				<xp:this.rendered><![CDATA[#{javascript:var strCloseNeeded:String = viewScope.get("cerrarNecesario");
+if (strCloseNeeded.equals ("1")) return false;
+return true;}]]></xp:this.rendered>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+					<xp:this.action><![CDATA[#{javascript:var url:String= context.getUrl().toString();
+url = url.replace("xfDividirPantalla", "xfdocPropuesta");
+facesContext.getExternalContext().redirect(url);}]]></xp:this.action>
+				</xp:eventHandler>
+			</xp:button>
+			<xp:panel id="PNL_Errores">
+				<xp:this.rendered><![CDATA[#{javascript:if (viewScope.get("booGeneralError") == true) return true;
+if (viewScope.get("booWebFacingError") == true) return true;
+if (viewScope.get("booIsUserActive") == true) return true;
+
+return false;}]]></xp:this.rendered>
+				<xp:panel id="PNL_Err_User">
+					<xp:button value="Reintentar" id="buttonReintentar">
+						<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="PNL_All">
+							<xp:this.action><![CDATA[#{javascript:delay(1000*20); //20 segundos
+
+//Comentada porque fue reemplazada por el button Recargar Oculto CSS
+//beforePageLoadAS400 ();}]]></xp:this.action>
+							<xp:this.onStart><![CDATA[XSP.startAjaxLoading()]]></xp:this.onStart>
+							<xp:this.onComplete><![CDATA[XSP.endAjaxLoading();document.getElementById('#{javascript:getClientId("buttonRecargarPagina")}').click();]]></xp:this.onComplete>
+							<xp:this.onError><![CDATA[XSP.endAjaxLoading()]]></xp:this.onError>
+						</xp:eventHandler>
+					</xp:button>
+					<xp:this.rendered><![CDATA[#{javascript://return true;
+//Si el usuario NO está activo, visible = FALSE
+if (viewScope.get("booIsUserActive") == false) return false;
+return true;}]]></xp:this.rendered>
+					<xp:button value="Recargar Oculto CSS" id="buttonRecargarPagina" style="display:none;">
+						<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.action><![CDATA[#{javascript:var url:String= context.getUrl().toString();
+facesContext.getExternalContext().redirect(url);}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xp:label id="LabelUsuarioActivo" style="font-weight:bold;color:rgb(255,255,255)">
+						<xp:this.value><![CDATA[#{javascript:"Error con su usuario: " + viewScope.get("UserErrorMessage"); }]]></xp:this.value>
+					</xp:label>
+					<xc:ccProgressBar></xc:ccProgressBar>
+				</xp:panel>
+				<xp:panel id="PNL_Incons">
+					<xp:this.rendered><![CDATA[#{javascript://Si hay un error con el usuario, tiene PRIORIDAD por sobre la inconsistencia, por lo cual, en ese caso, OCULTAMOS este panel.
+if (viewScope.get("booIsUserActive") == true) return false;
+if (viewScope.get("booWebFacingError") == false) return false;
+return true;}]]></xp:this.rendered>
+					<xp:button id="buttonCorregirIncons" value="Corregir Inconsistencia">
+						<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.action><![CDATA[#{javascript:var docxProp:NotesXspDocument = viewScope.get("docxProp");
+cerrarPropDeAS400 (docxProp, true);}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xp:label id="labelWebFacingNoCerrado" style="font-weight:bold;color:rgb(255,255,255);margin-left:10.0px;margin-right:10.0px" value="El WebFacing no fue cerrado correctamente.">
+					</xp:label>
+					<xp:label id="labelTrabajosActivos" style="color:rgb(255,255,255)">
+						<xp:this.value><![CDATA[#{javascript:var docxProp:NotesXspDocument = viewScope.get("docxProp");
+if (buscarTrabajoActivo(docxProp) == true) return ("Tiene trabajos activos");
+else return ("NO Tiene trabajos activos");}]]></xp:this.value>
+					</xp:label>
+				</xp:panel>
+				<xp:br></xp:br>
+				<xp:label id="labelErrorGral" style="font-weight:bold;color:rgb(255,255,255)">
+					<xp:this.rendered><![CDATA[#{javascript:if (viewScope.get("booGeneralError") == false) return false;
+return true;}]]></xp:this.rendered>
+					<xp:this.value><![CDATA[#{javascript:"Error: " + viewScope.get("strGralErrorMessage"); }]]></xp:this.value>
+				</xp:label>
+			</xp:panel>
+			<xp:panel id="PNL_SinErrores">
+				<xp:this.rendered><![CDATA[#{javascript:if (viewScope.get("booWebFacingError") == true) return false;
+//Si el usuario está activo, visible = FALSE
+if (viewScope.get("booIsUserActive") == true) return false;
+return true;}]]></xp:this.rendered>
+				<xp:panel id="PNL_Iniciar">
+					<xp:this.rendered><![CDATA[#{javascript://return true;
+
+var docxProp:NotesXspDocument = viewScope.get("docxProp");
+if (docxProp == null) throw new java.lang.Exception("La propuesta no fue encontrada");
+var docProp:NotesDocument = docxProp.getDocument();
+var strEstado:String = getEstadoPropuesta (docxProp);
+
+if (isPropuestaSuspendida ()) return false;
+if (isPropuestaSuspendidaEsp ()) return false;
+if (isStatusCheckFlag(strEstado, "est_PermiteEmision_opt") == false) return false;
+
+return true;}]]></xp:this.rendered>
+					<xp:button value="Iniciar Emisión" id="buttonInicioEmision">
+						<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.action><![CDATA[#{javascript:if (isUserActiveOnAS400()) throw new java.lang.Exception("Error con su usuario: " + viewScope.get("UserErrorMessage"));
+var docxProp:NotesXspDocument = viewScope.get("docxProp");
+if (docxProp == null) throw new java.lang.Exception("La propuesta no fue encontrada");
+var docProp:NotesDocument = docxProp.getDocument();
+//Siguiente linea hace el insert de vehiculos en el as400, si no encuentra vehiculos devuelve excepcion
+var mapResult:java.util.HashMap = isCargaPreEmision(docxProp.getDocument().getUniversalID()); 
+if(!mapResult.get("Resultado")){
+	var msg=new javax.faces.application.FacesMessage();
+	facesContext.addMessage("Error",msg(mapResult.get("ErrMsg")));
+	return false;
+}
+if(!isInspeccionesDePropuestaOK(docxProp.getDocument().getItemValueInteger("orden_nro").toString())){
+	var msg=new javax.faces.application.FacesMessage();
+	facesContext.addMessage("Error",msg("No se puede emitir ya que existen inspecciones por resover. Por favor modifique el estado de las mismas"));
+	return false;
+}
+viewScope.put("strAS400url", getUrlInicioEmision (docProp));
+setPropSuspEsp (docxProp, "Iniciar Emisión");
+viewScope.put("cerrarNecesario", "1")
+
+}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xp:messages id="messages1"></xp:messages>
+				</xp:panel>
+				<xp:panel id="PNL_CerrarNecesario">
+					<input type="hidden" name="cerrarNecesario" id="cerrarNecesario" value="#{javascript:viewScope.get ('cerrarNecesario');}"></input>
+					<xp:label value="Ver input hidden 'CerrarNecesario' arriba de este label" id="label1" style="background-color:rgb(255,255,255)"
+						rendered="false">
+					</xp:label>
+				</xp:panel>
+				<xp:panel id="PNL_Cerrar">
+					<xp:button value="Cerrar y Validar Datos" id="buttonCerrar">
+						<xp:this.rendered><![CDATA[#{javascript://Solo visible si el estado es SUSPENDIDA ESPECIAL
+//return true;
+var docxProp:NotesXspDocument = viewScope.get("docxProp");
+if (docxProp == null) throw new java.lang.Exception("La propuesta no fue encontrada");
+
+if (getEstadoPropuesta (docxProp).equals ("85")) return true;
+return false;}]]></xp:this.rendered>
+						<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="PNL_AllButIframe">
+							<xp:this.action><![CDATA[#{javascript://Tomo la propuesta del view scope porque no tengo acceso a un datasource 
+//de otro custom control de la pantalla dividida.
+if(delay(1000*6)){ //6 segundos
+	var docxProp:NotesXspDocument = viewScope.get("docxProp");
+	if (cerrarPropDeAS400 (docxProp, false)) {			
+		var url:String= context.getUrl().toString();
+		url = url.replace("xfDividirPantalla", "xfdocPropuesta");
+		facesContext.getExternalContext().redirect(url);
+	}
+}
+unLockDocument("");}]]></xp:this.action>
+							<xp:this.onComplete><![CDATA[XSP.partialRefreshGet("#{id:TBL_Estado}");
+]]></xp:this.onComplete>
+							<xp:this.script><![CDATA[document.getElementById("cerrarNecesario").value = "0";]]></xp:this.script>
+						</xp:eventHandler>
+					</xp:button>
+					<xp:label id="labelTrabajoActivo" style="font-weight:bold;color:rgb(255,255,255)" value="Antes de CERRAR debe salir de GAUS">
+						<xp:this.rendered><![CDATA[#{javascript:var booIsJobAct:boolean = viewScope.get("booIsJobActive");
+if (booIsJobAct == null) return false;
+if (booIsJobAct == false) return false;
+return true;}]]></xp:this.rendered>
+					</xp:label>
+				</xp:panel>
+				<xp:panel rendered="#{javascript:return isPropuestaSuspendida ();}" id="PNL_Retomar">
+					<xp:button value="Retomar" id="buttonRetomarSusp">
+						<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.action><![CDATA[#{javascript:if (isUserActiveOnAS400()) return;
+var docxProp:NotesXspDocument = viewScope.get("docxProp");
+if (docxProp == null) throw new java.lang.Exception("La propuesta no fue encontrada");
+var docProp:NotesDocument = docxProp.getDocument();
+var mapResult:java.util.HashMap = isCargaPreEmision(docxProp.getDocument().getUniversalID()); 
+if(!mapResult.get("Resultado")){
+	var msg=new javax.faces.application.FacesMessage();
+	facesContext.addMessage("Error",msg(mapResult.get("ErrMsg")));
+	return false;
+}
+if(!isInspeccionesDePropuestaOK(docxProp.getDocument().getItemValueInteger("orden_nro").toString())){
+	var msg=new javax.faces.application.FacesMessage();
+	facesContext.addMessage("Error",msg("No se puede emitir ya que existen inspecciones por resover. Por favor modifique el estado de las mismas"));
+	return false;
+}
+viewScope.put("strAS400url", getUrlRetomarSusp (docProp));
+setPropSuspEsp (docxProp, "Retomar de Suspendida");
+viewScope.put("cerrarNecesario", "1");}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xp:button value="Eliminar" id="buttonEliminarSusp">
+						<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.action><![CDATA[#{javascript:if (isUserActiveOnAS400()) return;
+
+var docxProp:NotesXspDocument = viewScope.get("docxProp");
+if (docxProp == null) throw new java.lang.Exception("La propuesta no fue encontrada");
+var docProp:NotesDocument = docxProp.getDocument();
+
+viewScope.put("strAS400url", getUrlEliminarSusp (docProp));
+setPropSuspEsp (docxProp, "Eliminar Suspendida");
+viewScope.put("cerrarNecesario", "1")}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xc:ccFx_BotonCambiarEstado property_ButtonLabel="Eliminar y Recuperar..." property_EstadoActual="41">
+						<xc:this.property_Opciones><![CDATA[#{javascript:var vOpciones:NotesView = getDbCfg().getView ("v.Sys.LK_EstadosCodigo");
+
+var dc:NotesDocumentCollection = vOpciones.getAllDocumentsByKey("41");
+var doc:NotesDocument = dc.getFirstDocument();
+if (doc != null) {
+	return doc.getItemValue("est_Siguientes_cod");
+}
+}]]></xc:this.property_Opciones>
+					</xc:ccFx_BotonCambiarEstado>
+				</xp:panel>
+			</xp:panel>
+			<xp:panel style="background-color:rgb(255,255,0);padding-left:5.0px;padding-right:5.0px;padding-top:5.0px;padding-bottom:5.0px" rendered="false"
+				id="PNL_Test">
+				<xp:button id="button" value="Devolver a Tecnica">
+					<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+						<xp:this.action><![CDATA[#{javascript://BOTON SOLO PARA TESTING
+var docxProp:NotesXspDocument = viewScope.get("docxProp");
+updateEstadoPropuesta (docxProp, "15");
+docxProp.save();}]]></xp:this.action>
+					</xp:eventHandler>
+				</xp:button>
+				<xp:button id="button1" value="Poner Suspendida" rendered="false">
+					<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+						<xp:this.action><![CDATA[#{javascript://BOTON SOLO PARA TESTING
+var docxProp:NotesXspDocument = viewScope.get("docxProp");
+updateEstadoPropuesta (docxProp, "87");
+docxProp.save();}]]></xp:this.action>
+					</xp:eventHandler>
+				</xp:button>
+				<xp:button id="buttonMarcarCerrarNecesario" value="Marcar Cerrar es Necesario" rendered="false">
+					<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+						<xp:this.action><![CDATA[#{javascript://BOTON SOLO PARA TESTING
+viewScope.put("cerrarNecesario", "1");}]]></xp:this.action>
+					</xp:eventHandler>
+				</xp:button>
+				<xp:button value="Cerrar Simulando Rta" id="button2" rendered="false">
+					<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+						<xp:this.action><![CDATA[#{javascript://Tomo la propuesta del view scope porque no tengo acceso a un datasource 
+//de otro custom control de la pantalla dividida.
+var docxProp:NotesXspDocument = viewScope.get("docxProp");
+viewScope.put("strSimularRta", "1");
+cerrarPropDeAS400 (docxProp);
+viewScope.put("strSimularRta", "0");}]]></xp:this.action>
+					</xp:eventHandler>
+				</xp:button>
+			</xp:panel>
+		</xp:panel>
+		<xp:panel id="PNL_IframeContainer">
+			<iframe id="iframeAs400" width="96%" height="96%" src="#{javascript:viewScope.get ('strAS400url')}">Su browser no soporta iframes</iframe>
+		</xp:panel>
+	</xp:panel>
+	<xp:eventHandler event="onClientLoad" submit="false">
+		<xp:this.script><![CDATA[window.onbeforeunload = function ()
+ {
+  var strCerrarNecesario = document.getElementById("CerrarNecesario").value;
+  if (strCerrarNecesario == "0") {
+	  //OK
+	  return;
+  }
+  else {
+	  //Siguientes 2 lineas comentadas porque si al presionar el botón, da algun error, por ejemplo, 
+	  //que primero debe cerrar en gauss, entonces el usuario debería permanacer en la página sí o sí.
+	  //No queda otra más que advertirle al usuario lo que está haciendo, y esperar que permanesca en la
+	  //página y complete las acciones.
+	  //var ccId = "#{javascript:getClientId('buttonCerrar')}";
+	  //document.getElementById("CerrarNecesario").click();
+	  return "Atención, está cerrando la ventana sin antes Cerrar y Validar Datos, la Propuesta quedará inconsistente.";
+  }
+
+  //Si devolves un string, le muestra un msj de confirmación al usuario.
+  //return "Any string value here forces a dialog box to \n" + 
+  //      "appear before closing the window.";
+  };
+]]></xp:this.script>
+	</xp:eventHandler>
+</xp:view>

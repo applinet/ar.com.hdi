@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" rendered="false">
+
+	XPage that returns the current progress (from a sessionScope
+	variable) in JSON format
+
+	<xp:this.afterRenderResponse><![CDATA[#{javascript:
+	
+var extCon = facesContext.getExternalContext();
+var writer = facesContext.getResponseWriter();
+
+var response = extCon.getResponse();
+response.setContentType( "application/json");
+response.setHeader("Cache-Control", "no-cache");
+
+var progress = 0;
+if ( sessionScope.containsKey("progress") ) {
+	progress = sessionScope.get("progress");
+	if (progress > 100) { progress = 100; } 
+}
+
+writer.write( toJson( { "progress" : progress } ) );
+writer.endDocument();
+
+}]]>
+	</xp:this.afterRenderResponse>
+
+</xp:view>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view
+	xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xe="http://www.ibm.com/xsp/coreex">
+	<xp:this.resources>
+		<xp:script
+			src="/RESTObjectFunctions.jss"
+			clientSide="false">
+		</xp:script>
+	</xp:this.resources>
+	REST&#160;Path&#160;--&gt;&#160;RESTService<xp:br></xp:br>
+	<xp:br></xp:br>
+	<xe:restService
+		id="restService1"
+		pathInfo="VehN">
+		<xe:this.service>
+			<xe:customRestService contentType="application/json" requestContentType="text/plain" requestVar="JWA">
+				<xe:this.doPost><![CDATA[#{javascript:// checkeo JWA. Si está vacio, no hago nada
+print("HAgo un post");
+//var jsLog:NotesLog = session.createLog("REST POST SSJS - Alta de Vehiculo");
+//jsLog.openNotesLog("SRVDESA/axin","AgentLog.nsf");
+var arrayOfObjects = eval("(" + JWA 	+ ")");
+//jsLog.logAction("Antes que comience la librería " + JWA);
+//var rtnString = restDoc(arrayOfObjects);
+//jsLog.logAction(rtnString);
+//return(rtnString);}]]></xe:this.doPost>
+			</xe:customRestService>
+		</xe:this.service>
+	</xe:restService>
+	<xp:br></xp:br>
+	<xp:br></xp:br>
+	<xp:br></xp:br>REST Path --&gt; RESTGet
+	<xp:br></xp:br>
+	<xp:br></xp:br>
+	<xe:restService
+		id="restService2"
+		pathInfo="RESTGet">
+		<xe:this.service>
+			<xe:customRestService contentType="application/json" requestContentType="text/plain" requestVar="JWA">
+				<xe:this.doGet><![CDATA[#{javascript:// GET
+print("do Get");
+var jsLog: NotesLog = session.createLog("REST GET SSJS");
+jsLog.openNotesLog("SRVDESA/axin", "AgentLogAutos.nsf");
+var db: NotesDatabase = session.getCurrentDatabase();
+jsLog.logAction("1.Comienza SSJS");
+var rtnString: String = "{\"RESTGet\":";
+
+try {
+    var uriString = facesContext.getExternalContext().getRequest().getRequestURI();
+    var unidString = @RightBack(uriString, "RESTGet\/");
+    var imageString = "[";
+    jsLog.logAction("Consulta UNID:" + unidString);
+    try {
+        var doc: NotesDocument = db.getDocumentByUNID(unidString);
+        var item: RichTextItem = doc.getFirstItem('sol_status_des');
+        jsLog.logAction("sol_status_des:" + unidString);
+        if (item != null) {
+            var rtStrint = "";
+            rtString = item.getText();
+            var splitItem = rtString.split("%");
+			jsLog.logAction("contados: " + splitItem.length);
+			
+			for (x = 0; x < splitItem.length; x++) {
+                var passItem = splitItem[x];
+                if (passItem.length > 2) {
+                    imageString = imageString + "\"" + passItem.trim() + "\",";
+                } else {
+                jsLog.logAction('too short' +  passItem);
+                }
+            }
+			
+            if (imageString.charAt(imageString.length - 1) == ',') {
+                imageString = imageString.substring(0, imageString.length - 1);
+            }
+            jsLog.logAction('imageString?' +imageString);
+        }
+    } catch (e) {
+        jsLog.logAction("get doc error " + e);
+    }
+} catch (e) {
+    jsLog.logAction("error" + e);
+}
+imageString = imageString + "]";
+rtnString = rtnString + imageString;
+rtnString = rtnString + "}";
+return rtnString;}]]></xe:this.doGet>
+			</xe:customRestService>
+		</xe:this.service>
+	</xe:restService></xp:view>

@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:xf="http://www.ibm.com/xsp/xflow">
+	<xp:this.resources>
+		<xp:styleSheet href="/hdi_buttons.css"></xp:styleSheet>
+	</xp:this.resources>
+	<xp:div id="divFrmPropuestas">
+		<xp:panel id="PNL_BotonesPropuestas">
+			<xp:panel id="PNL_MSJ_AUTREQ" rendered="#{javascript:return (requiereAutoriz (documentPropuesta))}">
+				<xp:label id="labelAUTREQ" style="font-family:Verdana,sans-serif;font-size:9pt;color:rgb(128,128,0);font-weight:bold">
+					<xp:this.value><![CDATA[#{javascript:if(getIsGroupMember("spwAU.N3.JEFE.USR_CRUD")){
+	if (getComponent("sol_status_cod").getValue().equals("20")){
+		return "La propuesta requiere su autorización.";
+	}
+}
+if (getComponent("sol_status_cod").getValue().equals("20")){
+	return "En proceso de autorización.";
+}else{
+	return "Para comenzar la emisión, debe solicitar Autorización. Por favor Enviar a Jefe para autorizar.";
+}
+ }]]></xp:this.value>
+				</xp:label>
+			</xp:panel>
+			<xp:button id="btnCancel" dojoType="dijit.form.Button">
+				<xp:this.dojoAttributes>
+					<xp:dojoAttribute name="iconClass" value="cancelIcon"></xp:dojoAttribute>
+				</xp:this.dojoAttributes>
+				<xp:this.value><![CDATA[#{javascript:if (documentPropuesta.isEditable()){
+"Cancelar"}
+else{
+"Cerrar"}}]]></xp:this.value>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="norefresh" immediate="true">
+					<xp:this.action>
+						<xp:actionGroup>
+
+
+
+
+
+
+
+
+
+
+
+
+							<xp:executeScript>
+								<xp:this.script><![CDATA[#{javascript:if (sessionScope.containsKey('lastView')) {
+	context.redirectToPage(applicationScope.get("urlNavegador") + sessionScope.get('lastView'))
+} else {
+print("Redirige a "+applicationScope.get("urlNavegador") + '/Bienvenido.xsp');
+	facesContext.getExternalContext().redirect(applicationScope.get("urlNavegador") + '/Bienvenido.xsp');
+}}]]></xp:this.script>
+							</xp:executeScript>
+						</xp:actionGroup>
+					</xp:this.action>
+					<xp:this.script><![CDATA[var x = dojo.byId("#{id:labelDocumentLocked}");
+if(x != null){
+	if(!confirm(dojo.byId("#{id:labelDocumentLocked}").innerHTML + ".\nQuedará bloqueado hasta que presione 'Liberar la Orden', 'Guardar' o Envíe a otra Bandeja.\n\nDesea dejarlo bloqueado?")){
+		return false;
+	}
+} 
+
+
+
+//alert('what=' + );
+//XSP.getElementById("#{id:labelDocumentLocked}").value
+
+XSP._setDirty(false,"")]]></xp:this.script>
+				</xp:eventHandler>
+			</xp:button>
+			<xp:button value="Editar " id="buttonEditar" dojoType="dijit.form.Button">
+				<xp:this.dojoAttributes>
+					<xp:dojoAttribute name="iconClass" value="editIcon"></xp:dojoAttribute>
+				</xp:this.dojoAttributes>
+				<xp:this.rendered><![CDATA[#{javascript:isStatusCheckFlag(getComponent("sol_status_cod").getValue(), "est_PermiteEdicion_opt") && !documentPropuesta.isEditable() && ((viewScope.booIsLocked && viewScope.booIsLockedByCurrentUser)|| !viewScope.booIsLocked) && 
+isStatusFieldAccessGroup(getComponent("sol_status_cod").getValue(), "est_PermiteEdicionGrupo_des")}]]></xp:this.rendered>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+					<xp:this.action>
+						<xp:actionGroup>
+							<xp:this.condition><![CDATA[#{javascript:isStatusFieldAccessGroup(getComponent("sol_status_cod").getValue(), "est_PermiteEdicionGrupo_des")}]]></xp:this.condition>
+							<xp:changeDocumentMode mode="edit"></xp:changeDocumentMode>
+							<xp:executeScript>
+								<xp:this.script><![CDATA[#{javascript:lockDocument("");}]]></xp:this.script>
+							</xp:executeScript>
+						</xp:actionGroup>
+					</xp:this.action>
+				</xp:eventHandler>
+			</xp:button>
+			<xp:button id="btnSave" value="Grabar y Cerrar" dojoType="dijit.form.Button" rendered="#{javascript:documentPropuesta.isEditable()}">
+				<xp:this.dojoAttributes>
+					<xp:dojoAttribute name="iconClass" value="saveIcon"></xp:dojoAttribute>
+				</xp:this.dojoAttributes>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+					<xp:this.action>
+						<xp:actionGroup>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+							<xp:executeScript>
+								<xp:this.script><![CDATA[#{javascript://Se pasan los tags de documentación faltante al campo asociado
+documentPropuesta.setValue("sol_Documentacion_des",viewScope.get("strDocTagsArray"));	
+	
+if(!documentPropuesta.isNewNote()){
+	unLockDocument("");
+} else {
+	//Compara tags de documentación del mail y la propuesta, para corregir la propuesta
+	verificarTagsDocumentacion(viewScope.get("docxProp"));
+}}]]></xp:this.script>
+							</xp:executeScript>
+							<xp:saveDocument var="documentPropuesta"></xp:saveDocument>
+
+
+							<xp:executeScript>
+								<xp:this.script><![CDATA[#{javascript:if (sessionScope.containsKey('lastView')) {
+	context.redirectToPage(sessionScope.get('lastView'))
+} else {
+	context.redirectToPage('Bienvenido');
+}}]]></xp:this.script>
+							</xp:executeScript>
+						</xp:actionGroup>
+					</xp:this.action>
+				</xp:eventHandler>
+			</xp:button>
+			<xp:button id="buttonGrabar" value="Grabar" dojoType="dijit.form.Button">
+				<xp:this.dojoAttributes>
+					<xp:dojoAttribute name="iconClass" value="saveIcon"></xp:dojoAttribute>
+				</xp:this.dojoAttributes>
+				<xp:this.rendered><![CDATA[#{javascript:documentPropuesta.isEditable() && !documentPropuesta.isNewNote()}]]></xp:this.rendered>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+					<xp:this.action>
+						<xp:actionGroup>
+							<xp:actionGroup>
+								<xp:actionGroup>
+									<xp:executeScript>
+										<xp:this.script><![CDATA[#{javascript://Se pasan los tags de documentación faltante al campo asociado
+documentPropuesta.setValue("sol_Documentacion_des",viewScope.get("strDocTagsArray"));}]]></xp:this.script>
+									</xp:executeScript>
+									<xp:saveDocument
+										var="documentPropuesta">
+									</xp:saveDocument>
+									<xp:executeScript>
+										<xp:this.script><![CDATA[#{javascript:unLockDocument("");}]]></xp:this.script>
+									</xp:executeScript>
+
+								</xp:actionGroup>
+								<xp:changeDocumentMode mode="readOnly" var="documentPropuesta"></xp:changeDocumentMode>
+							</xp:actionGroup>
+						</xp:actionGroup>
+					</xp:this.action>
+				</xp:eventHandler>
+			</xp:button>
+			<xp:button value="Continuar" id="btnContinuar" dojoType="dijit.form.Button" rendered="#{javascript:documentPropuesta.isNewNote()}">
+				<xp:this.dojoAttributes>
+					<xp:dojoAttribute name="iconClass" value="tildeIcon"></xp:dojoAttribute>
+				</xp:this.dojoAttributes>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+					<xp:this.action>
+						<xp:actionGroup>
+							<xp:actionGroup>
+								<xp:executeScript>
+									<xp:this.script><![CDATA[#{javascript://Se pasan los tags de documentación faltante al campo asociado
+documentPropuesta.setValue("sol_Documentacion_des",viewScope.get("strDocTagsArray"));
+
+//Compara tags de documentación del mail y la propuesta, para corregir la propuesta
+verificarTagsDocumentacion(viewScope.get("docxProp"));}]]></xp:this.script>
+								</xp:executeScript>
+								<xp:saveDocument
+									var="documentPropuesta">
+								</xp:saveDocument>
+								<xp:executeScript>
+									<xp:this.script><![CDATA[#{javascript:sessionScope.put("TabComponenteVisible", true);
+//lockDocument("");}]]></xp:this.script>
+								</xp:executeScript>
+								<xp:changeDocumentMode mode="readOnly"
+									var="documentPropuesta">
+								</xp:changeDocumentMode>
+
+							</xp:actionGroup>
+						</xp:actionGroup>
+					</xp:this.action>
+				</xp:eventHandler>
+			</xp:button>
+			<xp:button value="Dividir Pantalla" id="buttonDivPan" dojoType="dijit.form.Button">
+				<xp:this.dojoAttributes>
+					<xp:dojoAttribute name="iconClass" value="dividirIcon"></xp:dojoAttribute>
+				</xp:this.dojoAttributes>
+				<xp:this.rendered><![CDATA[#{javascript:if((viewScope.booIsLocked && viewScope.booIsLockedByCurrentUser)|| !viewScope.booIsLocked){
+return (isEmisionAllowed (documentPropuesta));
+}else{return false}}]]></xp:this.rendered>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="complete" immediate="true">
+					<xp:this.action><![CDATA[#{javascript:if (userTryingToEdit () == false) {
+	throw new java.lang.Exception("No puede EDITAR este documento.  Bloqueado por: " + viewScope.get("strLockedBy"));
+}
+var url:String= context.getUrl().toString();
+if (isPropuestaEmitidaEnAs400()){
+	unLockDocument("");
+	facesContext.getExternalContext().redirect(url);	
+}else{
+	url = url.replace("xfdocPropuesta", "xfDividirPantalla");
+	facesContext.getExternalContext().redirect(url);
+}}]]></xp:this.action>
+				</xp:eventHandler>
+			</xp:button>
+			<xp:button value="Desvincular póliza"
+				id="QuitarRelacionPolizaAnterior" dojoType="dijit.form.Button">
+				<xp:this.dojoAttributes>
+					<xp:dojoAttribute name="iconClass"
+						value="unlinkIcon">
+					</xp:dojoAttribute>
+				</xp:this.dojoAttributes>
+				<xp:this.rendered><![CDATA[#{javascript:// Busca la base productiva
+var dbProd:NotesDatabase = getDbByKey("Navegador - No cambiar");
+if (dbProd == null) return false; // No se encontró la base productiva
+
+var idPadre_cod:String = documentPropuesta.getItemValueString("idPadre_cod");
+if (idPadre_cod.equals("")) return false; //sale por padre de todas
+
+try {
+	// Primero busca el padre en la misma base
+	var docPadre:NotesDocument = database.getDocumentByUNID(idPadre_cod);
+	var booBaseProd = false;
+} catch(e) {
+	try {
+		// Si el padre no está en la misma base, se busca en la base productiva
+		var docPadre:NotesDocument = dbProd.getDocumentByUNID(idPadre_cod);
+		var booBaseProd = true;
+	} catch(e) {
+	    return false; //sale por padre nulo
+	}
+}
+
+// Revisa que el padre esté emitido
+if (docPadre.getItemValueString("sol_status_cod") != "90") return false;
+
+var actual_poliza_nro:Integer = documentPropuesta.getItemValueInteger("sol_poliza_nro");
+var padre_poliza_nro:Integer = docPadre.getItemValueInteger("sol_poliza_nro");
+
+if(actual_poliza_nro.equals(padre_poliza_nro)) return false; // sale por poliza = a padre
+
+var docProfile:NotesDocument = dbProd.getProfileDocument("f.p.Configuracion", "");
+var vecUsrs:java.util.Vector = docProfile.getItemValue("prfUsrsDesvinculanPolizas");
+
+// Si el usuario no está en la lista de personas habilitadas para desvincular, no ve el botón
+if (vecUsrs.contains(@Name("[CN]",@UserName())) == false) return false;	// Lista del documento de configuracion
+
+// Se guarda en variables scope la información del padre que se necesita para desvincular:
+// El nro de orden y path de la base que lo contiene
+viewScope.put("padreNroOrden",docPadre.getItemValueInteger("orden_nro"));
+
+if (booBaseProd == false) {
+	viewScope.put("padrePath",docPadre.getParentDatabase().getFilePath());
+} else {
+	viewScope.put("padrePath","");
+}
+
+return true;}]]></xp:this.rendered>
+				<xp:eventHandler event="onclick" submit="true"
+					refreshMode="complete">
+					<xp:this.script><![CDATA[if(!confirm("Con esta acción quitará la relación de esta póliza con la siguiente.\nLuego un proceso la relacionará nuevamente.\nDesea continuar y quitar la relación?")){
+return false;
+}]]></xp:this.script>
+					<xp:this.action>
+						<xp:actionGroup>
+							<xp:executeScript>
+								<xp:this.script><![CDATA[#{javascript:viewScope.put("vsComentarioComun", "si");
+getComponent('addCommentDialog').show();}]]></xp:this.script>
+							</xp:executeScript>
+						</xp:actionGroup>
+					</xp:this.action>
+				</xp:eventHandler>
+			</xp:button>
+			<xe:tooltip id="tooltipButtonDesvincular" for="QuitarRelacionPolizaAnterior" label="Desvincula esta orden de la siguiente" position="below"></xe:tooltip>
+			&#160;<xc:ccDAU></xc:ccDAU>
+			<xp:button value="Autorizar" id="buttonAutorizar">
+				<xp:this.rendered><![CDATA[#{javascript:if (documentPropuesta.getItemValueString ("sol_status_cod").equals ("20") || documentPropuesta.getItemValueString ("sol_status_cod").equals ("40")) {
+	if (documentPropuesta.isEditable()) {
+		if (requiereAutoriz (documentPropuesta)) return true;
+	}
+}
+return false;}]]></xp:this.rendered>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+					<xp:this.action>
+						<xp:actionGroup>
+							<xp:executeScript>
+								<xp:this.script><![CDATA[#{javascript:documentPropuesta.replaceItemValue ("sol_Autoriz_flag", "1");
+setSysLog (documentPropuesta.getDocument(), "Se autorizó la propuesta.");
+setLogBackEnd (documentPropuesta.getDocument(), "Autorizó la propuesta.");
+documentPropuesta.save();
+unLockDocument("");}]]></xp:this.script>
+							</xp:executeScript>
+							<xp:changeDocumentMode mode="readOnly" var="documentPropuesta"></xp:changeDocumentMode>
+						</xp:actionGroup>
+					</xp:this.action>
+				</xp:eventHandler>
+			</xp:button>
+			<xc:ccFx_BotonCambiarEstado
+				property_ButtonLabel="Enviar a...">
+				<xc:this.property_Opciones><![CDATA[#{javascript:var vOpciones:NotesView = getDbCfg().getView ("v.Sys.LK_EstadosCodigo");
+if (!documentPropuesta.isNewNote()){
+	/*var dc:NotesDocumentCollection = vOpciones.getAllDocumentsByKey(getComponent("sol_status_cod" ).getValue ());
+	var doc:NotesDocument = dc.getFirstDocument();
+	while (doc != null) {
+		return doc.getItemValue("est_Siguientes_cod");
+	}*/
+	//var dc:NotesDocumentCollection = vOpciones.getAllDocumentsByKey(getComponent("sol_status_cod" ).getValue ());
+	var doc:NotesDocument = vOpciones.getDocumentByKey(getComponent("sol_status_cod").getValue());
+	if (doc != null) {
+		return doc.getItemValue("est_Siguientes_cod");
+	}
+}}]]></xc:this.property_Opciones>
+				<xc:this.property_EstadoActual><![CDATA[#{javascript:getComponent("sol_status_cod").getValue();}]]></xc:this.property_EstadoActual>
+			</xc:ccFx_BotonCambiarEstado>
+
+			<xc:ccIcono></xc:ccIcono>
+			<xp:div style="display:inline;">
+				
+				
+			</xp:div>
+		</xp:panel>
+	</xp:div>
+</xp:view>

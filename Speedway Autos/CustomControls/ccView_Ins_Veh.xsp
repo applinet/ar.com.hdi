@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core">
+	<xp:this.data>
+		<xp:dominoView var="viewInspecciones" viewName="v.UI.Ins.Veh">
+			<xp:this.categoryFilter><![CDATA[#{javascript:context.getUrlParameter("veh");}]]></xp:this.categoryFilter>
+		</xp:dominoView>
+		<xp:dominoDocument var="docVeh" action="openDocument"
+			formName="Componente">
+			<xp:this.documentId><![CDATA[#{javascript://Seteo el código de vehiculo obteniendolo del parámetro de la URL
+var strVeh = context.getUrlParameter("veh");
+if (strVeh.equals("")) throw new java.lang.Exception("No llegó el código del vehiculo");
+
+//Busco los campos del vehiculo
+var vVehiculos:NotesView = getDbVeh().getView ("v.Sys.Veh");
+var docVeh:NotesDocument = vVehiculos.getDocumentByKey(strVeh);
+
+if (docVeh == null) {
+	throw new java.lang.Exception("El código de vehiculo no fue encontrado: " + strVeh); 
+}
+
+docVeh.getUniversalID()
+}]]></xp:this.documentId>
+		</xp:dominoDocument>
+		<xp:dominoDocument var="docProp" action="openDocument"
+			formName="Propuesta">
+			<xp:this.documentId><![CDATA[#{javascript:docVeh.getItemValueString("idPadre_cod");}]]></xp:this.documentId>
+		</xp:dominoDocument>
+	</xp:this.data>
+
+
+
+
+	<xp:this.resources>
+		<xp:styleSheet href="/views.css"></xp:styleSheet>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+		<xp:styleSheet href="/viewIns.css"></xp:styleSheet>
+	</xp:this.resources>
+	<xp:span style="font-weight:bold"></xp:span>
+	<xp:br style="color:rgb(255,0,0)" rendered="false"></xp:br>
+	<xp:panel id="PNL_Title" style="margin-bottom:20.0px"
+		styleClass="PanelBoxHeader">
+
+		
+		<xp:panel id="PNL_Veh" styleClass="PanelBoxHeaderVeh">
+			<xp:panel id="PNL_Veh_Title" styleClass="PanelTitle">Vehiculo</xp:panel><xp:table id="TBL_Veh_Fields">
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Marca:"
+							id="veh_marca_des_Label1" for="veh_marca_des1">
+						</xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{docVeh.veh_marca_des}"
+							id="veh_marca_des1">
+						</xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Modelo:"
+							id="veh_modelo_des_Label1" for="veh_modelo_des1">
+						</xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{docVeh.veh_modelo_des}"
+							id="veh_modelo_des1">
+						</xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Submodelo:"
+							id="veh_submodelo_des_Label1" for="veh_submodelo_des1">
+						</xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{docVeh.veh_submodelo_des}"
+							id="veh_submodelo_des1">
+						</xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Patente:"
+							id="veh_patente_des_Label1" for="veh_patente_des1">
+						</xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{docVeh.veh_patente_des}"
+							id="veh_patente_des1">
+						</xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Cobertura Solicitada:"
+							id="veh_cobertura_des_Label1" for="veh_cobertura_des1">
+						</xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{docVeh.veh_cobertura_des}"
+							id="veh_cobertura_des1">
+						</xp:text>
+					</xp:td>
+				</xp:tr>
+				
+			</xp:table>
+		</xp:panel>
+		<xp:panel id="PNL_Prop" styleClass="PanelBoxHeaderProp">
+			<xp:panel id="PNL_Prop_Title" styleClass="PanelTitle">Propuesta</xp:panel>
+			<xp:table id="TBL_Prop_Fields">
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Orden:"
+							id="orden_nro_Label1" for="orden_nro1">
+						</xp:label>
+					</xp:td>
+					<xp:td>
+						
+					<xp:text value="#{docProp.orden_nro}"
+						id="orden_nro1">
+						<xp:this.converter>
+							<xp:convertNumber type="number"></xp:convertNumber>
+						</xp:this.converter>
+					</xp:text></xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Póliza:"
+							id="sol_superpoliza_nro_Label1" for="sol_superpoliza_nro1">
+						</xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{docProp.sol_superpoliza_nro}"
+							id="sol_superpoliza_nro1">
+							<xp:this.converter>
+								<xp:convertNumber></xp:convertNumber>
+							</xp:this.converter>
+						</xp:text>
+					</xp:td>
+				</xp:tr>
+				
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Estado:"
+							id="sol_status_des_Label1" for="sol_status_des1">
+						</xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{docProp.sol_status_des}"
+							id="sol_status_des1">
+						</xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Asegurado:"
+							id="sol_asegurado_des_Label1" for="sol_asegurado_des1">
+						</xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{docProp.sol_asegurado_des}"
+							id="sol_asegurado_des1">
+						</xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Productor:"
+							id="sol_productor_des_Label1" for="sol_productor_des1">
+						</xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{docProp.sol_productor_des}"
+							id="sol_productor_des1">
+						</xp:text>
+					</xp:td>
+				</xp:tr>
+			</xp:table></xp:panel>
+	</xp:panel>
+
+	<xp:panel styleClass="PanelBox" id="PNL_Listing">
+		<xp:table cellpadding="5" cellspacing="0" border="0">
+			<xp:tr styleClass="ViewTitle">
+				<xp:td>Número</xp:td>
+				<xp:td>Inspector</xp:td>
+				<xp:td>Combinada</xp:td>
+				<xp:td>Estado</xp:td>
+				<xp:td>Cobertura</xp:td>
+				
+			</xp:tr>
+
+			<xp:repeat id="repeat1" rows="30"
+				value="#{viewInspecciones}" var="repeatColInspec"
+				indexVar="repeatIndexInspec">
+
+				<xp:tr id="rowInspeccion" styleClass="ViewRow">
+					<xp:td align="center">
+						<xp:text escape="true" id="computedField1">
+							<xp:this.converter>
+								<xp:convertNumber type="number"></xp:convertNumber>
+							</xp:this.converter>
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_Consecutivo_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>
+					<xp:td>
+						<xp:text escape="true" id="computedField2">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_Inspect_opt");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>
+					<xp:td>
+						<xp:text escape="true" id="computedField3">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_iFecha_dat");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>
+					<xp:td>
+						<xp:text escape="true" id="computedField4">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_iEst_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>
+					<xp:td>
+						<xp:text escape="true" id="computedField5">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_iCobAprob_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>
+					<xp:eventHandler event="onclick" submit="true"
+						refreshMode="complete">
+						<xp:this.action>
+							<xp:openPage name="/xfDocInspeccion.xsp"
+								target="openDocument"
+								documentId="#{javascript:repeatColInspec.getUniversalID();}">
+							</xp:openPage>
+						</xp:this.action>
+					</xp:eventHandler>
+				</xp:tr>
+			</xp:repeat>
+		</xp:table>
+	</xp:panel>
+</xp:view>

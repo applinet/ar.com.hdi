@@ -1,0 +1,305 @@
+'++LotusScript Development Environment:2:5:(Options):0:74
+%REM
+	Library LS.Mailing
+	Created Jul 12, 2013 by Diego L/axin
+	Description: Comments for Library
+%END REM
+
+Option Public
+Option Declare
+
+Use "LS.general.BE.v01"
+
+'++LotusScript Development Environment:2:5:(Forward):0:1
+Declare Class mailingConfig
+Declare Function linkMailWithDoc (docMail_param As NotesDocument, strMailCat_param As String, booSave_param As Boolean, booSend_param As Boolean, booMost_param As Boolean)
+Declare Function sendMailWithCfg (strClave_param As String, booSave_param As Boolean, strMailCat_param As String, strAction_param As String, docTarget_param As NotesDocument) As Boolean
+
+'++LotusScript Development Environment:2:5:(Declarations):0:10
+%REM
+	Class mailingConfig
+	Description: Comments for Class
+%END REM
+Class mailingConfig
+	
+	Public dbConfig As NotesDatabase
+	Public viewMailingConfig As NotesView
+	Public docMailConfig As NotesDocument
+	Public strMailCat As String
+	Public strAction As String
+	Public strClave As String
+	Public strCode As String
+	Public strNombre As String
+	Public strEnabled As String
+	Public strCondicionesFormula As String
+	
+	Public strFromFormula As String
+	Public strAsuntoFormula As String
+	Public strCuerpoPlanoFormula As String
+	Public rtCuerpo As NotesRichTextItem
+	Public strCuerpoUbic As String
+	Public rtFirma As NotesRichTextItem
+	Public strIncluirNotesLink As String
+	Public booIncluirNotesLink As Boolean
+	Public strIncluirNotesLinkTxt As String
+	
+	Public strIncluirAdjunto As String
+	
+	Public strIncluirCampoEnriq As String
+	Public booIncluirCampoEnriq As Boolean
+	Public strIncluirCampoEnriqTxt As String
+	
+	Public vecSendTo As Variant
+	Public strSendToFormula As String
+	Public vecCopyTo As Variant
+	Public strCopyToFormula As String
+	Public vecBlindCopyTo As Variant
+	Public strBlindCopyToFormula As String
+	
+	Public booEnabled As Boolean
+	Public booCumpleCondiciones As Boolean
+	
+	Public vecFromFResult As Variant
+	Public vecAsuntoFResult As Variant
+	Public vecCuerpoPlanoFResult As Variant
+	Public strCuerpoPlano As String
+	
+	Public vecSendToFResult As Variant
+	Public vecCopyToResult As Variant
+	Public vecBlindCopyToFResult As Variant
+	
+	Public vecAllSendTo As Variant
+	Public vecAllCopyTo As Variant
+	Public vecAllBlindCopyTo As Variant
+	
+	Public intDestinatariesCount As Integer
+	Public booIsValid As Boolean
+	
+	%REM
+		Sub New
+		Description: Comments for Sub
+	%END REM
+	Sub New (strClave_prm As String, strMailCat_prm As String, strAction_prm As String, docTarget_prm As NotesDocument)
+		On Error GoTo errHandler
+		
+		Set dbConfig = getCfgDB ()
+		Set viewMailingConfig = dbConfig.getView("v.Sys.Mail.Clave")
+		Set docMailConfig = viewMailingConfig.getDocumentByKey(strClave_prm)
+		
+		strMailCat = strMailCat_prm
+		strAction = strAction_prm
+		strClave = strClave_prm
+		
+		strCode = docMailConfig.getItemValue("mail_Codigo_des")(0)
+		strNombre = docMailConfig.getItemValue("mail_Nombre_des")(0)
+		strEnabled = docMailConfig.getItemValue("mail_Habilitado_des")(0)
+		strCondicionesFormula = docMailConfig.getItemValue("mail_Condiciones_des")(0)
+		
+		'MENSAJE
+		strFromFormula = docMailConfig.getItemValue("mail_From_des")(0)
+		strAsuntoFormula = docMailConfig.getItemValue("mail_Asunto_des")(0)
+		strCuerpoPlanoFormula = docMailConfig.getItemValue("mail_CuerpoPlano_des")(0)
+		Set rtCuerpo = docMailConfig.getFirstItem("mail_CuerpoEnr_des")
+		strCuerpoUbic = docMailConfig.getItemValue("mail_CuerpoEnrUbic_opt")(0)
+		Set rtFirma = docMailConfig.getFirstItem("mail_Firma_des")
+		strIncluirNotesLink = docMailConfig.getItemValue("mail_LinkIncluir_des")(0)
+		booIncluirNotesLink = False
+		If (strIncluirNotesLink = "1") Then booIncluirNotesLink = True
+		strIncluirNotesLinkTxt = docMailConfig.getItemValue("mail_LinkIncluirTxt_des")(0)
+		
+		strIncluirAdjunto = docMailConfig.getItemValue("mail_AdjIncluir_des")(0)
+		
+		strIncluirCampoEnriq = docMailConfig.getItemValue("mail_RichFieldIncluir_des")(0)
+		booIncluirCampoEnriq = False
+		If (strIncluirCampoEnriq = "1") Then booIncluirCampoEnriq = True
+		strIncluirCampoEnriqTxt = docMailConfig.getItemValue("mail_RichFieldIncluirText_des")(0)
+		
+		
+		'DESTINATARIOS
+		vecSendTo = docMailConfig.getItemValue("mail_SendTo_des")
+		strSendToFormula = docMailConfig.getItemValue("mail_SendToFormula_des")(0)
+		vecCopyTo = docMailConfig.getItemValue("mail_CopyTo_des")
+		strCopyToFormula = docMailConfig.getItemValue("mail_CopyToFormula_des")(0)
+		vecBlindCopyTo = docMailConfig.getItemValue("mail_BlindCopyTo_des")
+		strBlindCopyToFormula = docMailConfig.getItemValue("mail_BlindCopyToFormula_des")(0)
+		
+		'HABILITADO ?
+		booEnabled = False
+		If (strEnabled = "1") Then booEnabled = True
+				
+		'CUMPLE CONDICIONES?
+		booCumpleCondiciones = evaluateFormulaBoolean(strCondicionesFormula, docTarget_prm)
+				
+		'CALCULO FORMULAS
+		vecFromFResult = evaluateFormula (strFromFormula, docTarget_prm)
+		vecAsuntoFResult = evaluateFormula (strAsuntoFormula, docTarget_prm)
+		vecCuerpoPlanoFResult = evaluateFormula (strCuerpoPlanoFormula, docTarget_prm)
+		strCuerpoPlano = vecCuerpoPlanoFResult(0)
+		
+		vecSendToFResult = evaluateFormula (strSendToFormula, docTarget_prm)
+		vecCopyToResult = evaluateFormula (strCopyToFormula, docTarget_prm)
+		vecBlindCopyToFResult = evaluateFormula (strBlindCopyToFormula, docTarget_prm)
+		
+		vecAllSendTo = unirDestinatarios (vecSendTo, vecSendToFResult)
+		vecAllCopyTo = unirDestinatarios (vecCopyTo, vecCopyToResult)
+		vecAllBlindCopyTo = unirDestinatarios (vecBlindCopyTo, vecBlindCopyToFResult)
+		
+		'Calculo datos varios
+		If (vecAllSendTo(0) <> "") Then
+			intDestinatariesCount = UBound (vecAllSendTo) + 1
+		End If
+		If (vecAllCopyTo(0) <> "") Then
+			intDestinatariesCount = UBound (vecAllCopyTo) + 1
+		End If
+		If (vecAllBlindCopyTo(0) <> "") Then
+			intDestinatariesCount = UBound (vecAllBlindCopyTo) + 1
+		End If
+				
+		booIsValid = True
+		If (vecAsuntoFResult (0) = "") Then booIsValid = False
+		
+		
+		
+		Exit Sub
+errHandler:
+		Error Err, Error$ + Chr (13) + CStr (GetThreadInfo (LSI_THREAD_PROC)) + " - Line " + CStr (Erl)
+		Exit Sub
+	End Sub
+	
+	
+End Class
+'++LotusScript Development Environment:2:1:linkMailWithDoc:5:8
+%REM
+	Function linkMailWithDoc
+	Description: Comments for Function
+%END REM
+Function linkMailWithDoc (docMail_param As NotesDocument, strMailCat_param As String, booSave_param As Boolean, booSend_param As Boolean, booMost_param As Boolean)
+	On Error GoTo errHandler	
+	On Error 4294 GoTo AmbiguousError
+	
+	If (booMost_param) Then 
+		Call docMail_param.replaceItemValue("MyMailMostrador", "1")
+	Else 
+		Call docMail_param.replaceItemValue("MyMailMostrador", "0")
+	End If
+	Call docMail_param.replaceItemValue("MyMailCode", Evaluate("@Unique"))
+	Call docMail_param.replaceItemValue("MyMailCat", strMailCat_param)
+	If (booSend_param) Then Call docMail_param.send(False)
+	Call docMail_param.replaceItemValue("Form", "MemoLinked")
+	If (booSave_param) Then Call docMail_param.save(False, False)
+		
+	Exit Function
+	
+AmbiguousError: 
+	MessageBox "Ingresa en AmbiguousError" 
+	Dim estaSession As New NotesSession
+	Dim namesdb As NotesDatabase, Persondoc As NotesDocument
+	Set namesdb= estaSession.getdatabase(docMail_param.Parentdatabase.Server, "names.nsf") 
+	Set Persondoc= namesdb.getview("($Users)").getdocumentbykey(docMail_param.SendTo(0))
+	
+	If (Persondoc.Form(0) = "Group") Then
+		docMail_param.SendTo = Persondoc.ListName(0) & "@" & Persondoc.MailDomain(0)
+	Else
+		docMail_param.SendTo = Persondoc.fullname(0) & "@" & Persondoc.MailDomain(0)	
+	End If
+	
+	
+	MessageBox "Encontró a: " +  docMail_param.SendTo(0)
+	Call docMail_param.Send(True) 
+	Resume Next 	
+	
+errHandler:
+	Error Err, Error$ + Chr (13) + CStr (GetThreadInfo (LSI_THREAD_PROC)) + " - Line " + CStr (Erl)
+	Exit Function
+End Function
+
+'++LotusScript Development Environment:2:1:sendMailWithCfg:5:8
+%REM
+	Function sendMailWithCfg
+	Description: Comments for Function
+%END REM
+Function sendMailWithCfg (strClave_param As String, booSave_param As Boolean, strMailCat_param As String, strAction_param As String, docTarget_param As NotesDocument) As Boolean
+	'"InspeccionRtaRecibida-Previa", True, strInsCode, "Se recibió Respuesta de Inspección Previa", docIns
+	'On Error GoTo errHandler
+	
+	Dim dbMails As NotesDatabase
+	Dim myMailConfig As mailingConfig
+	Dim newMail As NotesDocument
+	Dim rtBody As NotesRichTextItem
+	
+	
+	Set myMailConfig = New mailingConfig (strClave_param, strMailCat_param, strAction_param, docTarget_param)
+	
+	
+	sendMailWithCfg = False
+	If (myMailConfig.booEnabled = False) Then Exit Function
+	If (myMailConfig.booCumpleCondiciones = False) Then Exit Function
+	If (myMailConfig.intDestinatariesCount < 1) Then Exit Function
+	If (myMailConfig.booIsValid = False) Then Exit Function
+	
+	
+	Set dbMails = getMailsDb()
+	Set newMail = dbMails.Createdocument()
+	
+	Call newMail.replaceItemValue("Form", "Memo")
+	Call newMail.replaceItemValue("SendTo", myMailConfig.vecAllSendTo)
+	Call newMail.replaceItemValue("CopyTo", myMailConfig.vecAllCopyTo)
+	Call newMail.replaceItemValue("BlindCopyTo", myMailConfig.vecAllBlindCopyTo)
+	Call newMail.replaceItemValue("From", myMailConfig.vecFromFResult)
+	Call newMail.replaceItemValue("Principal", myMailConfig.vecFromFResult)
+	Call newMail.replaceItemValue("Subject", myMailConfig.vecAsuntoFResult)
+	
+	Set rtBody = newMail.createRichTextItem("Body")
+	If (myMailConfig.strCuerpoUbic = "1") Then Call rtBody.appendRTItem(myMailConfig.rtCuerpo)
+	Call rtBody.appendText(myMailConfig.strCuerpoPlano)
+	
+	If (myMailConfig.booIncluirNotesLink And (Not docTarget_param Is Nothing) And docTarget_param.Isnewnote = False) Then
+		rtBody.appendText(myMailConfig.strIncluirNotesLinkTxt)
+		Call rtBody.appendDocLink(docTarget_param, "")
+	End If
+	
+	If (myMailConfig.strCuerpoUbic = "2") Then Call rtBody.appendRTItem(myMailConfig.rtCuerpo)
+	Call rtBody.appendRTItem(myMailConfig.rtFirma)
+	
+	Call newMail.replaceItemValue("MyMailAction", strAction_param)
+	Call newMail.replaceItemValue("MyMailConfigCode", myMailConfig.strCode)
+	Call newMail.replaceItemValue("MyMailClave", strClave_param)
+	Call newMail.replaceItemValue("MyMailNombre", myMailConfig.strNombre)
+	Call newMail.replaceItemValue("MyMailCondiciones", myMailConfig.strCondicionesFormula)
+	Call newMail.replaceItemValue("MyMailSentDate", Now)
+	
+	
+	If myMailConfig.strIncluirAdjunto = "1" Then		
+		Dim rtiObject As NotesEmbeddedObject
+		Set rtiObject = rtBody.EmbedObject( EMBED_ATTACHMENT, "", docTarget_param.dato(0))
+	End If
+	
+	If myMailConfig.strIncluirCampoEnriq = "1" Then
+		Dim item As NotesRichTextItem
+		Set Item = docTarget_param.Getfirstitem(myMailConfig.strIncluirCampoEnriqTxt)
+		Call newMail.Copyitem(Item , "Body")
+	End If	
+	
+	
+
+
+	Call linkMailWithDoc (newMail, strMailCat_param, booSave_param, True, False)
+	
+	'Exit Function
+'errHandler:
+	'Error Err, Error$ + Chr (13) + CStr (GetThreadInfo (LSI_THREAD_PROC)) + " - Line " + CStr (Erl)
+'	Exit Function
+End Function
+
+
+
+
+
+
+
+
+
+
+
+
+

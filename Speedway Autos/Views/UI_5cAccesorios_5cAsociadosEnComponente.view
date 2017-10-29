@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<note class='view' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.0'
+ replicaid='03257E5A006E447C'>
+<noteinfo noteid='1aa' unid='F5707217AF5FB0F303257CF6003ADAD2' sequence='22'>
+<created><datetime>20140613T074251,06-03</datetime></created>
+<modified><datetime>20170829T080800,84-03</datetime></modified>
+<revised><datetime>20170829T080800,83-03</datetime></revised>
+<lastaccessed><datetime>20170829T080800,83-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170426,56-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name
+>CN=Pepe Administrator/O=axin</name><name>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name='$FormulaClass' sign='true'><text>1</text></item>
+<item name='TmpViewDesignCollation' sign='true'><text>es-AR</text></item>
+<item name='$TITLE' sign='true'><text>UI\Accesorios\AsociadosEnComponente|v.UI.AccAsocComponente_EmbView</text></item>
+<item name='$Index' sign='true'><text/></item>
+<item name='$Formula' summary='true' sign='true'><formula compiled='true'>
+igAFAFgAVAAGAAsADgARAA0ACQAEAGlkUGFkcmVfY29kYWNjX25vbWJyZV9kZXNhY2NfdGFyaWZh
+YmxlX29wdGFjY192YWxvcl9ucm8kQ29uZmxpY3QkUkVGBAAEAAAAHgAFAAQARm9ybQEACgBBY2Nl
+c29yaW9zCgIDAAcADgAIAAlMMVMyUzNT
+</formula></item>
+<item name='$Collation' summary='true'>
+<rawitemdata type='2'>
+GAABAABECGYHAAALAGlkUGFkcmVfY29k
+</rawitemdata></item>
+<item name='$ViewFormat' summary='true' sign='true'>
+<rawitemdata type='5'>
+AQAEAAkAiAQAAFZDAwQLAAkAAAAAAEMAAQEACgABAAAAAAAAAAICAAAAVkMAAA4ADgAAAAAAUAAB
+AAAKAAAAAAAAAAAAAgIAAABWQwAAEQAMAAAAAABQAAEAAAoAAAAAAAAAAAACAgAAAFZDAAANAAgA
+AAAAAFAAAQAACgAAAAAAAAAAAAICAAAAaWRQYWRyZV9jb2RVbmlkUGFkcmVhY2Nfbm9tYnJlX2Rl
+c2FjY0Rlc2NyaXBjaW9uYWNjX3RhcmlmYWJsZV9vcHRhY2NUYXJpZmFibGVhY2NfdmFsb3JfbnJv
+YWNjVmFsb3ImAAEAAAABAQAJAQAACgEBDgoAABUArSsBAAEAAQAAAAAAAAAAAFdDAQEACQAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAP//AAAAAAAAAAAAAAAAAABXQwEBAAkAAAAAAAAAAAAAAAAAAAAA
+AAAEAAAAAAD//wAAAAAAAAAAAAAAAAAAV0MBAQAJAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAA//8A
+AAAAAAAAAAAAAAAAAFdDAQEACQAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAP//AAAAAAAAAAAAAAAA
+AABCAAAAAAABAP///wABAN3/6QABAAAAAAAAAAAAAAAAAAEA////AAEAiP+uAAAAAQAAAAAAAQAA
+AAAAAQAAAAAAAAAIAAAAAAABAA==
+</rawitemdata></item>
+<item name='$Comment' sign='true'><text>vUI_BonificacionesAsociadasEnComponente</text></item>
+<item name='$Flags'><text>Y</text></item>
+<item name='$DesignerVersion' sign='true'><text>8.5.3</text></item></note>
+

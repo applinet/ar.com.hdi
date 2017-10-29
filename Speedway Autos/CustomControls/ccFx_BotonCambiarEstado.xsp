@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex" xmlns:xc="http://www.ibm.com/xsp/custom">
+
+	<xe:dropDownButton id="btnCambiarEstado" style="display:inline">
+		<xe:this.treeNodes>
+			<xe:basicContainerNode label="#{javascript:compositeData.property_ButtonLabel}" transparent="false" imageHeight="15px"
+				image="/SendToBox.png">
+				<xe:this.children>
+					<xe:repeatTreeNode loaded="true" indexVar="index" var="crrView">
+						<xe:this.children>
+							<xe:basicLeafNode loaded="true">
+								<xe:this.label><![CDATA[#{javascript:var pipeidx = crrView.indexOf("|");//Obtengo el indice del pipe
+crrView.left(pipeidx);
+}]]></xe:this.label>
+								<xe:this.submitValue><![CDATA[#{javascript:var pipeidx = crrView.indexOf("|");//Obtengo el indice del pipe
+@Trim(crrView.mid(pipeidx+1, 4));
+}]]></xe:this.submitValue>
+							</xe:basicLeafNode>
+						</xe:this.children>
+						<xe:this.value><![CDATA[#{javascript:compositeData.property_Opciones}]]></xe:this.value>
+					</xe:repeatTreeNode>
+				</xe:this.children>
+			</xe:basicContainerNode>
+		</xe:this.treeNodes>
+		<xe:this.rendered><![CDATA[#{javascript:var docxProp:NotesXspDocument = viewScope.get("docxProp");
+if (docxProp == null) throw new java.lang.Exception("La propuesta no fue encontrada");
+if(!((viewScope.booIsLocked && viewScope.booIsLockedByCurrentUser)|| !viewScope.booIsLocked)){return false}
+var estado:String = compositeData.property_EstadoActual;
+var estadosOcultos:Array = compositeData.property_OcultarEnEstados; //Emitida, Susp Esp, Susp
+if(docxProp.isNewNote()){return false};
+if(docxProp.isEditable()){return false};
+if(@IsMember(estado, estadosOcultos)){return false};
+
+var vEstados:NotesView = getDbCfg().getView ("v.Sys.LK_EstadosCodigo");
+var docEstado:NotesDocument = vEstados.getDocumentByKey(compositeData.property_EstadoActual);
+if (docEstado != null){
+	var booResult:boolean = false;
+	var vecCodigoEstado:java.util.Vector = new java.util.Vector();
+	//	var strEstGrupos:String = docEstado.getItemValueString("est_Grupos_des"); //FPRgrupo	
+	var vecEstGrupos:java.util.Vector = docEstado.getItemValue("est_Grupos_des"); //Grupo que puede cambiar de estado
+	for (i=0; i<vecEstGrupos.size(); i++) {
+		if(vecEstGrupos.elementAt(i) != ""){
+			var groups:java.util.Vector = context.getUser().getGroups();//FPRgrupo
+			if(groups.indexOf(vecEstGrupos.elementAt(i)) != -1){
+				booResult = true;
+			}
+		}
+	};
+	
+	if(!booResult){return false;}
+	
+	var arrEstSig:String = docEstado.getItemValue("est_Siguientes_cod");
+	if(arrEstSig == "[]"){return false;}	
+}
+return true}]]></xe:this.rendered>
+		<xp:eventHandler event="onItemClick" submit="true" refreshMode="partial" refreshId="divCommentDialog">
+			<xe:this.action><![CDATA[#{javascript:var estadoSeleccionado = context.getSubmittedValue();
+if(isStatusCheckFlag(estadoSeleccionado, "est_ObligaComentario_cod")){ //Chequeo si el estado al que pasa tiene la marca
+	isStatusCheckGaus
+}
+if(isStatusCheckFlag(estadoSeleccionado, "est_ObligaComentario_cod")){ //Chequeo si el estado al que pasa tiene la marca
+	viewScope.SubmitValue = context.getSubmittedValue();
+	getComponent('addCommentDialog').show();
+}else{
+	if(viewScope.get("booIsAS400") != null && viewScope.get("booIsAS400") == true){
+		viewScope.SubmitValue = context.getSubmittedValue();
+		getComponent('addCommentDialog').show();
+	}else{
+		var doc: NotesDocument = viewScope.docxProp.getDocument();
+		doc.replaceItemValue("sol_status_cod", context.getSubmittedValue());
+		var sol_status_des:String = getStatusLabel(context.getSubmittedValue());
+		doc.replaceItemValue("sol_status_des", sol_status_des);	
+		// Si tiene marca de pasa abajo del movimiento anterior --> isStatusCheckFlag
+		setLogBackEnd (doc, "Envió a Estado: " + sol_status_des);
+		if(isStatusCheckFlag(estadoSeleccionado, "est_SolicitaAutorizacion_opt")){doc.replaceItemValue("sol_Autoriz_flag","0")};
+		doc.replaceItemValue("autor_acl", getNextStatusAuthorField(context.getSubmittedValue()));
+		
+		var strEst_Mailing_cod:String = getFieldValueFromViewConfig("v.Sys.LK_EstadosCodigo",estadoSeleccionado, "est_Mailing_cod");
+		if (strEst_Mailing_cod != ""){
+			if (sendMailWithCfg (strEst_Mailing_cod, true, "Cambio Estado: " + sol_status_des, "", doc)) {
+				setLogBackEnd (doc, "Mail enviado por cambio de estado: " + sol_status_des);
+				doc.save()
+			} else {doc.save()}
+		}else{doc.save()}
+			
+		if (isLockDocument()) unLockDocument("");
+		if (sessionScope.containsKey('lastView')) {
+			context.redirectToPage(sessionScope.get('lastView'))
+		} else {
+			context.redirectToPage('Bienvenido');
+		}
+	}
+}
+}]]></xe:this.action>
+		</xp:eventHandler>
+	</xe:dropDownButton>
+	<xc:ccDialogComentario></xc:ccDialogComentario>
+</xp:view>

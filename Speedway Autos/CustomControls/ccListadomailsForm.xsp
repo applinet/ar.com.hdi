@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom">
+	<!--Listado de Asociados para Dividir Pantalla
+	Tomando un UNID de una viewScope muestra los datos
+	-->
+	<xp:div id="userContainer" style="border: 1px solid #000; margin-top: 1.5em; padding: 1em;">
+		<xp:div id="noSelection">
+			<xp:this.rendered><![CDATA[#{javascript:viewScope.get("userId") == "" || viewScope.get("userId") == null}]]></xp:this.rendered>
+			No ha seleccionado un documento asociado
+		</xp:div>
+		<xp:panel id="userData">
+			<xp:this.rendered><![CDATA[#{javascript:viewScope.get("userId") != "" && viewScope.get("userId") != null}]]></xp:this.rendered>
+			<xp:this.data>
+				<xp:dominoDocument var="userDoc" formName="UserInfo" action="openDocument">
+					<xp:this.documentId><![CDATA[#{javascript:viewScope.get("userId")}]]></xp:this.documentId>
+				</xp:dominoDocument>
+			</xp:this.data>
+			<xp:table>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Fecha" id="label1" for="computedField1">
+						</xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text escape="true" id="computedField1" value="#{userDoc.fechaEnvio_nro}">
+						</xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="De" id="label2" for="computedField2">
+						</xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text escape="true" id="computedField2" value="#{userDoc.From}">
+						</xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Asunto" id="label3" for="computedField3">
+						</xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text escape="true" id="computedField3" value="#{userDoc.mai_subject_des}">
+						</xp:text>
+					</xp:td>
+				</xp:tr>
+			</xp:table>
+		</xp:panel>
+	</xp:div>
+</xp:view>

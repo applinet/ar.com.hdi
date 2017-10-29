@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex">
+	<xp:this.data>
+		<xp:dominoDocument var="generalMail" action="openDocument" formName="MemoLinked" ignoreRequestParams="true"
+			documentId="#{javascript:return getMailUnid();}">
+		</xp:dominoDocument>
+	</xp:this.data>
+	<xp:this.resources>
+		<xp:styleSheet href="/forms.css"></xp:styleSheet>
+	</xp:this.resources>
+	<xp:panel styleClass="PanelBoxDashedScroll" id="mailContainer">
+		<xp:div id="noSelection" style="background-color:#EEEEEE" styleClass="PanelContent">
+			<xp:this.rendered><![CDATA[#{javascript:var strMailUnid:String = getMailUnid();
+if (strMailUnid == null) return true;
+if (strMailUnid.equals ("")) return true;
+return false;}]]></xp:this.rendered>
+			- Mails Asociados -
+			<xp:br></xp:br>
+			Para visualizar&#160; un NUEVO mail asociado, seleccionelo desde el tab de Mails
+		</xp:div>
+		<xp:panel id="panelMail" styleClass="PanelContent">
+			<xp:this.rendered><![CDATA[#{javascript:var strMailUnid:String = getMailUnid();
+if (strMailUnid == null) return false;
+if (strMailUnid.equals ("")) return false;
+return true;}]]></xp:this.rendered>
+			<xp:button id="button1" value="Quitar y enviar a Mostrador">
+				<xp:this.rendered><![CDATA[#{javascript://Solo se ve en las No Emitidas
+if(viewScope.docxProp == null){return false};
+if(viewScope.docxProp.getDocument().getItemValueString("sol_status_cod").equals("82")){return true};
+if(viewScope.docxProp.getDocument().getItemValueString("sol_status_cod").equals("60")){return true};
+return false;}]]></xp:this.rendered>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="mailContainer">
+					<xp:this.action>
+						<xp:executeScript>
+							<xp:this.script><![CDATA[#{javascript:generalMail.replaceItemValue("MyMailCode","");
+generalMail.replaceItemValue("MyMailCat","");
+generalMail.replaceItemValue("form","Mail");
+generalMail.save();
+viewScope.selectedEmailUNID = "";}]]></xp:this.script>
+						</xp:executeScript>
+					</xp:this.action></xp:eventHandler>
+			</xp:button>
+			<xp:table style="width:100%">
+				<xp:tr><xp:td><xp:label value="Nro Mail:" id="orden_nro_Label1" for="orden_nro1"></xp:label></xp:td><xp:td>
+	<xp:inputText value="#{generalMail.orden_nro}" id="orden_nro1" styleClass="colorLightI">
+		<xp:this.converter>
+			<xp:convertNumber></xp:convertNumber>
+		</xp:this.converter>
+	</xp:inputText></xp:td></xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Originado Por:" id="myMailAction_Label1" for="myMailAction1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{generalMail.MyMailAction}" id="myMailAction1"></xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Enviado A:" id="sendTo_Label1" for="sendTo1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{generalMail.SendTo}" id="sendTo1"></xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td style="width:150.0px">
+						<xp:label value="En Copia:" id="copyTo_Label1" for="copyTo1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{generalMail.CopyTo}" id="copyTo1"></xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="En Copia Oculta:" id="blindCopyTo_Label1" for="blindCopyTo1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{generalMail.BlindCopyTo}" id="blindCopyTo1"></xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Remitente:" id="from_Label1" for="from1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{generalMail.From}" id="from1"></xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Nombre de Remitente:" id="principal_Label1" for="principal1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{generalMail.Principal}" id="principal1"></xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Asunto:" id="subject_Label1" for="subject1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{generalMail.Subject}" id="subject1"></xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Fecha de Envio:" id="myMailSentDate_Label1" for="myMailSentDate1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{generalMail.MyMailSentDate}" id="myMailSentDate1">
+							<xp:this.converter>
+								<xp:convertDateTime type="both" dateStyle="short" timeStyle="short"></xp:convertDateTime>
+							</xp:this.converter>
+						</xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td colspan="2">
+						<xp:label value="Cuerpo:" id="body_Label1" for="body1"></xp:label>
+						<xp:inputRichText value="#{generalMail.Body}" id="body1" style="width:100%" readonly="true"></xp:inputRichText>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td colspan="2">
+						<xp:repeat id="repeat1" rows="30" value="#{javascript:@AttachmentNames()}" indexVar="attachmentIndex" var="attachment">
+							<xp:link escape="true" text="#{javascript:attachment;}" id="link1" target="_blank">
+								<xp:this.value><![CDATA[#{javascript:
+                        var url = facesContext.getExternalContext().getRequest().getContextPath() + "/0/" + getMailUnid() 
+            /*in my case: viewEntry.getDocument().getUniversalID()*/ 
+            + "/$File/"+ attachment;        
+                        return url;}]]></xp:this.value>
+								<xp:image id="image1">
+									<xp:this.url><![CDATA[#{javascript:var strFileName:String = attachment.toLowerCase ();
+if(strFileName.indexOf("pdf") > 0) return 'iconpdf.jpg';
+if(strFileName.indexOf("xls") > 0) return 'iconexcel.gif';
+if(strFileName.indexOf("xlsx") > 0) return 'iconexcel.gif';
+if(strFileName.indexOf("doc") > 0) return 'iconword.gif';
+if(strFileName.indexOf("docx") > 0) return 'iconword.gif';
+if(strFileName.indexOf("jpg") > 0) return 'iconimg.gif';
+if(strFileName.indexOf("gif") > 0) return 'iconimg.gif';
+                            }]]></xp:this.url>
+								</xp:image>
+								&#160;
+							</xp:link>
+							<br></br>
+						</xp:repeat>
+					</xp:td>
+				</xp:tr>
+			</xp:table>
+		</xp:panel>
+	</xp:panel>
+</xp:view>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view
+	xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xe="http://www.ibm.com/xsp/coreex">
+	<xe:navigator
+		id="navigator1">
+		<xe:this.treeNodes>
+			<xe:basicLeafNode
+				label="Manual de Uso"
+				href="/Bienvenido.xsp">
+			</xe:basicLeafNode>
+			<xe:basicLeafNode
+				label="notas y links"
+				href="/Bienvenido_1.xsp">
+			</xe:basicLeafNode>
+			<xe:basicLeafNode
+				label="Obtengo Datos JSON"
+				href="/Bienvenido_2.xsp">
+			</xe:basicLeafNode>
+			<xe:basicLeafNode
+				label="WebFacing"
+				href="/WebFacing.xsp">
+			</xe:basicLeafNode>
+		</xe:this.treeNodes>
+	</xe:navigator>
+</xp:view>

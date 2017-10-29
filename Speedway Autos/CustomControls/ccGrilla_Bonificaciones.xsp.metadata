@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="03257E5A006E447C" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="2c2" sequence="40" unid="C99BD196FB72104903257CF6003AF8A7">
+<created><datetime>20140613T074407,43-03</datetime></created>
+<modified><datetime>20170829T080805,47-03</datetime></modified>
+<revised><datetime>20170829T080805,46-03</datetime></revised>
+<lastaccessed><datetime>20170829T080805,46-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170428,24-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name="$TITLE"><text>ccGrilla_Bonificaciones.xsp</text></item>
+<item name="$Flags"><text>gC~4;</text></item>
+
+
+
+
+<item name="$FileNames" sign="true"><text>ccGrilla_Bonificaciones.xsp</text></item>
+
+
+
+<item name="$DesignerVersion" sign="true"><text>8.5</text></item>
+
+</note>

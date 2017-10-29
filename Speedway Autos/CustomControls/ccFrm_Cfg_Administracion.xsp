@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core">
+	
+	<xp:panel>
+	<xp:this.data>
+		<xp:dominoDocument var="documentCfg" formName="Configuración de Estado   -   f.CfgEst" action="openDocument">
+			<xp:this.databaseName><![CDATA[#{javascript:var docConfig: NotesDocument = database.getView("Configuracion").getDocumentByKey("Configuracion");
+return docConfig.getItemValueString("conf_path");}]]></xp:this.databaseName>
+		</xp:dominoDocument>
+	</xp:this.data>
+	<xp:table>
+		<xp:tr>
+			<xp:td>
+				<xp:label value="Est_ codigo_des:" id="est_Codigo_des_Label1" for="est_Codigo_des1"></xp:label>
+			</xp:td>
+			<xp:td>
+				<xp:inputText value="#{documentCfg.est_Codigo_des}" id="est_Codigo_des1"></xp:inputText>
+			</xp:td>
+		</xp:tr>
+		<xp:tr>
+			<xp:td>
+				<xp:label value="Est_ nombre_des:" id="est_Nombre_des_Label1" for="est_Nombre_des1"></xp:label>
+			</xp:td>
+			<xp:td>
+				<xp:inputText value="#{documentCfg.est_Nombre_des}" id="est_Nombre_des1"></xp:inputText>
+			</xp:td>
+		</xp:tr>
+		<xp:tr>
+			<xp:td>
+				<xp:label value="Est_ form_des:" id="est_Form_des_Label1" for="est_Form_des1"></xp:label>
+			</xp:td>
+			<xp:td>
+				<xp:inputText value="#{documentCfg.est_Form_des}" id="est_Form_des1"></xp:inputText>
+			</xp:td>
+		</xp:tr>
+		<xp:tr>
+			<xp:td>
+				<xp:label value="Est_ vol el sus rec_opt:" id="est_VolElSusRec_opt_Label1" for="est_VolElSusRec_opt1"></xp:label>
+			</xp:td>
+			<xp:td>
+				<xp:inputText value="#{documentCfg.est_VolElSusRec_opt}" id="est_VolElSusRec_opt1"></xp:inputText>
+			</xp:td>
+		</xp:tr>
+		<xp:tr>
+			<xp:td>
+				<xp:label value="Est_ permite emision_opt:" id="est_PermiteEmision_opt_Label1" for="est_PermiteEmision_opt1"></xp:label>
+			</xp:td>
+			<xp:td>
+				<xp:inputText value="#{documentCfg.est_PermiteEmision_opt}" id="est_PermiteEmision_opt1"></xp:inputText>
+			</xp:td>
+		</xp:tr>
+		<xp:tr>
+			<xp:td>
+				<xp:label value="Est_ final_opt:" id="est_Final_opt_Label1" for="est_Final_opt1"></xp:label>
+			</xp:td>
+			<xp:td>
+				<xp:inputText value="#{documentCfg.est_Final_opt}" id="est_Final_opt1"></xp:inputText>
+			</xp:td>
+		</xp:tr>
+		<xp:tr>
+			<xp:td>
+				<xp:label value="Est_ previos_des:" id="est_Previos_des_Label1" for="est_Previos_des1"></xp:label>
+			</xp:td>
+			<xp:td>
+				<xp:inputText value="#{documentCfg.est_Previos_des}" id="est_Previos_des1"></xp:inputText>
+			</xp:td>
+		</xp:tr>
+		<xp:tr>
+			<xp:td>
+				<xp:label value="Est_ orden_nro:" id="est_Orden_nro_Label1" for="est_Orden_nro1"></xp:label>
+			</xp:td>
+			<xp:td>
+				<xp:inputText value="#{documentCfg.est_Orden_nro}" id="est_Orden_nro1">
+					<xp:this.converter>
+						<xp:convertNumber></xp:convertNumber>
+					</xp:this.converter>
+				</xp:inputText>
+			</xp:td>
+		</xp:tr>
+		<xp:tr>
+			<xp:td>
+				<xp:label value="Est_ ocultar navega_opt:" id="est_OcultarNavega_opt_Label1" for="est_OcultarNavega_opt1"></xp:label>
+			</xp:td>
+			<xp:td>
+				<xp:inputText value="#{documentCfg.est_OcultarNavega_opt}" id="est_OcultarNavega_opt1"></xp:inputText>
+			</xp:td>
+		</xp:tr>
+		<xp:tr>
+			<xp:td>
+				<xp:label value="Est_ siguientes_cod:" id="est_Siguientes_cod_Label1" for="est_Siguientes_cod1"></xp:label>
+			</xp:td>
+			<xp:td>
+				<xp:inputText value="#{documentCfg.est_Siguientes_cod}" id="est_Siguientes_cod1"></xp:inputText>
+			</xp:td>
+		</xp:tr>
+		<xp:tr>
+			<xp:td>
+				<xp:label value="Est_ validar propuesta_opt:" id="est_ValidarPropuesta_opt_Label1" for="est_ValidarPropuesta_opt1"></xp:label>
+			</xp:td>
+			<xp:td>
+				<xp:inputText value="#{documentCfg.est_ValidarPropuesta_opt}" id="est_ValidarPropuesta_opt1"></xp:inputText>
+			</xp:td>
+		</xp:tr>
+		<xp:tr>
+			<xp:td>
+				<xp:label value="Est_ validar componente_opt:" id="est_ValidarComponente_opt_Label1" for="est_ValidarComponente_opt1"></xp:label>
+			</xp:td>
+			<xp:td>
+				<xp:inputText value="#{documentCfg.est_ValidarComponente_opt}" id="est_ValidarComponente_opt1"></xp:inputText>
+			</xp:td>
+		</xp:tr>
+		<xp:tr>
+			<xp:td>
+				<xp:label value="Est_ obliga comentario_cod:" id="est_ObligaComentario_cod_Label1" for="est_ObligaComentario_cod1"></xp:label>
+			</xp:td>
+			<xp:td>
+				<xp:inputText value="#{documentCfg.est_ObligaComentario_cod}" id="est_ObligaComentario_cod1"></xp:inputText>
+			</xp:td>
+		</xp:tr>
+	</xp:table></xp:panel>
+</xp:view>

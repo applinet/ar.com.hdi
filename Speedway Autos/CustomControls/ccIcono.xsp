@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xf="http://www.ibm.com/xsp/xflow"
+	xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:xe="http://www.ibm.com/xsp/coreex">
+
+	<xp:button value="Clasificar" id="btn_Icono" style="display:inline">
+		<xp:this.rendered><![CDATA[#{javascript:var docxProp:NotesXspDocument = viewScope.get("docxProp");
+if (docxProp != null) {
+	//Si se trata de una propuesta
+	return !docxProp.isNewNote() && docxProp.isEditable() && docxProp.getDocument().getItemValue("Form")[0] == "Propuesta";
+} else {
+	return false;
+}}]]>
+		</xp:this.rendered>
+		<xp:eventHandler event="onclick" submit="true"
+			refreshMode="partial" refreshId="dialogIcono">
+			<xp:this.action><![CDATA[#{javascript:getComponent('dialogIcono').show()}]]></xp:this.action>
+		</xp:eventHandler>
+	</xp:button>
+	
+	<xp:panel id="PanelIconos" style="width:633.0px;display:inline">
+		<xp:this.data>
+			<xp:dominoView var="viewIconos">
+				<xp:this.viewName><![CDATA[#{javascript:"v.Sys.Iconos"}]]></xp:this.viewName>
+				<xp:this.databaseName><![CDATA[#{javascript://Obtiene la direccion de la base Configuracion
+var viewCfg:NotesView = session.getCurrentDatabase().getView("v.Sys.Cfg");
+var docCfg:NotesDocument = viewCfg.getDocumentByKey("Configuracion")
+if (docCfg != null) {
+	return docCfg.getItemValueString("conf_path");
+} else {
+	return "";
+}}]]></xp:this.databaseName>
+			</xp:dominoView>
+		</xp:this.data>
+		<xe:dialog id="dialogIcono">		
+				<xp:panel id="PanelIconos_Content">
+			
+			<xp:table cellpadding="5" cellspacing="0" border="0"
+				style="width:100.0%" id="TBL_Iconos">
+				<xp:tr styleClass="ViewTitle">
+					<xp:td>Nombre</xp:td>
+					<xp:td>Ícono</xp:td>
+					<xp:td>Descripción</xp:td>
+
+
+				</xp:tr>
+				<xp:repeat id="repeatIconos" var="repeatIconosRow"
+					indexVar="repeatIconoIndex" value="#{viewIconos}">
+					<xp:tr id="rowIconos">
+						<xp:this.styleClass><![CDATA[#{javascript:if (!!viewScope.get("IcoSelectedCod")) { 
+	if (viewScope.get("IcoSelectedCod").equals(repeatIconosRow.getColumnValue("ico_Nombre_des"))) {
+		return "ViewRowSelected";
+	}
+}
+return "ViewRow";}]]></xp:this.styleClass>
+						<xp:td>
+							
+						<xp:text escape="true" value="#{repeatIconosRow.ico_Nombre_des}" id="grillaNombre">
+							</xp:text></xp:td>
+						<xp:td>
+
+						<xp:text escape="false" id="grillaIcono">
+							<xp:this.value><![CDATA[#{javascript:var url:XSPUrl = new XSPUrl(database.getHttpURL());
+var path = "/icons/vwicn";
+var idx = repeatIconosRow.getColumnValue("ico_Icono_cod");
+path += ("00"+idx).right(3);
+path += ".gif";
+url.setPath(path);
+url.removeAllParameters();
+return '<img src="' + url.toString() + '">';}]]></xp:this.value>
+						</xp:text></xp:td>
+
+						<xp:td>
+							
+						<xp:text escape="true" id="grillaDescripcion" value="#{repeatIconosRow.ico_ToolTip_des}">
+							</xp:text></xp:td>
+						<xp:eventHandler event="onclick" submit="true"
+							refreshMode="partial" immediate="true" refreshId="sol_Icono_cod">
+							<xp:this.action>
+								<xp:actionGroup>
+
+
+
+
+
+
+
+
+
+
+
+									<xp:executeScript>
+										<xp:this.script><![CDATA[#{javascript:getComponent("sol_Icono_cod").setValue(repeatIconosRow.getColumnValue("ico_Icono_cod"));
+
+var doc:NotesXspDocument = requestScope.get("currentDocument");
+if (doc != null) {
+	//Si se trata de un mail
+	if (doc.getDocument().getItemValue("Form")[0] == "Mail") {
+		//Guarda el documento
+		doc.getDocument().replaceItemValue("sol_Icono_cod", repeatIconosRow.getColumnValue("ico_Icono_cod"));
+		doc.getDocument().save();
+	}
+}
+
+
+/*var docxProp:NotesXspDocument = viewScope.get("docxProp");
+if(!docxProp.isEditable() && docxProp.getItemValueString("Form") == "Propuesta" && !docxProp.isNewNote()) {
+	//docxProp.setValue("sol_Icono_cod", repeatIconosRow.getColumnValue("ico_Icono_cod"))
+}*/}]]>
+										</xp:this.script>
+									</xp:executeScript>
+									<xp:executeScript
+										script="#{javascript:getComponent('dialogIcono').hide()}">
+									</xp:executeScript>
+								</xp:actionGroup>
+							</xp:this.action>
+						</xp:eventHandler>
+						<xp:eventHandler event="onmouseout"
+							submit="true" refreshMode="partial"
+							refreshId="PanelIconos">
+						</xp:eventHandler>
+						<xp:td>
+
+						</xp:td>
+					</xp:tr>
+				</xp:repeat>
+			</xp:table>
+		</xp:panel>
+			<xp:eventHandler event="onBlur" submit="true"
+				refreshMode="partial" refreshId="PanelIconos">
+			</xp:eventHandler></xe:dialog>
+	</xp:panel></xp:view>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xe="http://www.ibm.com/xsp/coreex">
+	<xp:this.data>
+		<xp:dominoView var="viewInspecciones" viewName="v.UI.Ins.Veh">
+			<xp:this.categoryFilter><![CDATA[#{javascript:return viewScope.get("VehSelectedUNID");}]]></xp:this.categoryFilter>
+		</xp:dominoView>
+	</xp:this.data>
+
+
+
+
+	<xp:this.resources>
+		<xp:styleSheet href="/views.css"></xp:styleSheet>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+		<xp:styleSheet href="/viewIns.css"></xp:styleSheet>
+	</xp:this.resources>
+	
+	<xp:span style="font-weight:bold"></xp:span>
+	<xp:br style="color:rgb(255,0,0)" rendered="false"></xp:br>
+
+	<xp:panel id="PNL_Listing">
+		<ul class="MiGrilla">
+			<li class="MiGrillaTitulo">
+				<div class="MiGrillaCol">Número</div>
+				<div class="MiGrillaCol ColInsInspector">Inspector</div>
+				<div class="MiGrillaCol">Combinada</div>
+				<div class="MiGrillaCol">Estado</div>
+				<div class="MiGrillaCol">Cobertura</div>
+			</li>
+
+			<xp:repeat id="repeat1" rows="30"
+				value="#{viewInspecciones}" var="repeatColInspec"
+				indexVar="repeatIndexInspec" disableOutputTag="true">
+
+				<xp:panel></xp:panel>
+
+				<!--
+				El computed FIELD a continuación, devuelve HTML y va a devolver algo
+				asì: 
+				<li class="MiGrillaFila" onclick="">
+				
+				2013/09/13 - Diego Liberman
+				ACA TENEMOS UN PROBLEMA PORQUE NOTES PONE UN TAG DE <SPAN> PARA ENCERRAR
+				MI COMPUTED FIELD QUE DEVUELVE EL HTML, Y NO PUDE ENCONTRAR COMO EVITAR QUE LO
+				HAGA.  EL HTML ENTONCES QUEDA MAL FORMADO PERO EN IE SE VE BIEN IGUAL.
+				POR AHORA NO VAMOS A CORREGIRLO. 
+				-->
+				<xp:text escape="false" disableOutputTag="false"
+					contentType="html">
+					<xp:this.value><![CDATA[#{javascript:var strUrl:String = "/" + session.evaluate("@WebDbName").elementAt(0) + "/xfDocInspeccion.xsp";
+strUrl += "?action=openDocument";
+strUrl += "&documentId=" + repeatColInspec.getUniversalID();
+return "<li class=\"MiGrillaFila\" onclick=\"javascript:window.open('" + strUrl + "');\">"}]]></xp:this.value>
+				</xp:text>
+				<div class="MiGrillaCol">
+
+						<xp:text escape="true" id="computedField1">
+							<xp:this.converter>
+								<xp:convertNumber type="number"></xp:convertNumber>
+							</xp:this.converter>
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_Consecutivo_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</div>
+					<div class="MiGrillaCol ColInsInspector">
+						<xp:text escape="true" id="computedField2">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_Inspect_opt");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</div>
+					<div class="MiGrillaCol">
+						<xp:text escape="true" id="computedField3">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_iFecha_dat");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</div>
+					<div class="MiGrillaCol">
+						<xp:text escape="true" id="computedField4">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_iEst_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</div>
+					<div class="MiGrillaCol">
+						<xp:text escape="true" id="computedField5">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_iCobAprob_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</div>
+
+				<!--
+				El siguiente computed field devuelve el cierre de un li.
+				Se hace un computed field porque sino el compilador de xpage muestra
+				un error, ya que el tag de apertura del LI se calcula con un campo
+				computado
+				</li>
+				  -->
+				<xp:text escape="false" id="computedField7">
+					<xp:this.value><![CDATA[#{javascript:return "</li>"}]]></xp:this.value>
+				</xp:text>
+			</xp:repeat>
+
+		</ul>
+	</xp:panel>
+	<xp:br></xp:br>
+	
+
+</xp:view>

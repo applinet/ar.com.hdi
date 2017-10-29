@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<note class='view' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.0'
+ replicaid='03257E5A006E447C'>
+<noteinfo noteid='17a' unid='1FC6020A43E0F3DD03257CF6003ADAC1' sequence='24'>
+<created><datetime>20140613T074250,89-03</datetime></created>
+<modified><datetime>20170829T080759,80-03</datetime></modified>
+<revised><datetime>20170829T080759,79-03</datetime></revised>
+<lastaccessed><datetime>20170829T080759,79-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170426,32-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Pepe Administrator/O=axin</name><name>CN=Fernando Rodriguez/O=axin</name><name
+>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name
+>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name='$FormulaClass' sign='true'><text>1</text></item>
+<item name='TmpViewDesignCollation' sign='true'><text>es-AR</text></item>
+<item name='$TITLE' sign='true'><text>(Sys\aGaus\ComponentesAsociadosEnPropuesta)|v.Sys.GausVehAsocPropuestas</text></item>
+<item name='$Index' sign='true'><text/></item>
+<item name='$Formula' summary='true' sign='true'><formula compiled='true'>
+BgEFACAAHAACAAsACQBpZFBhZHJlX2NvZCRDb25mbGljdAQABAAAAKYABQAEAEZvcm0BAAoAQ29t
+cG9uZW50ZQoCBQARAHZlaF9zcHd2ZWhBQk1fY29kAAEAAQBBAAoCBQARAHZlaF9zcHd2ZWhBQk1f
+Y29kAAEAAQBCAAoCHQIFABEAdmVoX3Nwd3ZlaEFCTV9jb2QAAQABAE0ACgIdAgQAHAIFABIAdmVo
+X3N0YXR1c0dhdXNfZGVzAQAIAElOQUNUSVZPCwIcAgMABwA6ADMACUwxUzJTM1M0UzVTN1M4UzlT
+MTBTMTFTMTJTMTNTMTRTMTVTMTZTMThTMTlTMjBTMjFTAA==
+</formula></item>
+<item name='$Collation' summary='true'>
+<rawitemdata type='2'>
+GAABAABECGYAAAALAGlkUGFkcmVfY29k
+</rawitemdata></item>
+<item name='$ViewFormat' summary='true' sign='true'>
+<rawitemdata type='5'>
+AQABAAwAinQAAFZDAQALAA0AAAAAAO4AAQAACgABAAAAAAAAAAICAAAAaWRQYWRyZV9jb2RVbmlk
+UHJvcHVlc3RhJgABAAAAAQEACQEAAAoBAQ4KAAAVAK0rAQABAAEAAAAAAAAAAABXQwEBAAkAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAD//wAAAAAAAAAAAAAAAAAAQgAgAAAAAQD///8AAQDd/+kAAQAA
+AAAAAAAAAAAAAAABAP///wABAIj/rgAAAAEAAAAAAAEAAAAAAAEAAAAAAAAACAAAAAAAAQA=
+</rawitemdata></item>
+<item name='$Comment' sign='true'><text>vUI_VehiculosAsociadosEnPropuesta</text></item>
+<item name='$Flags'><text>Y</text></item>
+<item name='$DesignerVersion' sign='true'><text>8.5.3</text></item></note>
+

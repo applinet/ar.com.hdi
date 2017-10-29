@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Solo contiene la vista 
+Utilizado en xvUI_Por_Estado-->
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex" xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xp:this.data>
+		<xp:dominoView var="DSviewLKPropuestasProceso" viewName="vLK_PropuestasEnProceso">
+			<xp:this.keys><![CDATA[#{javascript:viewScope.get("vLK_Status")}]]></xp:this.keys>
+		</xp:dominoView>
+	</xp:this.data>
+	<xp:this.resources>
+		<xp:styleSheet href="/HDI_buttons.css"></xp:styleSheet>
+	</xp:this.resources>
+	<xp:this.beforePageLoad><![CDATA[#{javascript:viewScope.put("vLK_Status","")}]]></xp:this.beforePageLoad>
+	
+	<xe:inPlaceForm id="inPlaceForm1"></xe:inPlaceForm>
+	<xp:viewPanel value="#{DSviewLKPropuestasProceso}" id="viewPanelPropuestas" pageName="/xfdocPropuesta.xsp" rows="10" var="rowData">
+		<xp:this.facets>
+			<xp:pager partialRefresh="true" layout="Previous Group Next" xp:key="headerPager" id="pager1"></xp:pager>
+		</xp:this.facets>
+		<xp:viewColumn columnName="Fecha" id="viewColumnFecha" showCheckbox="true" style="text-align:left;width:91.0px">
+			<xp:this.facets>
+				<xp:viewColumnHeader value="Fecha" xp:key="header" id="viewColumnHeaderFecha" style="margin-left:10.0px">
+				</xp:viewColumnHeader>
+			</xp:this.facets>
+		</xp:viewColumn>
+		<xp:viewColumn id="viewColumnRama" style="text-align:center" columnName="sol_rama_cod">
+			<xp:this.facets>
+				<xp:viewColumnHeader xp:key="header" id="ColumnHeaderRama" value="Sol_rama_cod"></xp:viewColumnHeader>
+			</xp:this.facets>
+		</xp:viewColumn>
+		<xp:viewColumn columnName="sol_articulo_cod" id="viewColumnCodArt" style="text-align:center">
+			<xp:this.facets>
+				<xp:viewColumnHeader value="Articulo" xp:key="header" id="viewColumnHeaderCodArt"></xp:viewColumnHeader>
+			</xp:this.facets>
+		</xp:viewColumn>
+		<xp:viewColumn contentType="html" styleClass="accordionContent .quicklinks" style="text-align:center" id="viewColumn3">
+			<xp:this.value><![CDATA[#{javascript:if (!rowData.isCategory())
+"<a href='" + facesContext.getExternalContext().getRequestContextPath() + "/xfdocPropuesta.xsp?documentId="+rowData.getUniversalID()+"&action=openDocument'>"
++rowData.getColumnValue("Form")+"</a>"}]]></xp:this.value>
+			<xp:viewColumnHeader value="Form" id="viewColumnHeader3"></xp:viewColumnHeader>
+		</xp:viewColumn>
+		<xp:viewColumn id="viewColumnNroSOLN" contentType="html" styleClass="accordionContent .quicklinks" style="text-align:center">
+			<xp:this.value><![CDATA[#{javascript:if (!rowData.isCategory())
+"<a href='" + facesContext.getExternalContext().getRequestContextPath() + "/xfdocPropuesta.xsp?documentId="+rowData.getUniversalID()+"&action=openDocument'>"
++rowData.getColumnValue("orden_nro")+"</a>"}]]></xp:this.value>
+			<xp:viewColumnHeader id="viewColumnHeaderNroSOLN" value="Nro solicitud"></xp:viewColumnHeader>
+		</xp:viewColumn>
+		<xp:viewColumn columnName="sol_poliza_nro" style="text-align:center">
+			<xp:this.facets>
+				<xp:viewColumnHeader value="Nro Poliza" xp:key="header"></xp:viewColumnHeader>
+			</xp:this.facets>
+			<xp:this.converter>
+				<xp:convertNumber type="number" integerOnly="true"></xp:convertNumber>
+			</xp:this.converter>
+		</xp:viewColumn>
+		<xp:viewColumn columnName="sol_status_des" style="text-align:center">
+			<xp:this.facets>
+				<xp:viewColumnHeader value="Estado" xp:key="header"></xp:viewColumnHeader>
+			</xp:this.facets>
+		</xp:viewColumn>
+		<xp:viewColumn columnName="Unid" id="viewColumn1">
+			<xp:this.facets>
+				<xp:viewColumnHeader value="Unid" xp:key="header" id="viewColumnHeader1"></xp:viewColumnHeader>
+			</xp:this.facets>
+		</xp:viewColumn>
+		<xp:viewColumn id="viewColumn2" value=" ">
+			<xp:this.facets>
+				<xp:viewColumnHeader xp:key="header" id="viewColumnHeader2" value="Action"></xp:viewColumnHeader>
+			</xp:this.facets>
+			<xp:button value="Vehiculo" id="button3">
+				<xp:eventHandler event="onclick" submit="true" refreshMode="complete" id="eventHandler1">
+					<xp:this.action>
+						<xp:createResponse name="/xfDocComponente.xsp" parentId="#{javascript:rowData.getUniversalID()}">
+						</xp:createResponse>
+					</xp:this.action>
+				</xp:eventHandler>
+			</xp:button>
+		</xp:viewColumn>
+	</xp:viewPanel>
+</xp:view>

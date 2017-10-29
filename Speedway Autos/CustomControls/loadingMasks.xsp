@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core">
+	<xp:this.resources>
+		<xp:script
+			src="/CustomControlLib.js"
+			clientSide="true"
+		>
+		</xp:script>
+	</xp:this.resources>
+	<xp:text
+		escape="false"
+		id="computedField2"
+		rendered="#{javascript:compositeData.startupLoader}"
+	>
+		<xp:this.value><![CDATA[#{javascript:'<div id="startloader" class="divstartloader1"></div>'}]]></xp:this.value>
+	</xp:text>
+	<xp:text
+		escape="false"
+		id="computedField1"
+	>
+		<xp:this.value><![CDATA[#{javascript:'<style>' +
+'div.loading {'+
+' background-repeat: no-repeat;' +
+' background-image: url("' + compositeData.imageSource + '");' +
+'    background-position: center;' +
+'    background-color:' + compositeData.MaskColor + ';' +
+'    opacity:' + compositeData.opacity + ';' +
+'}' +
+
+'#startloader {' +
+ ' width:100%; height:100%; margin:0; padding:0;' +
+ ' background:' +  compositeData.startupBackgroundColor + " url('" + compositeData.startupImage + "') no-repeat center center;" +
+ '   position:absolute;' +
+  '  z-index:999;' +
+'}' +
+'</style>'}]]></xp:this.value>
+	</xp:text>
+	<xp:scriptBlock
+		id="scriptBlock2"
+		rendered="true"
+	>
+		<xp:this.value><![CDATA[
+dojo.require('dijit.Dialog')
+
+function loading() {
+	underlay = new dijit.DialogUnderlay({'class': 'loading'});
+    underlay.show();
+}
+function stoploading(){
+	underlay.hide()
+	}
+
+dojo.subscribe( 'partialrefresh-start',  function( method, form, refreshId ){
+ loading();
+ } );
+
+dojo.subscribe( 'partialrefresh-complete', function( method, form, refreshId ){
+ stoploading()
+} );
+
+dojo.subscribe( 'partialrefresh-error', function( method, form, refreshId ){
+ stoploading()
+} );]]></xp:this.value>
+	</xp:scriptBlock>
+	
+	</xp:view>

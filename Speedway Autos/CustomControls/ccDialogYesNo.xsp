@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex">
+	<xp:div id="divDialogYesNo">
+		<xe:dialog id="dialogYesNo" title="Anulacion por reemplazo">
+			<xe:dialogContent id="dialogContent2" style="width:450px">
+				<xp:label value="Ud. ha emitido una Anulacion por reemplazo. Quiere generar la renovación nuevamente, generar una nueva o solo anularla?" id="label1"></xp:label>
+			</xe:dialogContent>
+			<xe:dialogButtonBar id="dialogButtonBarYesNo">
+				<xp:button value="Generar Renovación" id="buttonRenovar">
+					<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+						<xp:this.action><![CDATA[#{javascript:var docPropuestaAnulacion:NotesDocument = viewScope.get("docxProp").getDocument();
+var docRenovacion:NotesDocument = getUltimaPropuestaEmitida(docPropuestaAnulacion.getUniversalID(), docPropuestaAnulacion.getItemValueString("sol_pathHistorico_des"));
+var unidDocRenovacion:String = docRenovacion.getUniversalID();
+var pathDocRenovacion:String = docRenovacion.getItemValueString("sol_pathHistorico_des");
+var docPropuestaAnteriorRenovacion:NotesDocument = getUltimaPropuestaEmitida(unidDocRenovacion, pathDocRenovacion);
+//Tomo los valores de docPropuestaAnteriorRenovacion para no perder el objeto
+var SuperOrden = docPropuestaAnteriorRenovacion.getItemValueString("superOrden_cod");
+var poliza = docPropuestaAnteriorRenovacion.getItemValueDouble("sol_poliza_nro");
+var SuperPoliza = docPropuestaAnteriorRenovacion.getItemValueDouble("sol_superpoliza_nro");
+var unidDocDesenganchada:String = docPropuestaAnteriorRenovacion.getUniversalID(); 
+var pathDocDesenganchada:String = pathDocRenovacion; 
+var dbDocDesenganchada:NotesDatabase = docPropuestaAnteriorRenovacion.getParentDatabase();
+
+//Guardo la url de la renovacion nueva
+var url:String = nuevaPropuestaFromDoc(docPropuestaAnteriorRenovacion, "5", "2", "0", "");
+var idxUnid = url.indexOf("documentId=") + 11;
+var srtUnidDocNew:String = url.substring(idxUnid, idxUnid + 32);
+var docNewPropuesta:NotesDocument = database.getDocumentByUNID(srtUnidDocNew);
+
+docNewPropuesta.replaceItemValue("superOrden_cod", SuperOrden);
+docNewPropuesta.replaceItemValue("sol_poliza_nro", poliza);
+docNewPropuesta.replaceItemValue("sol_superpoliza_nro", SuperPoliza);
+docNewPropuesta.replaceItemValue("sol_pathHistorico_des", pathDocDesenganchada);
+setLogBackEnd(docNewPropuesta, "Operación generada desde una Anulación por reemplazo.");
+
+//Busco el vehiculo y le cambio veh_statusGaus_des y veh_spwvehABM_cod
+var collVeh:DocumentCollection = getCollectionByKey(getDbPropuestas(), "v.UI.VehAsocPropuestas_EmbView", docNewPropuesta.getUniversalID());
+if(collVeh.getCount() > 0){//Tiene Vehiculos
+	var docVeh:NotesDocument = collVeh.getFirstDocument();
+	while (docVeh != null) {
+		docVeh.replaceItemValue("veh_statusGaus_des", "");
+		docVeh.replaceItemValue("veh_spwvehABM_cod", "A");
+		docVeh.save();
+		var tmpdoc = collVeh.getNextDocument();
+		docVeh.recycle();
+		docVeh = tmpdoc;
+	}
+}
+
+//Busco el mail y le asigno el unid de la nueva propuesta para que tenga ambos unids
+var collMails:DocumentCollection = getCollectionByKey(getDbPropuestas(), "v.Sys.MailsLinked", docPropuestaAnulacion.getUniversalID());
+if(collMails.getCount() > 0){//Tiene Mails
+	var docMail:NotesDocument = collMails.getFirstDocument();
+	while (docMail != null) {
+		var vecMyMailCat:java.util.Vector = docMail.getItemValue("MyMailCat");
+		vecMyMailCat.add(docNewPropuesta.getUniversalID());
+		docMail.replaceItemValue("MyMailCat", vecMyMailCat);
+		docMail.save();
+		var tmpdoc = collMails.getNextDocument();
+		docMail.recycle();
+		docMail = tmpdoc;
+	}
+}
+docNewPropuesta.save();
+if(sessionScope.AnulacionEmitidaPorReemplazo != null){
+	sessionScope.AnulacionEmitidaPorReemplazo.remove(docPropuestaAnulacion.getUniversalID());
+	print("Viene Scope de AnulacionEmitidaPorReemplazo");	
+}
+var docDesenganchada:NotesDocument = dbDocDesenganchada.getDocumentByUNID(unidDocDesenganchada);
+docDesenganchada.replaceItemValue("idPadre_cod", srtUnidDocNew);
+docDesenganchada.save();
+docDesenganchada.recycle();
+docNewPropuesta.recycle();
+facesContext.getExternalContext().redirect(url);}]]></xp:this.action>
+					</xp:eventHandler>
+				</xp:button>
+				<xp:button value="Generar Nueva" id="buttonYes">
+					<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+						<xp:this.action><![CDATA[#{javascript:var docPropuestaPorEnganchar:NotesDocument = viewScope.get("docxProp").getDocument();
+var url:String = nuevaPropuestaFromDoc(docPropuestaPorEnganchar, "5", "1", "0", "");
+var idxUnid = url.indexOf("documentId=") + 11;
+var srtUnidDocNew:String = url.substring(idxUnid, idxUnid + 32);
+var docNewPropuesta:NotesDocument = database.getDocumentByUNID(srtUnidDocNew);
+docNewPropuesta.replaceItemValue("superOrden_cod", docPropuestaPorEnganchar.getItemValueString("superOrden_cod"));
+docNewPropuesta.replaceItemValue("sol_poliza_nro", 0);
+docNewPropuesta.replaceItemValue("sol_icono_cod", "148");
+setLogBackEnd(docNewPropuesta, "Operación generada desde una Anulación por reemplazo.");
+
+//Busco el vehiculo y le cambio veh_statusGaus_des y veh_spwvehABM_cod
+var collVeh:DocumentCollection = getCollectionByKey(getDbPropuestas(), "v.UI.VehAsocPropuestas_EmbView", docNewPropuesta.getUniversalID());
+if(collVeh.getCount() > 0){//Tiene Vehiculos
+	var docVeh:NotesDocument = collVeh.getFirstDocument();
+	while (docVeh != null) {
+		docVeh.replaceItemValue("veh_statusGaus_des", "");
+		docVeh.replaceItemValue("veh_spwvehABM_cod", "A");
+		docVeh.save();
+		var tmpdoc = collVeh.getNextDocument();
+		docVeh.recycle();
+		docVeh = tmpdoc;
+	}
+}
+//Busco el mail y le asigno el unid de la nueva propuesta para que tenga ambos unids
+var collMails:DocumentCollection = getCollectionByKey(getDbPropuestas(), "v.Sys.MailsLinked", docPropuestaPorEnganchar.getUniversalID());
+if(collMails.getCount() > 0){//Tiene Mails
+	var docMail:NotesDocument = collMails.getFirstDocument();
+	while (docMail != null) {
+		var vecMyMailCat:java.util.Vector = docMail.getItemValue("MyMailCat");
+		vecMyMailCat.add(docNewPropuesta.getUniversalID());
+		docMail.replaceItemValue("MyMailCat", vecMyMailCat);
+		docMail.save();
+		var tmpdoc = collMails.getNextDocument();
+		docMail.recycle();
+		docMail = tmpdoc;
+	}
+}
+
+docNewPropuesta.save();
+docNewPropuesta.recycle();
+if(sessionScope.AnulacionEmitidaPorReemplazo != null){	
+	sessionScope.AnulacionEmitidaPorReemplazo.remove(docPropuestaPorEnganchar.getUniversalID());
+}
+
+setLogBackEnd(docPropuestaPorEnganchar, "Se ha generado la propuesta nueva por reemplazo");
+docPropuestaPorEnganchar.replaceItemValue("idPadre_cod", "");
+docPropuestaPorEnganchar.save();
+docPropuestaPorEnganchar.recycle();
+facesContext.getExternalContext().redirect(url);}]]></xp:this.action>
+					</xp:eventHandler>
+				</xp:button>
+				<xp:button value="Solo Anularla" id="buttonNo">
+					<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+						<xp:this.action><![CDATA[#{javascript:var docPropuestaPorEnganchar:NotesDocument = viewScope.get("docxProp").getDocument();
+setLogBackEnd(docPropuestaPorEnganchar, "Ha elegido no emitir la nueva por reemplazo automáticamente");
+if(sessionScope.AnulacionEmitidaPorReemplazo != null){	
+	sessionScope.AnulacionEmitidaPorReemplazo.remove(docPropuestaPorEnganchar.getUniversalID());
+}	
+docPropuestaPorEnganchar.save();
+docPropuestaPorEnganchar.recycle();
+facesContext.getExternalContext().redirect(context.getUrl().toString());}]]></xp:this.action>
+					</xp:eventHandler>
+				</xp:button>
+			</xe:dialogButtonBar>
+		</xe:dialog>
+	</xp:div>
+</xp:view>

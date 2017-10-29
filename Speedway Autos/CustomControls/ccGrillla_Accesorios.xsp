@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Grilla de Accesorios embebida en el formulario de propuesta en el tab Accesorios-->
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:xe="http://www.ibm.com/xsp/coreex">
+	<xp:this.data>
+		<xp:dominoView var="DSv_AccAsocComponente" viewName="v.UI.AccAsocComponente_EmbView">
+			<xp:this.categoryFilter><![CDATA[#{javascript:viewScope.get("VehSelectedUNID");}]]></xp:this.categoryFilter>
+		</xp:dominoView>
+	</xp:this.data>
+	<xp:panel style="width:500px;">
+		<xp:button id="btn_NuevoAccesorio" styleClass="solAccAdd" rendered="#{javascript:visibleBtnsAccesorios();}">
+			<xp:eventHandler event="onclick" submit="true"
+				refreshMode="norefresh"
+				onComplete="XSP.openTooltipDialog('#{id:tooltipDlg_accesorios}', '#{id:btn_NuevoAccesorio}');">
+				<xp:this.action><![CDATA[#{javascript:viewScope.AccNoteId="NEW"}]]></xp:this.action>
+			</xp:eventHandler>
+		</xp:button>
+		<xe:tooltip id="tooltipButtonNuevoAccesorio" for="btn_NuevoAccesorio" label="Nuevo Accesorio" position="below"></xe:tooltip>
+		<xp:dataTable id="dataTableGrilla" value="#{DSv_AccAsocComponente}" var="rowData" indexVar="idxData" rows="3">
+			<xp:this.facets>
+				<xp:pager partialRefresh="true" id="pager1" xp:key="header" layout="Previous Group Next">
+					<xp:this.rendered><![CDATA[#{javascript:getComponent("dataTableGrilla").getRowCount() < 4 ? false : true;}]]></xp:this.rendered>
+				</xp:pager>
+			</xp:this.facets>
+			<xp:column id="column1"
+				style="vertical-align:top; width:150px;">
+				<xp:link escape="true" text="#{rowData.acc_nombre_des}"
+					id="NameLink">
+					<xp:eventHandler event="onclick" submit="true"
+						refreshMode="norefresh"
+						onComplete="XSP.openTooltipDialog('#{id:tooltipDlg_accesorios}', '#{id:NameLink}')">
+						<xp:this.action><![CDATA[#{javascript:viewScope.AccNoteId=rowData.getNoteID();}]]></xp:this.action>
+					</xp:eventHandler>
+				</xp:link>
+			</xp:column>
+			<xp:column id="column3"
+				style="vertical-align:top; width:150px;">
+				<xp:this.facets></xp:this.facets>
+				<xp:text escape="false" id="computedField1"
+					value="#{rowData.acc_valor_nro}">
+					<xp:this.converter>
+						<xp:convertNumber pattern=" $ #,##0.00"></xp:convertNumber>
+					</xp:this.converter>
+				</xp:text>
+			</xp:column>
+		</xp:dataTable>
+	</xp:panel>
+	<xe:tooltipDialog id="tooltipDlg_accesorios">
+		<xp:panel id="PNL_accInputForm">
+			<xp:this.data>
+				<xp:dominoDocument var="DSf_Accesorios" formName="Accesorios"
+					action="#{javascript:return viewScope.AccNoteId=='NEW'?'createDocument':'editDocument';}" 
+					documentId="#{javascript:viewScope.AccNoteId=='NEW'?'':viewScope.AccNoteId}"
+					ignoreRequestParams="true">
+					<xp:this.querySaveDocument><![CDATA[#{javascript:if(viewScope.get("VehSelectedUNID").equals(null)){
+var strIdVeh:String = "";
+}else{
+var strIdVeh:String = viewScope.get("VehSelectedUNID");
+};
+var docAccesorios:NotesDocument = DSf_Accesorios.getDocument();
+if (docAccesorios.isNewNote()){
+docAccesorios.replaceItemValue( "idPadre_cod" ,strIdVeh);
+docAccesorios.replaceItemValue("idPropuesta_cod" ,context.getUrlParameter("documentId"));
+}
+dBar.info("ACC_FINQuerySave");}]]></xp:this.querySaveDocument> 
+</xp:dominoDocument>
+			</xp:this.data>
+			<xp:table>
+				<xp:tr> 
+				<xp:td valign="top" style="width:100.0px">
+						<xp:label value="Nombre *:" id="label_acc_nombre_des" for="acc_nombre_des" />
+					</xp:td>
+					<xp:td>
+						
+						<xe:djFilteringSelect value="#{DSf_Accesorios.acc_nombre_cod}" id="acc_nombre_cod" required="true" defaultValue=" ">
+							<xp:selectItems id="selectItems3">
+								<xp:this.value><![CDATA[#{javascript:if(documentPropuesta.isEditable()){
+	importPackage(ar.com.hdi.autos.connect);
+	var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+	var doc:NotesDocument = database.createDocument();
+	var result = jce.getSelectAS("solTB_SET244", doc);
+	doc.recycle();
+	return result;
+}}]]></xp:this.value>
+							</xp:selectItems>
+						</xe:djFilteringSelect>
+						<xp:text
+							value="#{DSf_accesorios.acc_nombre_des}" id="acc_nombre_des"
+							style="display:none">
+						</xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td valign="top" style="width:auto">
+						<xp:label value="Tarifable:" id="label_acc_tarifable_opt"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:comboBox value="#{DSf_Accesorios.acc_tarifable_opt}" id="acc_tarifable_opt" defaultValue="0" required="true">
+							<xp:selectItems id="selectItems1">
+								<xp:this.value><![CDATA[#{javascript:var vOpciones:NotesView = getDbCfg().getView ("v.Sys.Opciones.Clave");
+var entryCol:NotesViewEntryCollection = vOpciones.getAllEntriesByKey("AUAccesorios_tarifable")
+var entryOpt:NotesViewEntry = entryCol.getFirstEntry();
+var docOpt:NotesDocument;
+
+var arrOpts:Array = new Array ();
+
+while (entryOpt != null) {
+	docOpt = entryOpt.getDocument();
+	
+	arrOpts.push(docOpt.getItemValueString("opt_Nombre_des") + "|" + docOpt.getItemValueString("opt_Codigo_des"));
+	
+	entryOpt = entryCol.getNextEntry(entryOpt);
+}
+arrOpts}]]></xp:this.value>
+							</xp:selectItems>
+							<xp:eventHandler event="onchange" submit="true" refreshMode="partial" id="eventHandler1" refreshId="djNumberTextBox_acc_valor_nro"></xp:eventHandler>
+							<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="djNumberTextBox_acc_valor_nro"></xp:eventHandler>
+						</xp:comboBox>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td valign="top" style="width:auto">
+						<xp:label value="Valor:" id="label_acc_valor_nro" for="djNumber_acc_valor_nro"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xe:djNumberTextBox id="djNumberTextBox_acc_valor_nro" value="#{DSf_Accesorios.acc_valor_nro}" defaultValue="0"
+							required="true" regExp=".{1,9999999}">
+							<xe:this.constraints>
+								<xe:djNumberConstraints min="1" max="9999999"></xe:djNumberConstraints>
+							</xe:this.constraints>
+							<xp:this.validators>
+								<xp:validateRequired message="Debe ingresar un valor para el accesorio."></xp:validateRequired>
+							</xp:this.validators>
+						</xe:djNumberTextBox>
+					</xp:td>
+				</xp:tr>
+			</xp:table>
+			<xp:messages id="messages"></xp:messages>
+			<xp:panel style="text-align:right" id="PNL_accButtons">
+				<xe:djButton label="Guardar" id="djButtonSave" disabled="#{javascript:!DSf_Accesorios.isEditable()}" rendered="#{javascript:visibleBtnsAccesorios();}">
+					<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+						<xp:this.action>
+							<xp:actionGroup>
+								<xp:executeScript>
+									<xp:this.script><![CDATA[#{javascript:var strAccCode:String = getComponent ("acc_nombre_cod").getValue();
+
+DSf_Accesorios.setValue("acc_nombre_des", getComponent ("acc_nombre_cod").getValue());
+DSf_Accesorios.setValue("idPropuesta_cod", viewScope.docxProp.getDocument().getUniversalID());
+
+getComponent("tooltipDlg_accesorios").hide("dataTableGrilla")}]]></xp:this.script>
+								</xp:executeScript>
+								<xp:saveDocument></xp:saveDocument>
+							</xp:actionGroup>
+						</xp:this.action>
+					</xp:eventHandler>
+				</xe:djButton>
+				<xe:djButton label="Borrar" id="djButtonDelete" disabled="#{javascript:DSf_Accesorios.isNewNote()}" rendered="#{javascript:visibleBtnsAccesorios();}">
+					<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+						<xp:this.action>
+							<xp:actionGroup>
+								<xp:deleteDocument name="" message="Está seguro que quiere eliminar el accesorio?"></xp:deleteDocument>
+								<xp:executeScript>
+									<xp:this.script><![CDATA[#{javascript:getComponent("tooltipDlg_accesorios").hide("dataTableGrilla");}]]></xp:this.script>
+								</xp:executeScript>
+							</xp:actionGroup>
+						</xp:this.action>
+					</xp:eventHandler>
+				</xe:djButton>
+				<xe:djButton label="Cancelar" id="djButton3">
+					<xp:eventHandler event="onclick" submit="true" immediate="true">
+						<xp:this.action>
+							<xp:actionGroup>
+								<xp:executeScript>
+									<xp:this.script><![CDATA[#{javascript:getComponent("tooltipDlg_accesorios").hide()}]]></xp:this.script>
+								</xp:executeScript>
+							</xp:actionGroup>
+						</xp:this.action>
+					</xp:eventHandler>
+				</xe:djButton>
+			</xp:panel>
+		</xp:panel>
+	</xe:tooltipDialog>
+</xp:view>

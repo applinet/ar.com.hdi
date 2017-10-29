@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex" xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xe:dropDownButton id="btnCambiarEstado" style="display:inline">
+		<xe:this.treeNodes>
+			<xe:basicContainerNode label="#{javascript:compositeData.property_ButtonLabel}" transparent="false" image="/SendToBox.png"
+				imageHeight="15px">
+				<xe:this.children>
+					<xe:repeatTreeNode loaded="true" indexVar="index" var="crrView">
+						<xe:this.children>
+							<xe:basicLeafNode loaded="true">
+								<xe:this.label><![CDATA[#{javascript:var pipeidx = crrView.indexOf("|");//Obtengo el indice del pipe
+crrView.left(pipeidx);}]]></xe:this.label>
+								<xe:this.submitValue><![CDATA[#{javascript:var pipeidx = crrView.indexOf("|");//Obtengo el indice del pipe
+@Trim(crrView.mid(pipeidx+1, 3))}]]></xe:this.submitValue>
+							</xe:basicLeafNode>
+						</xe:this.children>
+						<xe:this.value><![CDATA[#{javascript:compositeData.property_Opciones}]]></xe:this.value>
+					</xe:repeatTreeNode>
+				</xe:this.children>
+			</xe:basicContainerNode>
+		</xe:this.treeNodes>
+		<xe:this.rendered><![CDATA[#{javascript:var estadosOcultos:Boolean = compositeData.property_OcultarEnEstados; //Emitida, Susp Esp, Susp
+if(!estadosOcultos){return false};
+var vEstados:NotesView = getDbCfg().getView ("v.Sys.LK_EstadosCodigo");
+var docEstado:NotesDocument = vEstados.getDocumentByKey(compositeData.property_EstadoActual);
+if (docEstado != null){
+	var booResult:boolean = false;
+	var vecCodigoEstado:java.util.Vector = new java.util.Vector();
+	//	var strEstGrupos:String = docEstado.getItemValueString("est_Grupos_des"); //FPRgrupo	
+	var vecEstGrupos:java.util.Vector = docEstado.getItemValue("est_Grupos_des"); //Grupo que puede cambiar de estado
+	for (i=0; i<vecEstGrupos.size(); i++) {
+		if(vecEstGrupos.elementAt(i) != ""){
+			var groups:java.util.Vector = context.getUser().getGroups();//FPRgrupo
+			if(groups.indexOf(vecEstGrupos.elementAt(i)) != -1){
+				booResult = true;				
+			}
+		}
+	};
+	
+	if(!booResult){return false;}
+	
+	var arrEstSig:String = docEstado.getItemValue("est_Siguientes_cod");
+	if(arrEstSig == "[]"){return false;}	
+}
+return true}]]></xe:this.rendered>
+		<xp:eventHandler event="onItemClick" submit="true" refreshMode="complete">
+			<xe:this.action><![CDATA[#{javascript:var estadoSeleccionado = context.getSubmittedValue();
+var viewPanel=getComponent(compositeData.property_viewPanel)
+if( viewPanel.getSelectedIds().length == 0) {
+	view.postScript("alert('Debe seleccionar al menos una propuesta a enviar')");
+	return;
+}
+
+var docIDArray=viewPanel.getSelectedIds(); 
+for(i=0;i < docIDArray.length;i++){
+	var docId=docIDArray[i];
+	var doc:NotesDocument=database.getDocumentByID(docId); 
+	if(DocLock.isLocked(doc.getUniversalID())){
+		view.postScript("alert('Se cancela el proceso debido a que la orden " + doc.getItemValueInteger("orden_nro") + " se encuentra bloqueada por un usuario')");
+		return;
+	}	
+}
+
+for(i=0;i < docIDArray.length;i++){
+	var docId=docIDArray[i];
+	var doc:NotesDocument=database.getDocumentByID(docId);
+	doc.replaceItemValue("sol_status_cod", context.getSubmittedValue());
+	var sol_status_des:String = getStatusLabel(context.getSubmittedValue());
+	doc.replaceItemValue("sol_status_des", sol_status_des);	
+	setLogBackEnd (doc, "Envió Ordenes a Estado: " + sol_status_des);
+	doc.replaceItemValue("autor_acl", getNextStatusAuthorField(context.getSubmittedValue()));
+	doc.save()	
+}
+
+
+ }]]></xe:this.action>
+		</xp:eventHandler>
+	</xe:dropDownButton>
+</xp:view>

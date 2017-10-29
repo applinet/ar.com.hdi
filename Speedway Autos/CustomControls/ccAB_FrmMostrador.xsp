@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Esta es una Barra de acciones para la vista de Mostrador-->
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex" xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:debug="http://www.openntf.org/xsp/debugtoolbar">
+	
+	<xp:this.resources>
+		<xp:styleSheet href="/hdi_buttons.css"></xp:styleSheet>
+	</xp:this.resources>
+	<xp:this.afterPageLoad><![CDATA[#{javascript:viewScope.MaiSelectedUNID = context.getUrlParameter("documentId");}]]></xp:this.afterPageLoad>
+	<xc:ccRolDesarrollo_Data></xc:ccRolDesarrollo_Data><xp:panel style="border-bottom: 2px solid green">
+		<xp:table>
+			<xp:tr style="margin-bottom:10.0px">
+				<xp:td style="padding-top:3.0px">
+					<xp:button id="buttonNuevaSolicitud"
+						styleClass="solAdd">
+						<xp:eventHandler event="onclick" submit="true"
+							refreshMode="partial" id="eventHandler1">
+							<xp:this.action><![CDATA[#{javascript:getComponent('dialogNuevaOperacion').show();}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xe:tooltip id="tooltipButtonNuevaSolicitud"
+						for="buttonNuevaSolicitud" label="Nueva Orden" position="below">
+					</xe:tooltip>
+				</xp:td>
+				<xp:td style="width:5.0%"></xp:td>
+				<xp:td>
+					<xp:button id="buttonNuevaInspeccionPrevia"
+						styleClass="insPreviaAdd">
+						<xp:eventHandler event="onclick" submit="true"
+							refreshMode="complete" id="eventHandler8">
+							<xp:this.action><![CDATA[#{javascript:context.redirectToPage("xfDocInspeccion.xsp?OpenXPage&login&Previa=" + currentDocument.getDocument().getUniversalID(), true);}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xe:tooltip id="tooltipButtonNuevaInspeccionPrevia"
+						for="buttonNuevaInspeccionPrevia" label="Nueva Inspección Previa"
+						position="below">
+					</xe:tooltip>
+				<xp:span style="padding-top:0.0px"></xp:span></xp:td>
+				<xp:td style="width:5.0%"></xp:td>
+				<xp:td style="padding-top:3.0px">
+					<xp:button id="buttonNuevaInspeccionProductor"
+						styleClass="insProdAdd">
+						<xp:eventHandler event="onclick" submit="true"
+							refreshMode="complete" id="eventHandler9">
+							<xp:this.action><![CDATA[#{javascript:context.redirectToPage("xfDocInspeccion.xsp?OpenXPage&login&Productor=" + currentDocument.getDocument().getUniversalID(), true);}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xe:tooltip id="tooltip1"
+						for="buttonNuevaInspeccionProductor"
+						label="Nueva Inspección de Productor" position="below">
+					</xe:tooltip>
+				</xp:td>
+				<xp:td style="width:5.0%"></xp:td>
+				<xp:td style="padding-top:3.0px">
+					<xp:button id="buttonEliminarMail"
+						styleClass="maiDelete">
+						<xp:eventHandler event="onclick" submit="true"
+							refreshMode="complete" id="eventHandler3">
+							<xp:this.action><![CDATA[#{javascript:var dbMailsDelete:NotesDatabase = getDbMailsDelete ();
+var docMail:NotesDocument = documentMail.getDocument();
+var docNew = dbMailsDelete.createDocument();
+docMail.copyAllItems(docNew, false);
+docNew.save();
+docMail.remove(true);
+context.redirectToPage("xvUI_Mostrador.xsp?OpenXPage&login", true);}]]></xp:this.action>
+							<xp:this.script><![CDATA[if(confirm("Está seguro de eliminar este mail?")){
+	return true;
+}else{
+	return false;
+}]]></xp:this.script>
+						</xp:eventHandler>
+					</xp:button>
+					<xe:tooltip id="tooltip2" for="buttonEliminarMail"
+						label="Eliminar mail" position="below">
+					</xe:tooltip>
+				</xp:td>
+				<xp:td style="width:5.0%"></xp:td>
+				<xp:td style="padding-top:3.0px">
+					<xp:button id="buttonMaiAddToPropuesta"
+						styleClass="maiAddToPropuesta">
+						<xp:eventHandler event="onclick" submit="true"
+							id="eventHandler5" refreshMode="partial" refreshId="PanelName">
+							<xp:this.action><![CDATA[#{javascript:viewScope.SearchThis = "";
+viewScope.AdjuntarPropuestaNro = "";}]]></xp:this.action>
+							<xp:this.script><![CDATA[dijit.byId("myDialogAdjuntarEnPropuesta").show();]]></xp:this.script>
+						</xp:eventHandler>
+					</xp:button>
+					<xe:tooltip id="tooltip4"
+						for="buttonMaiAddToPropuesta" label="Adjuntar mail a Orden"
+						position="below">
+					</xe:tooltip>
+				</xp:td>
+				<xp:td style="width:5.0%"></xp:td>
+				<xp:td style="padding-top:3.0px">
+					<xp:button id="buttonMaiAddToInspeccionRealizada"
+						styleClass="maiAddToPropuesta">
+						<xp:eventHandler event="onclick" submit="true"
+							id="eventHandler6" refreshMode="norefresh">
+							<xp:this.script><![CDATA[dijit.byId("myDialogAdjuntarEnInspeccion").show();]]></xp:this.script>
+							<xp:this.action><![CDATA[#{javascript:viewScope.SearchThis = "";
+viewScope.AdjuntarInspeccionNro = "";}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xe:tooltip id="tooltip6"
+						for="buttonMaiAddToInspeccionRealizada"
+						label="Adjuntar mail como Inspeccion Realizada"
+						position="below">
+					</xe:tooltip>
+				</xp:td>
+				<xp:td style="width:5.0%"></xp:td>
+				<xp:td style="padding-top:3.0px">
+					<xp:button id="buttonMaiAddFlotaPoliza"
+						styleClass="maiAddFlotaPoliza">
+						<xp:eventHandler event="onclick" submit="true"
+							refreshMode="partial" id="eventHandler2">
+							<xp:this.action><![CDATA[#{javascript:getComponent('dialogPolizaFlota').show();}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xe:tooltip id="tooltip5"
+						for="buttonMaiAddFlotaPoliza"
+						label="Asignar Nro. de Póliza y Flota" position="below">
+					</xe:tooltip>
+				</xp:td>
+
+
+				<!--NUEVO BOTON-->
+				<xp:td style="width:5.0%"></xp:td>
+				<xp:td style="padding-top:3.0px">
+					<xp:this.rendered><![CDATA[#{javascript:var doc = requestScope.get("currentDocument");
+if (doc != null) {
+	//Si se trata de un mail
+	return (doc.getDocument().getItemValue("Form")[0] == "Mail");
+} else {
+	return false;
+}}]]></xp:this.rendered>
+					<xp:button id="buttonClasificar"
+						styleClass="maiClasificar">
+
+						<xp:eventHandler event="onclick" submit="true"
+							refreshMode="partial" refreshId="dialogIcono"
+							id="eventHandler7">
+							<xp:this.action>
+								<![CDATA[#{javascript:getComponent('dialogIcono').show()}]]>
+							</xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xe:tooltip id="tooltip7" for="buttonClasificar"
+						label="Clasificar" position="below">
+					</xe:tooltip>
+				</xp:td>
+
+
+				<xp:td style="width:5.0%"></xp:td>
+				<xp:td>
+					<xp:this.rendered><![CDATA[#{javascript:var doc = requestScope.get("currentDocument");
+if (doc != null) {
+	//Si se trata de un mail
+	return (doc.getDocument().getItemValue("Form")[0] == "Mail");
+} else {
+	return false;
+}}]]></xp:this.rendered>
+					
+					<xe:valuePicker for="djextListTextBoxTagsDoc"
+						listWidth="30%" dojoType="extlib.dijit.PickerCheckbox"
+						pickerIcon="/Tag.png" dialogTitle="Documentación">
+						<xe:this.dataProvider>
+							<xe:simpleValuePicker>
+								<xe:this.valueList><![CDATA[#{javascript:var strOpciones = getOpcionesClave("Documentacion_Tags");
+var strResult:Array = new Array();
+if (strOpciones != null && strOpciones[0] != "") {
+	for(var i = 0; i < strOpciones.length; i++) {
+		if (strOpciones[i].indexOf("|") != -1) {
+			strResult.push(strOpciones[i].left(strOpciones[i].indexOf("|")));
+		}
+	}
+}
+strResult;}]]></xe:this.valueList>
+							</xe:simpleValuePicker>
+						</xe:this.dataProvider>
+
+						<xe:this.dojoAttributes>
+							<xp:dojoAttribute name="iconClass "
+								value="maiClasificar" loaded="true">
+							</xp:dojoAttribute>
+						</xe:this.dojoAttributes>
+
+					</xe:valuePicker>
+					
+					
+				</xp:td>
+				<xp:td style="width:5.0%"></xp:td>
+				<xp:td style="padding-top:3.0px">
+					<xp:button id="buttonExit" styleClass="Exit">
+						<xp:eventHandler event="onclick" submit="true"
+							refreshMode="norefresh" id="eventHandler4">
+							<xp:this.action>
+
+								<xp:actionGroup>
+
+
+									<xp:openPage
+										name="$$PreviousPage">
+									</xp:openPage>
+
+								</xp:actionGroup>
+							</xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xe:tooltip id="tooltip3" for="buttonExit"
+						label="Cerrar" position="below">
+					</xe:tooltip>
+				</xp:td>
+			</xp:tr>
+		</xp:table>
+</xp:panel>
+	<xc:ccDocumentacionFaltante Titulo="Documentación: "></xc:ccDocumentacionFaltante>
+	<xc:ccDialogAsignarPolizaFlota></xc:ccDialogAsignarPolizaFlota>
+	<xp:br></xp:br>
+	
+	<xc:ccDialogAdjuntarEnInspeccionEnviada></xc:ccDialogAdjuntarEnInspeccionEnviada>
+	<xp:br></xp:br>
+	<xc:ccIcono></xc:ccIcono>
+	<xp:div style="display:none;">
+		<xp:inputText id="sol_Icono_cod" value="#{documentMail.sol_Icono_cod}" disableClientSideValidation="true">
+		</xp:inputText>
+	</xp:div>
+</xp:view>

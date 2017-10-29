@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core">
+
+	<xp:this.beforePageLoad><![CDATA[#{javascript:updateLockScopeVariables ();}]]></xp:this.beforePageLoad>
+	<xp:this.resources>
+		<xp:script src="/JSS.DocumentLocking.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	<xp:panel
+		style="width:100%;padding-left:4.0px;padding-right:4.0px;padding-top:4.0px;padding-bottom:4.0px">
+		<xp:label id="labelDocumentLocked" style="color:rgb(255,0,0);background-color:rgb(255,255,128)">
+			<xp:this.value><![CDATA[#{javascript:viewScope.get("strLockedMsg")}]]></xp:this.value>
+			<xp:this.rendered><![CDATA[#{javascript:if (viewScope.get("booIsLocked")) return true;
+else return false;}]]></xp:this.rendered>
+		</xp:label>
+		<xp:br></xp:br>
+		<xp:button value="Blockear la orden" id="buttonLock">
+			<xp:this.rendered><![CDATA[#{javascript:if(currentDocument.getItemValueString("Form") == "Propuesta"){
+	if(!isStatusFieldAccessGroup(getComponent("sol_status_cod").getValue(), "est_PermiteEdicionGrupo_des")) return false;	
+} 
+//Si no está bloqueado, LOCK visible
+if (viewScope.get("booIsLocked") == false) return true;
+
+return false;}]]></xp:this.rendered>
+			<xp:eventHandler event="onclick" submit="true"
+				refreshMode="complete">
+				<xp:this.action><![CDATA[#{javascript:lockDocument("");}]]></xp:this.action>
+			</xp:eventHandler>
+		</xp:button>
+		<xp:button id="buttonUnLock" value="Liberar la orden">
+			<xp:this.rendered><![CDATA[#{javascript://Si no está bloqueado, UnLock OCULTO
+if (viewScope.get("booIsLocked") == false) return false;
+
+//Si está bloqueado pero NO por el usuario actual, UnLock OCULTO
+if (viewScope.get("booIsLockedByCurrentUser") == false) return false;
+
+return true;}]]></xp:this.rendered>
+			<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+				<xp:this.action>
+					<xp:actionGroup>
+						<xp:executeScript>
+							<xp:this.script><![CDATA[#{javascript:unLockDocument("");}]]></xp:this.script>
+						</xp:executeScript>
+						<xp:changeDocumentMode mode="readOnly"></xp:changeDocumentMode>
+					</xp:actionGroup>
+				</xp:this.action>
+			</xp:eventHandler>
+		</xp:button>
+	</xp:panel>
+	
+	</xp:view>

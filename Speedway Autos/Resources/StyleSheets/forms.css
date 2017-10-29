@@ -1,0 +1,90 @@
+
+.FormColumn {
+	width:600px;
+	float:left;
+}
+
+.PanelBox {
+	margin-bottom: 10px;
+	float: left;
+	width: 95%;
+	clear: left;
+	border:1px solid #1B8D3D;
+}
+.PanelActions, .PanelSys {
+	width: 1200px;
+	float: left;
+	margin-bottom: 10px;
+}
+
+.PanelBoxDashed {
+	margin-bottom: 10px;
+	float: left;
+	clear: left;
+	border:1px dashed #1B8D3D;
+}
+.PanelBoxDashedScroll {
+	margin-bottom: 10px;
+	height: 375px;
+	float: left;
+	clear: left;
+	border:1px dashed #1B8D3D;
+	overflow: auto;
+}
+.PanelTitle {
+	padding:5px;
+	background-color: #36B75C;
+	font-weight: bold;
+	font-size: 12px;
+	font-family: Verdana;
+}
+.PanelContent {
+	margin:0px 5px;
+	float:left;
+}
+.TableFields {
+	float:left;
+}
+.TableFields tbody tr td {
+	padding-left: 10px;
+}
+.Panel {
+	float:left;
+	width: 100%;
+}
+.PanelPager {
+	float:left;
+	width: 100%;
+	margin-bottom: 10px;
+}
+.PanelMailBox {
+	border:1px dashed #1B8D3D;
+}
+.FieldComentarios {
+	width:300px;
+	height:60px;
+}
+.FieldHistory {
+	font-size: 10px;
+	font-family: Verdana;
+	color: gray;
+}
+
+.TableBasic, .TableBasicTop {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.TableBasic tbody tr td, .TableBasicTop tbody tr td {
+	padding-right: 8px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+.TableBasicTop tbody tr td {
+	vertical-align: top;
+}
+
+.PanelFactura {
+	width: 95%;
+	border: solid 1px gray;
+	padding: 5px;
+}

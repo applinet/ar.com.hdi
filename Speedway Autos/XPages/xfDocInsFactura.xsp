@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xc:oneuiLayout><xp:this.facets>
+	<xc:ccNavIns xp:key="facet_3" ccPropEstado="FACTURAS"></xc:ccNavIns>
+	<xc:ccFrm_InsFacturacion xp:key="facet_2"></xc:ccFrm_InsFacturacion></xp:this.facets></xc:oneuiLayout></xp:view>

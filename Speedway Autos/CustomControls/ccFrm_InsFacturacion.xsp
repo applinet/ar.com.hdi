@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xp:this.data>
+		<xp:dominoDocument var="insFacturacion" formName="f.CtrFactIns"
+			computeWithForm="both">
+			<xp:this.postSaveDocument><![CDATA[#{javascript:context.redirectToPage("/viewIns_Facturas.xsp?OpenXPage");}]]></xp:this.postSaveDocument>
+		</xp:dominoDocument>
+	</xp:this.data>
+	<xp:this.resources>
+		<xp:styleSheet href="/forms.css"></xp:styleSheet>
+
+		<xp:script src="/JSS.Inspeccion.jss" clientSide="false"></xp:script>
+		<xp:script src="/JSS.InsFacturacion.jss" clientSide="false"></xp:script>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+		<xp:script src="/JSS.Validation.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	<xp:this.beforePageLoad><![CDATA[#{javascript:insFcLoadInitialData (insFacturacion)}]]></xp:this.beforePageLoad>
+	&#160;
+	
+	<xp:table rendered="false" style="margin-bottom:33.0px">
+		<xp:tr>
+			<xp:td>
+				<xp:label value="Código:" id="code_FC_Label1"
+					for="code_FC1">
+				</xp:label></xp:td>
+			<xp:td>
+				<xp:text value="#{insFacturacion.Code_FC}"
+					id="code_FC1">
+				</xp:text></xp:td>
+		</xp:tr>
+		<xp:tr><xp:td><xp:label value="Created_ f c:" id="created_FC_Label1" for="created_FC1"></xp:label></xp:td><xp:td><xp:text value="#{insFacturacion.Created_FC}" id="created_FC1"><xp:this.converter><xp:convertDateTime type="both" dateStyle="short" timeStyle="short"></xp:convertDateTime></xp:this.converter></xp:text></xp:td></xp:tr><xp:tr>
+			<xp:td>
+				<xp:label value="Ins UNIDs:"
+					id="insUNIDs_FC_Label1" for="insUNIDs_FC1">
+				</xp:label>
+			</xp:td>
+			<xp:td>
+				<xp:text value="#{insFacturacion.InsUNIDs_FC}"
+					id="insUNIDs_FC1">
+				</xp:text>
+			</xp:td>
+</xp:tr>
+		<xp:tr>
+			<xp:td>
+				<xp:label value="Ins Codes:"
+					id="insCodes_FC_Label1" for="insCodes_FC1">
+				</xp:label>
+			</xp:td>
+			<xp:td>
+				<xp:text value="#{insFacturacion.InsCodes_FC}"
+					id="insCodes_FC1">
+				</xp:text>
+			</xp:td>
+		</xp:tr>
+		<xp:tr><xp:td>
+	<xp:label value="Ins consecutivos:" id="insConsecutivos_FC_Label1"
+		for="insConsecutivos_FC1">
+	</xp:label></xp:td>
+	<xp:td>
+		<xp:text value="#{insFacturacion.InsConsecutivos_FC}"
+			id="insConsecutivos_FC1">
+		</xp:text></xp:td></xp:tr>
+	</xp:table>
+	<xp:messages id="messages1"></xp:messages>
+	<xp:br></xp:br>
+	<xp:panel id="panelFactura" styleClass="PanelFactura">
+		<xp:table
+			style="border-bottom: solid 1px gray; width:100.0%;margin-bottom:30.0px; "
+			styleClass="TableBasicTop">
+			<xp:tr>
+				<xp:td style="width:130.0px">
+					<xp:label value="Número de Factura:"
+						id="numero_FC_Label1" for="numero_FC1">
+					</xp:label>
+				</xp:td>
+				<xp:td style="width:100px">
+					<xp:inputText value="#{insFacturacion.Numero_FC}"
+						id="numero_FC1">
+					</xp:inputText>
+				</xp:td>
+				<xp:td style="width:70.0px">
+					<xp:label value="Inspector:"
+						id="inspector_FC_Label1" for="inspector_FC1">
+					</xp:label>
+				</xp:td>
+				<xp:td>
+					<xp:text value="#{insFacturacion.Inspector_FC}"
+						id="Inspector_FC1">
+					</xp:text>
+				</xp:td>
+				
+				
+			</xp:tr>
+		</xp:table>
+		<xp:table styleClass="TableBasicTop" style="width:100%">
+
+			<xp:tr>
+				<xp:td style="width:130.0px">
+					<xp:label value="Cantidad de KM:"
+						id="kM_Count_FC_Label1" for="kM_Count_FC1">
+					</xp:label>
+				</xp:td>
+				<xp:td style="width:100px">
+					<xp:inputText value="#{insFacturacion.KM_Count_FC}"
+						id="kM_Count_FC1">
+						<xp:this.converter>
+							<xp:convertNumber></xp:convertNumber>
+						</xp:this.converter>
+					</xp:inputText>
+				</xp:td>
+
+
+				<xp:td>
+
+					<xp:label value="Importe de KM:"
+						id="impKM_FC_Label1" for="impKM_FC1">
+					</xp:label>
+					</xp:td>
+				<xp:td>
+
+					<xp:text value="#{insFacturacion.ImpKM_FC}"
+						id="impKM_FC1">
+						<xp:this.converter>
+							<xp:convertNumber type="number"></xp:convertNumber>
+						</xp:this.converter>
+					</xp:text>
+				</xp:td>
+				<xp:td>(Valor * Cantidad)</xp:td>
+			</xp:tr>
+			<xp:tr>
+				<xp:td>
+
+
+					<xp:label value="Valor del KM:"
+						id="kM_Valor_FC_Label1" for="kM_Valor_FC1">
+					</xp:label>
+				</xp:td>
+				<xp:td>
+
+
+					<xp:text value="#{insFacturacion.KM_Valor_FC}"
+						id="KM_Valor_FC1">
+						<xp:this.converter>
+							<xp:convertNumber type="number"></xp:convertNumber>
+						</xp:this.converter>
+					</xp:text>
+				</xp:td>
+
+
+				<xp:td>
+					<xp:label value="Inspecciones Facturadas:"
+						id="label1" for="impSumaIns_FC1">
+					</xp:label>
+				</xp:td>
+				<xp:td>
+					<xp:text value="#{insFacturacion.ImpSumaIns_FC}"
+						id="ImpSumaIns_FC1">
+						<xp:this.converter>
+							<xp:convertNumber type="number"></xp:convertNumber>
+						</xp:this.converter>
+					</xp:text>
+				</xp:td>
+				<xp:td>Suma de Importes de las Inspecciones Facturadas</xp:td>
+			</xp:tr>
+			<xp:tr>
+				<xp:td>
+
+
+				</xp:td>
+				<xp:td>
+
+
+				</xp:td>
+
+
+				<xp:td>
+
+					<xp:label value="Importe Adicional:"
+						id="impAdicional_FC_Label1" for="impAdicional_FC1">
+					</xp:label>
+				</xp:td>
+				<xp:td>
+
+					<xp:inputText
+						value="#{insFacturacion.ImpAdicional_FC}" id="impAdicional_FC1">
+						<xp:this.converter>
+							<xp:convertNumber></xp:convertNumber>
+						</xp:this.converter>
+					</xp:inputText>
+				</xp:td>
+				<xp:td></xp:td>
+			</xp:tr>
+			<xp:tr>
+				<xp:td></xp:td>
+				<xp:td></xp:td>
+
+
+				<xp:td></xp:td>
+				<xp:td></xp:td>
+				<xp:td></xp:td>
+			</xp:tr>
+			<xp:tr>
+				<xp:td>
+					<xp:label value="Importe Total sin IVA:"
+						id="impTotalSinIVA_FC_Label1" for="impTotalSinIVA_FC1">
+					</xp:label>
+				</xp:td>
+				<xp:td>
+					<xp:inputText
+						value="#{insFacturacion.ImpTotalSinIVA_FC}"
+						id="impTotalSinIVA_FC1">
+						<xp:this.converter>
+							<xp:convertNumber type="number"></xp:convertNumber>
+						</xp:this.converter>
+					</xp:inputText>
+				</xp:td>
+
+
+				<xp:td>
+					<xp:label value="Total de Importes:"
+						id="impSumaTotal_FC_Label1" for="impSumaTotal_FC1">
+					</xp:label>
+					
+				</xp:td>
+				<xp:td>
+					<xp:text value="#{insFacturacion.ImpSumaTotal_FC}"
+						id="impSumaTotal_FC1">
+						<xp:this.converter>
+							<xp:convertNumber type="number"></xp:convertNumber>
+						</xp:this.converter>
+					</xp:text>
+				
+					&#160;
+					<xp:image url="/Check-icon.png" id="image1" style="height:16.0px;width:16.0px;margin-left:10.0px"><xp:this.rendered><![CDATA[#{javascript:var strVal:String = viewScope.get("datosValidados");
+if (strVal == null) return (false);
+if (!strVal.equals ("1")) return (false);
+
+return (true);}]]></xp:this.rendered></xp:image>
+				</xp:td>
+				<xp:td>
+					-&#160;Importe de KM
+					<xp:br></xp:br>
+					-&#160;Suma de Importes de las&#160;Inspecciones Facturadas
+					<xp:br></xp:br>
+					-&#160;Importe Adicional</xp:td></xp:tr></xp:table>
+		<xp:br></xp:br>
+		<xp:table>
+			<xp:tr>
+				<xp:td style="width:130px"><xp:span style="font-weight:bold">Inspecciones:</xp:span></xp:td>
+				<xp:td>
+					<xp:text escape="true" id="computedField1">
+						<xp:this.value><![CDATA[#{javascript://var vecValues:java.util.Vector = insFacturacion.getDocument().getItemValue("insConsecutivos_FC");
+var vecValues:java.util.Vector = getComponent("insConsecutivos_FC1").getValue();
+vecValues.toArray().join("; ")}]]></xp:this.value>
+					</xp:text></xp:td>
+			</xp:tr>
+		</xp:table>
+		<xp:br></xp:br></xp:panel>
+	
+	<xp:br></xp:br>
+	<xp:br></xp:br>
+	<xp:button value="Validar Datos" id="buttonValidarDatos" rendered="#{javascript:insFacturacion.isNewNote()}">
+
+
+									
+								<xp:eventHandler event="onclick"
+									submit="true" refreshMode="complete">
+									<xp:this.action><![CDATA[#{javascript:insFcValidarDatos(insFacturacion)}]]></xp:this.action>
+								</xp:eventHandler></xp:button>
+	<xp:button value="Ingresar Factura" id="buttonIngresarFc" style="margin-left:20.0px" rendered="#{javascript:insFacturacion.isNewNote()}">
+
+
+									
+								<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+	<xp:this.action>
+		<xp:actionGroup
+			condition="#{javascript:insFcValidarDatos(insFacturacion);}">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<xp:executeScript
+				script="#{javascript:insFcIngresar (insFacturacion);}">
+
+			</xp:executeScript>
+			<xp:saveDocument var="insFacturacion"></xp:saveDocument>
+		</xp:actionGroup>
+	</xp:this.action></xp:eventHandler></xp:button>
+	
+	<xp:button value="Cancelar" id="buttonCancelar" style="margin-left:20.0px" rendered="#{javascript:insFacturacion.isNewNote()}">
+
+
+									
+								<xp:eventHandler event="onclick"
+									submit="true" refreshMode="complete">
+									<xp:this.action><![CDATA[#{javascript:context.redirectToPage("/viewIns_Facturas.xsp?OpenXPage");}]]></xp:this.action>
+								</xp:eventHandler></xp:button><xp:br></xp:br>
+	<xp:button value="Eliminar" id="buttonEliminar"><xp:this.rendered><![CDATA[#{javascript:if (insFacturacion.isNewNote()) return false;
+if (isUserInsControlFacturacion()) return true;
+if (isUserSystem ()) return true;
+else return false;}]]></xp:this.rendered>
+		<xp:eventHandler event="onclick" submit="true"
+			refreshMode="complete">
+			<xp:this.script><![CDATA[return window.confirm("¿Eliminar Factura? La acción también eliminará la factura de las inspecciones que fueron asociadas.");]]></xp:this.script>
+
+			<xp:this.action>
+
+				<xp:actionGroup>
+
+					<xp:changeDocumentMode mode="edit"
+						var="insFacturacion">
+					</xp:changeDocumentMode>
+					<xp:executeScript
+						script="#{javascript:insFcEliminar (insFacturacion);}">
+					</xp:executeScript>
+					<xp:save name="/viewIns_Facturas.xsp"></xp:save>
+				</xp:actionGroup>
+			</xp:this.action>
+		</xp:eventHandler></xp:button>
+	<xp:br></xp:br>
+	
+</xp:view>

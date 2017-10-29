@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='utf-8'?>
+<note class='view' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.0'
+ replicaid='03257E5A006E447C'>
+<noteinfo noteid='1b2' unid='9E9CA8D4CFEE39AF03257CF6003ADAD4' sequence='21'>
+<created><datetime>20140613T074251,08-03</datetime></created>
+<modified><datetime>20170829T080800,50-03</datetime></modified>
+<revised><datetime>20170829T080800,49-03</datetime></revised>
+<lastaccessed><datetime>20170829T080800,49-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170426,60-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name
+>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name
+>CN=Pepe Administrator/O=axin</name><name>CN=Fernando Rodriguez/O=axin</name><name
+>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name
+>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name='$FormulaClass' sign='true'><text>1</text></item>
+<item name='TmpViewDesignCollation' sign='true'><text>es-AR</text></item>
+<item name='$TITLE' sign='true'><text>UI\Bonificaciones\AsociadasEnComponente|v.UI.BonAsocComponente_EmbView</text></item>
+<item name='$Index' sign='true'><text/></item>
+<item name='$Formula' summary='true' sign='true'><formula compiled='true'>
+7AAFALYAsQAKAAsADgAVABYAFgAMABMAEwAJAAQAaWRQYWRyZV9jb2Rib25fbm9tYnJlX2Rlc2Jv
+bl9wb3JjSW5ncmVzYWRvX25yb2Jvbl9wb3JjUmFuZ29EZXNkZV9ucm9ib25fcG9yY1JhbmdvSGFz
+dGFfbnJvYm9uX3RpcG9fb3B0Ym9uX3ZhbGlkb0Rlc2RlX25yb2Jvbl92YWxpZG9IYXN0YV9ucm8k
+Q29uZmxpY3QkUkVGAAQABAAAACIABQAEAEZvcm0BAA4AQm9uaWZpY2FjaW9uZXMKAgMABwAOAAgA
+CUwxUzJTM1M=
+</formula></item>
+<item name='$Collation' summary='true'>
+<rawitemdata type='2'>
+LQACAABECGYHAAALAIFmAAsADgBpZFBhZHJlX2NvZGJvbl9ub21icmVfZGVz
+</rawitemdata></item>
+<item name='$Comment' sign='true'><text>vUI_BonificacionesAsociadasEnComponente</text></item>
+<item name='$Flags'><text>Y</text></item>
+<item name='$DesignerVersion' sign='true'><text>8.5.3</text></item>
+<item name='$ViewFormat' sign='true'>
+<rawitemdata type='5'>
+AQAIAAgACAAAAFZDAwQLAAkAAAAAAEMAAQEACgABAAAAAAAAAAICAAAAVkMFAA4ADgAAAAAAagAB
+AAAKAAAAAAAAAAEAAgIAAABWQwAAFQAOAAAAAAA8AAEAAAoAAAAAAAAAAAACAgAAQFZDAAAWABEA
+AAAAADwAAQAACgAAAAAAAAAAAAICAABAVkMAABYAEQAAAAAAPAABAAAKAAAAAAAAAAAAAgIAAEBW
+QwAADAAHAAAAAAA8AAEAAAoAAAAAAAAAAAACAgAAQFZDAAATAA4AAAAAADwAAQAACgAAAAAAAAAA
+AAICAABAVkMAABMADgAAAAAAPAABAAAKAAAAAAAAAAAAAgIAAEBpZFBhZHJlX2NvZFVuaWRQYWRy
+ZWJvbl9ub21icmVfZGVzYm9uRGVzY3JpcGNpb25ib25fcG9yY0luZ3Jlc2Fkb19ucm9Cb25Qb3Jj
+RGVmYXVsdGJvbl9wb3JjUmFuZ29EZXNkZV9ucm9Cb25Qb3JjUmFuZ29EZXNkZWJvbl9wb3JjUmFu
+Z29IYXN0YV9ucm9Cb25Qb3JjUmFuZ29IYXN0YWJvbl90aXBvX29wdEJvblRpcG9ib25fdmFsaWRv
+RGVzZGVfbnJvQm9uVmFsaWRvRGVzZGVib25fdmFsaWRvSGFzdGFfbnJvQm9uVmFsaWRvSGFzdGEm
+AAEAAAABAQAJAQAACgEBDgoAAAEArSsBAAEAAQAAAAAAAAAAAFdDAQEACQAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAP//AAAAAAAAAAAAAAAAAABXQwEBAAkAAAAAAAAAAAAAAAAAAAAAAADEAAAAAAD/
+/wAAAAAAAAAAAAAAAAAAV0MBAQAJAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAA//8AAAAAAAAAAAAA
+AAAAAFdDAQEACQAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAP//AAAAAAAAAAAAAAAAAABXQwEBAAkA
+AAAAAAAAAAAAAAAAAAAAAAAEAAAAAAD//wAAAAAAAAAAAAAAAAAAV0MBAQAJAAAAAAAAAAAAAAAA
+AAAAAAAABAAAAAAA//8AAAAAAAAAAAAAAAAAAFdDAQEACQAAAAAAAAAAAAAAAAAAAAAAAAQAAAAA
+AP//AAAAAAAAAAAAAAAAAABXQwEBAAkAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAD//wAAAAAAAAAA
+AAAAAAAAQgAAAAAAAQD///8ABQD///8AAQAAAAAAAAAAAAAAAAABAP///wABAP///wAAAAEAAAAA
+AAEAAAAAAAEAAAAAAAAACAAAAAAAAQBYQwAMgAMAAAAAAAECAgIBAQEBBwQCAAAAAAAAAAAgLy86
+WUMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+</rawitemdata></item></note>
+

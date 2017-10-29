@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="03257E5A006E447C" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="5f6" sequence="23" unid="E0AE4E2D41B0E07C03257CF6003B4719">
+<created><datetime>20140613T074728,25-03</datetime></created>
+<modified><datetime>20170829T080821,62-03</datetime></modified>
+<revised><datetime>20170829T080821,61-03</datetime></revised>
+<lastaccessed><datetime>20170829T080821,61-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170432,68-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name="$TITLE"><text>hdi_oneUI_green.theme</text></item>
+<item name="$Flags"><text>34567Cg~`</text></item>
+<item name="$DesignerVersion" sign="true"><text>8.5.3</text></item>
+
+
+<item name="$FileNames" sign="true"><text>hdi_oneUI_green.theme</text></item></note>

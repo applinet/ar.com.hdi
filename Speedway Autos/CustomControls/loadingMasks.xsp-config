@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config>
+  <faces-config-extension>
+    <namespace-uri>http://www.ibm.com/xsp/custom</namespace-uri>
+    <default-prefix>xc</default-prefix>
+  </faces-config-extension>
+  <composite-component>
+    <component-type>loadingMasks</component-type>
+    <composite-name>loadingMasks</composite-name>
+    <composite-file>/loadingMasks.xsp</composite-file>
+    <composite-extension>
+      <designer-extension>
+        <in-palette>true</in-palette>
+        <render-markup>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xd;
+&lt;xp:view xmlns:xp="http://www.ibm.com/xsp/core"&gt;&#xd;
+&lt;xp:label value="Loading Mask CC v2.1" id="label1" style="font-weight:bold;font-size:12pt;font-family:Arial;color:rgb(2,91,125)"&gt;&lt;/xp:label&gt;&#xd;
+&lt;/xp:view&gt;&#xd;
+</render-markup>
+      </designer-extension>
+    </composite-extension>
+    <property>
+      <property-name>MaskColor</property-name>
+      <property-class>string</property-class>
+      <display-name>maskColor</display-name>
+      <property-extension>
+        <designer-extension>
+          <default-value>Black</default-value>
+        </designer-extension>
+      </property-extension>
+    </property>
+    <property>
+      <property-name>imageSource</property-name>
+      <property-class>string</property-class>
+      <display-name>imageSource</display-name>
+      <property-extension>
+        <designer-extension>
+          <editor>com.ibm.workplace.designer.property.editors.ImagePicker</editor>
+        </designer-extension>
+      </property-extension>
+    </property>
+    <property>
+      <property-name>startupBackgroundColor</property-name>
+      <property-class>string</property-class>
+      <display-name>startupBackgroundColor</display-name>
+      <property-extension>
+        <designer-extension>
+          <default-value>white</default-value>
+        </designer-extension>
+      </property-extension>
+    </property>
+    <property>
+      <property-name>startupImage</property-name>
+      <property-class>string</property-class>
+      <display-name>startupImage</display-name>
+      <property-extension>
+        <designer-extension>
+          <editor>com.ibm.workplace.designer.property.editors.ImagePicker</editor>
+        </designer-extension>
+      </property-extension>
+    </property>
+    <property>
+      <property-name>opacity</property-name>
+      <property-class>string</property-class>
+      <display-name>opacity</display-name>
+      <property-extension>
+        <designer-extension>
+          <default-value>.5</default-value>
+        </designer-extension>
+      </property-extension>
+    </property>
+    <property>
+      <property-name>startupLoader</property-name>
+      <property-class>boolean</property-class>
+      <display-name>startupLoader</display-name>
+      <property-extension>
+        <designer-extension>
+          <default-value>true</default-value>
+        </designer-extension>
+      </property-extension>
+    </property>
+  </composite-component>
+</faces-config>

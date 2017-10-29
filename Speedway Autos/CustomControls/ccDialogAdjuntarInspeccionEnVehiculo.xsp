@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" dojoParseOnLoad="true" dojoTheme="true" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:xp_1="http://www.ibm.com/xsp/coreex"
+	xmlns:debug="http://www.openntf.org/xsp/debugtoolbar">
+	<xp:this.data>
+		<xp:dominoView var="viewPropuestasPorCodigo" viewName="v.UI.Ins.SinProp">
+			<xp:this.keys><![CDATA[#{javascript:viewScope.get("SearchThis")}]]></xp:this.keys>
+		</xp:dominoView>
+	</xp:this.data>
+	<xp:this.resources>
+		<xp:script src="/JSS.MailingFunctions.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	<div id="myDialogAdjuntarInspeccionEnVehiculo" dojoType="dijit.Dialog" style="display:none" title="Asociar mail a inspección... ">
+		<xp:panel id="PanelName">
+			<xp:br></xp:br>
+			<xp:table>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Seleccione la inspección, se visualizarán" id="label2" style="font-weight:bold"></xp:label>
+						<xp:br></xp:br>
+						<xp:label value="las inspecciones sin propuesta:  " id="label1" style="font-weight:bold"></xp:label>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						&#160;&#160;<xp:inputText id="inputText1" style="width:133.0px" showReadonlyAsDisabled="true" disabled="true">
+							<xp:this.value><![CDATA[#{javascript:var temp = viewScope.get("AdjuntarInspeccionNro");
+if (temp == null || temp.equals ("")) {
+temp = "";
+}else{
+@Word(temp, "|", 1);
+};
+}]]></xp:this.value>
+							<xp:eventHandler event="onchange" submit="true" refreshMode="partial" refreshId="button1" id="eventHandler1">
+							</xp:eventHandler>
+						</xp:inputText>
+						
+						<xc:viewpicklist rowsPerPage="5" searchBar="true" searchButtonText="Buscar" datasrc="viewPropuestasPorCodigo"
+							dialogID="dialog1" dialogTitle="Seleccione la inspección" typeAheadBar="false" select="Column" onReturn="Set Scope Value" selectField="appid"
+							fieldName="inputText1" tableClass="tablecellgreen" searchVar="viewScope.SearchThis" typeAheadVar="sessionScope.typethis" rowClass="odd, even"
+							headerClass="headerclass" searchButtonClass="button2" buttonImage="./add.png" pagerStyleFirst="navbutton1" pagerStyleCurrent="navbutton4"
+							pagerStyleLast="navbutton3" pagerStyleNext="navbutton2" pagerStylePrevious="navbutton2" searchBarClass="headerclass"
+							bottomBarClass="bottomround headerclass" cancelButtonClass="button2 floatthisright" cancelButtonText="Cancel" type="Single Value"
+							finishButtonText="Finish" finishButtonClass="button2 floatthisright" picklistButtonClass="button2" picklistButtonText="Pick the Field Value"
+							refreshID="inputText1" multiSelectButtonAddText="add" multiSelectButtonRemoveText="remove" selectWith="Link" openDialogWith="Link"
+							linkImg="./add.png" picklistLinkImg="./add.png" clearSearchImg="./cross.png" SelectCellWidth="25" cancelButtonImg="/AG_delete_button24x24.png"
+							varName="viewScope.AdjuntarInspeccionNro" dialogWidth="750px" selectColumn="10">
+							<xc:this.viewColumn>
+								<xp:value>0</xp:value>
+								<xp:value>9</xp:value>
+								<xp:value>6</xp:value>
+								<xp:value>7</xp:value>
+								<xp:value>8</xp:value>
+								<xp:value>4</xp:value>
+							</xc:this.viewColumn>
+						</xc:viewpicklist></xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td></xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:br></xp:br>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:button value="Adjuntar..." id="button1" style="text-align:center" icon="/sol_add24x24.png">
+							<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+								<xp:this.action><![CDATA[#{javascript:if (!viewScope.containsKey("AdjuntarInspeccionNro")){
+	view.postScript("alert('SE HA CANCELADO EL PROCESO.\\n\\nDebe asociar una inspección.\\n\\nPor favor ingrese el número de inspección para continuar.');");
+	return;
+}	
+if (!viewScope.containsKey("docxProp")){
+	view.postScript("alert('SE HA CANCELADO EL PROCESO.\\n\\nNo se ha encontrado la propuesta.');");
+	return;
+}	
+if (!viewScope.containsKey("VehSelectedUNID")){
+	view.postScript("alert('SE HA CANCELADO EL PROCESO.\\n\\nNo se ha encontrado el vehiculo.');");
+	return;
+}	
+
+//Tomo la Inspección
+var unidInsp:String = @Word(viewScope.get("AdjuntarInspeccionNro"), "|", 2);
+var dbInsp:NotesDatabase = getDbInspecciones();
+var docInsp:NotesDocument = dbInsp.getDocumentByUNID(unidInsp);
+
+//Si las patentes no coinciden cancelo el proceso (vehiculo vs inspeccion)
+var patVeh:String = documentComponente.getItemValueString("veh_patente_des");
+var patInsp:String = docInsp.getItemValueString("ins_VehPatNro_des");
+//print("pat " + patVeh + "=" + patInsp); 
+if (!patVeh.equals(patInsp)){
+	view.postScript("alert('SE HA CANCELADO EL PROCESO.\\n\\nLa patente de la inspección (" + patInsp + ") no coincide con la de este vehículo (" + patVeh + ").');");
+	return;
+}
+
+//Chequeo estado de la propuesta para enviar avisos.
+var docPropuesta:NotesDocument = viewScope.get("docxProp").getDocument();
+var estadoPropuesta:String = docPropuesta.getItemValueString("sol_status_cod");
+var strEstadoInspeccion:String = docInsp.getItemValueString("ins_iEst_cod");
+var booEstadoFinalInspeccion:Boolean = docInsp.getItemValueString("ins_Final_des") == "1" ? true : false;
+var booEnviarMailDifiereCobertura:Boolean = false;
+
+if(estadoPropuesta.equals("90") || estadoPropuesta.equals("82") || estadoPropuesta.equals("60") || estadoPropuesta.equals("87") || estadoPropuesta.equals("85")){
+	print("Emitida - No Emitida - Rechazada - Suspendida - Susp. Especial * No actualizar vehiculo");
+	
+	//Si estado de inspección = Aprobada(40) y <> cobertura del veh --> mando mail.-
+	//Si estado de inspección <> Aprobada(40) --> NO SE PUEDE ASOCIAR YA QUE NO ESTA APROBADA
+	if(booEstadoFinalInspeccion){
+		if(strEstadoInspeccion = "40"){
+		
+			booEnviarMailDifiereCobertura = docInsp.getItemValueString("ins_iCobAprob_cod") != documentComponente.getItemValueString("veh_cobertura_cod");			
+		}
+	}else{
+		view.postScript("alert('SE HA CANCELADO EL PROCESO.\\n\\nLa inspección no puede estar en proceso, debe estar Finalizada para poder adjuntarla.');");
+		return;		
+	}
+//}else if(estadoPropuesta.equals("87") || estadoPropuesta.equals("85") || @Right(estadoPropuesta, 1) == "S"){	
+	//print("Suspendida - Susp. Especial");
+	// NO SE PUEDE ASOCIAR EN PROCESO DE EMISION
+	//view.postScript("alert('SE HA CANCELADO EL PROCESO.\\n\\nLa propuesta ha iniciado un proceso de emisión. No se puede adjuntar inspecciones.');");
+	//return;	
+}else{	
+	print("Operaciones en estado previo al inicio de emisión");
+	//actualizar vehiculo
+	//Si estado de inspección = Aprobada(40) y <> cobertura del veh --> ACTUALIZO COBERTURA Y MAIL
+	//Si estado de inspección <> Aprobada(40) --> ASOCIAR SIN MAIL
+	if(booEstadoFinalInspeccion && strEstadoInspeccion.equals("40")){
+		booEnviarMailDifiereCobertura = docInsp.getItemValueString("ins_iCobAprob_cod") != documentComponente.getItemValueString("veh_cobertura_cod");
+		if (booEnviarMailDifiereCobertura){
+			//Y actualizar el vehiculo
+			//Cargamos en vehiculo la cobertura aprobada, suma asegurada y franquicia
+			documentComponente.replaceItemValue("veh_cobertura_cod", docInsp.getItemValueString("ins_iCobAprob_cod"));
+			documentComponente.replaceItemValue("veh_cobertura_des", docInsp.getItemValueString("ins_iCobAprob_des"));
+			var fqcia:String = getFranquiciaWs(documentComponente);
+			documentComponente.replaceItemValue("veh_franquiciaInforma_opt", "0");
+			if(!fqcia.equals("")){
+				documentComponente.replaceItemValue("veh_franquiciaValor_nro", parseFloat(fqcia));
+			}else{
+				documentComponente.replaceItemValue("veh_franquiciaValor_nro", 0);
+			}		
+			//Actualizo Suma Asegurada. Si Cobertura = A -->0 sino Suma Asegurada
+			if(docInsp.getItemValueString("ins_iCobAprob_cod") == 'A'){
+				documentComponente.replaceItemValue("veh_sumaAsegurada_nro", 0);	
+			}else{
+				var sa:String = getSumaAseguradaTablas(documentComponente.getDocument());
+				if(!sa.equals("[]")) {
+					documentComponente.replaceItemValue("veh_sumaAsegurada_nro", parseFloat(sa));
+					
+				}	 
+			}
+			documentComponente.save();	
+			print("Debería actualizar el vehiculo");
+		}					
+	}	 
+}
+
+//Actualizo campos de la Inspección
+docInsp.replaceItemValue("ins_PropUnid_des", docPropuesta.getUniversalID());
+docInsp.replaceItemValue("ins_Prop_nro", docPropuesta.getItemValueInteger("orden_nro"));
+docInsp.replaceItemValue("ins_Veh_cod", viewScope.get("VehSelectedUNID"));
+docInsp.replaceItemValue("ins_Veh_nro", documentComponente.getItemValueInteger("veh_componente_nro"));	
+var itemLog:NotesItem = docInsp.getFirstItem("ins_Log_des");
+setLog (itemLog, "Se ha adjuntado la inspección al vehiculo Nro " + documentComponente.getItemValueInteger("veh_componente_nro") + " de la propuesta Nro. " + viewScope.get("docxProp").getDocument().getItemValueInteger("orden_nro"));
+docInsp.save();	
+if(booEnviarMailDifiereCobertura){
+	print("Mail con dif de cobertura");
+	var strClave:String = "InspeccionRelacionada-CobAprobNoSolic";
+	var strCode:String = docInsp.getItemValueString("ins_Componente_cod");
+	var strAction:String = "Relacionada a vehículo - Diferencia en Cobertura";
+	if (sendMailWithCfg (strClave, true, strCode, strAction, docInsp)) {
+		setLog (itemLog, "Mail - Difiere Cobertura - Enviado");
+	}
+	else setLog (itemLog, "Mail - Difiere Cobertura - NO Enviado");
+}
+
+if(docInsp != null){docInsp.recycle()};
+if(docPropuesta != null){docPropuesta.recycle()};
+if(dbInsp != null){dbInsp.recycle()}; }]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+						<xp:button value="Cancelar" id="button10" styleClass="lotusFormButton" icon="/AG_delete_button24x24.png">
+							<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+								<xp:this.script><![CDATA[XSP.closeDialog('#{id:myDialogAdjuntarEnPropuesta}')]]></xp:this.script>
+								<xp:this.action><![CDATA[#{javascript:viewScope.AdjuntarInspeccionNro = "";
+viewScope.SearchThis = "";}]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+					</xp:td>
+				</xp:tr>
+			</xp:table>
+			<xp:br></xp:br>
+			<xp:br />
+		</xp:panel>
+	</div>
+</xp:view>

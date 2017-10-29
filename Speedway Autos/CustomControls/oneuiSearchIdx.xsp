@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:debug="http://www.openntf.org/xsp/debugtoolbar">
+	<xp:this.resources>
+		<xp:styleSheet href="/demo.css"></xp:styleSheet>
+		<xp:styleSheet href="/hdi_gerling.css"></xp:styleSheet>
+	</xp:this.resources>
+	<xp:this.data>
+		<xp:dominoView var="view1" viewName="V_propuestas_Search">
+			<xp:this.search><![CDATA[#{javascript:var search:String = param.searchOption;
+var res:String = "" ;
+if (search.substring(search.length -3) == 'nro'){
+res = isNaN( param.searchValue) ? "FIELD sol_productor_cod = NOTFOUND" : "FIELD " + search + " = " +param.searchValue;
+} else{
+res = "FIELD " + search + " CONTAINS " + param .searchValue + "*" ;
+};
+return res;}]]></xp:this.search>
+		</xp:dominoView>
+	</xp:this.data>
+	<div id="wrapper">
+		<xp:viewPanel value="#{view1}" id="viewPanel1" pageName="/xfdocPropuesta.xsp" viewStyle="width:100%" var="rowData" rows="12">
+			<xp:viewColumn columnName="orden_nro" id="viewColumn1" displayAs="link" openDocAsReadonly="true" style="text-align:center">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Nro Orden" xp:key="header" id="viewColumnHeader1" styleClass="SWcolorBackgroundHdiGreenLight1"
+						style="text-align:left">
+					</xp:viewColumnHeader>
+				</xp:this.facets>
+				<xp:this.converter>
+					<xp:convertNumber type="number" integerOnly="true"></xp:convertNumber>
+				</xp:this.converter>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="sol_articulo_cod" id="viewColumn2">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Articulo" xp:key="header" id="viewColumnHeader2" styleClass="SWcolorBackgroundHdiGreenLight1"
+						style="text-align:left">
+					</xp:viewColumnHeader>
+				</xp:this.facets>
+			</xp:viewColumn>
+			<xp:viewColumn id="viewColumnIcon" style="text-align:center;width:auto" columnName="Icon" displayAs="hidden">
+				<xp:this.facets></xp:this.facets>
+				<xp:this.iconSrc><![CDATA[#{javascript:var url:XSPUrl = new XSPUrl(database.getHttpURL());
+var path = "/icons/vwicn";
+//var idx = rowData.getColumnValues().get(3);
+var idx = rowData.getColumnValue("icon");
+if (idx < 10)
+path += ("00"+idx).left(3);
+else if (idx < 100)
+path += ("0"+idx).left(3);
+else
+path += idx;
+path += ".gif";
+url.setPath(path);
+url.removeAllParameters();
+return url.toString();}]]></xp:this.iconSrc>
+				<xp:this.iconAlt><![CDATA[#{javascript:var idx = rowData.getColumnValue("icon");
+switch(idx){
+	case "114": return "Nueva - Art. " + rowData.getColumnValue("sol_articulo_cod");
+	break;
+	case "117": return "Renovación - Art. " + rowData.getColumnValue("sol_articulo_cod");
+	break;
+	case "120": return "Endoso - Art. " + rowData.getColumnValue("sol_articulo_cod");
+	break;
+	case "115": return "Anulación - Art. " + rowData.getColumnValue("sol_articulo_cod");
+	break;
+	case "119": return "Rehabilitación - Art. " + rowData.getColumnValue("sol_articulo_cod");
+	break;
+	default: return "Resto";
+	break;
+}}]]></xp:this.iconAlt>
+				<xp:viewColumnHeader id="viewColumnHeaderIcon" styleClass="SWcolorBackgroundHdiGreenLight1"
+					style="text-align:justify;color:rgb(102,196,133)" value=".">
+				</xp:viewColumnHeader>
+			</xp:viewColumn>
+			<xp:viewColumn id="viewColumn9" style="text-align:center" columnName="Icon" displayAs="hidden">
+				<xp:this.facets></xp:this.facets>
+				<xp:this.iconSrc><![CDATA[#{javascript:var url:XSPUrl = new XSPUrl(database.getHttpURL());
+var path = "/icons/vwicn";
+//var idx = rowData.getColumnValues().get(3);
+var idx = rowData.getColumnValue("web_icon_cod");
+if(idx == "") return "";
+if (idx < 10)
+path += ("00"+idx).left(3);
+else if (idx < 100)
+path += ("0"+idx).left(3);
+else
+path += idx;
+path += ".gif";
+url.setPath(path);
+url.removeAllParameters();
+return url.toString();}]]></xp:this.iconSrc>
+				<xp:viewColumnHeader id="viewColumnHeader9" styleClass="SWcolorBackgroundHdiGreenLight1"
+					style="text-align:justify;color:rgb(102,196,133)" value=".">
+				</xp:viewColumnHeader>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="sol_poliza_nro" id="viewColumn4" style="text-align:right;font-weight:bold">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Nro Póliza" xp:key="header" id="viewColumnHeader4" styleClass="SWcolorBackgroundHdiGreenLight1"
+						style="text-align:left">
+					</xp:viewColumnHeader>
+				</xp:this.facets>
+				<xp:this.converter>
+					<xp:convertNumber type="number" integerOnly="true"></xp:convertNumber>
+				</xp:this.converter>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="sol_status_des" id="viewColumn3" style="color:rgb(255,0,0)">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Estado" xp:key="header" id="viewColumnHeader3" styleClass="SWcolorBackgroundHdiGreenLight1"
+						style="text-align:left">
+					</xp:viewColumnHeader>
+				</xp:this.facets>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="productor" id="viewColumn5">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Productor" xp:key="header" id="viewColumnHeader5" styleClass="SWcolorBackgroundHdiGreenLight1"></xp:viewColumnHeader>
+				</xp:this.facets>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="sol_asegurado_des" id="viewColumn6">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Asegurado" xp:key="header" id="viewColumnHeader6" styleClass="SWcolorBackgroundHdiGreenLight1"
+						style="text-align:left">
+					</xp:viewColumnHeader>
+				</xp:this.facets>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="sol_tipoOperacion_des" id="viewColumn7">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Movimiento" xp:key="header" id="viewColumnHeader7" styleClass="SWcolorBackgroundHdiGreenLight1"
+						style="text-align:left">
+					</xp:viewColumnHeader>
+				</xp:this.facets>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="sol_cotizacion_nro" id="viewColumn8" style="text-align:center">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Nro Cot Web" xp:key="header" id="viewColumnHeader8" styleClass="SWcolorBackgroundHdiGreenLight1"></xp:viewColumnHeader>
+				</xp:this.facets>
+				<xp:this.converter>
+					<xp:convertNumber type="number" integerOnly="true"></xp:convertNumber>
+				</xp:this.converter>
+			</xp:viewColumn>
+			<xp:this.facets>
+				<xp:pager partialRefresh="true" layout="Previous Group Next" xp:key="footerPager" id="pager2" alwaysCalculateLast="true"></xp:pager>
+				<xp:viewTitle xp:key="viewTitle" id="viewTitle1">
+					<xp:this.value><![CDATA[#{javascript:"Cantidad:  " + getComponent("viewPanel1").getRowCount()}]]></xp:this.value>
+				</xp:viewTitle>
+			</xp:this.facets>
+		</xp:viewPanel>
+	</div>
+</xp:view>

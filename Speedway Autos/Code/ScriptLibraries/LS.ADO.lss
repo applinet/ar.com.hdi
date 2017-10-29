@@ -1,0 +1,152 @@
+'++LotusScript Development Environment:2:5:(Options):0:74
+Option Public
+Use "LS.general.BE.v01"
+
+'++LotusScript Development Environment:2:5:(Forward):0:1
+Declare Function Conect_SQL_ADO (Session As NotesSession)
+Declare Function StripSpecial( strInput As String, CharactersToStrip As String ) As String
+Declare Function Leo_campo (campo As String)
+Declare Function Leo_campo_BONIFICACIONES (campo As String)
+Declare Function DesconectADO
+Declare Function Conect_AS_ADO (Session As NotesSession, docConfig As NotesDocument)
+Declare Function GetState(intState As Integer) As String
+
+'++LotusScript Development Environment:2:5:(Declarations):0:10
+Dim ADOConnection As Variant
+Dim ADOCommand As Variant
+Dim ADORecordSet As Variant
+Dim ADOError As Variant
+Dim ADOParameter As Variant
+Dim strSql As String 
+Dim NombreSource As String
+Dim NombreConexion As String	
+Dim User As String	
+Dim Conn_status As String
+
+'++LotusScript Development Environment:2:1:Conect_SQL_ADO:1:8
+Function Conect_SQL_ADO (Session As NotesSession)
+	Dim db As NotesDatabase	
+	Dim doc As NotesDocument	
+	Dim doc_AS As NotesDocument	
+	Dim Pwd As String		
+	Dim status As Variant
+	Dim strVersionInfo(5) As Variant
+	Dim x As Variant
+	
+	
+	Set db = session.CurrentDatabase	
+	Set ADOConnection = CreateObject("ADODB.Connection")
+	Set ADORecordSet = CreateObject("ADODB.RecordSet")
+	Set ADOError = CreateObject( "ADODB.Error" )
+	'Set doc = db.GetProfileDocument("prfAPPconfig_INTERFACESQL")
+	Set Doc= getDbConfigDoc("WEB724-1")
+	
+	NombreSource = doc.NombreDataSource(0)
+	NombreConexion = doc.NombreDriverODBC_1(0)	
+	User = doc.odbc_EscrUser_des(0)	
+	Pwd = doc.odbc_EscrPass_des(0)		
+	DataSource ="provider=sqloledb;data source=" & NombreSource & ";initial catalog=" & NombreConexion & ";uid=" & User & ";pwd=" & Pwd & ""		
+	
+	Conn_status= "Connection Closed"
+	
+	REM ABRO LA CONEXION Y BUSCO EL ESTADO DE LA MISMA	
+	ADOConnection.Open DataSource
+	Conn_status= "Connection " + GetState( ADOConnection.State ) 
+	
+	strVersionInfo(0) = "ADO Version: " & ADOConnection.Version 
+	strVersionInfo(1) = "DBMS Name: " & ADOConnection.Properties("DBMS Name").Value
+	strVersionInfo(2) = "DBMS Version: " & ADOConnection.Properties("DBMS Version").Value
+	strVersionInfo(3) = "OLE DB Version: " & ADOConnection.Properties("OLE DB Version").Value
+	strVersionInfo(4) = "Provider Name: " & ADOConnection.Properties("Provider Name").Value
+	strVersionInfo(5) = "Provider Version: " & ADOConnection.Properties("Provider Version").Value
+	
+End Function
+
+'++LotusScript Development Environment:2:1:StripSpecial:1:8
+Function StripSpecial( strInput As String, CharactersToStrip As String ) As String
+	tmpInput$ = strInput
+	
+	For j% = 1 To Len( tmpInput$ )
+		char$ = Mid$( tmpInput$, j%, 1 )
+		Modified% = False
+		For i% = 1 To Len( CharactersToStrip )
+			StripChar = Mid$( CharactersToStrip, i%, 1 )
+			If char$ = StripChar Then
+				Modified% = True
+			End If
+		Next
+		If Not Modified% Then
+			tmpString = tmpString & char$
+		End If
+	Next
+	
+	StripSpecial = tmpString
+	
+End Function 
+
+'++LotusScript Development Environment:2:1:Leo_campo:1:8
+Function Leo_campo (campo As String)
+	temp=ADORecordSet.Fields(campo).Value
+	If Isnull(temp) Then
+		temp=""
+	End If
+	Leo_campo=temp
+End Function
+
+'++LotusScript Development Environment:2:1:Leo_campo_BONIFICACIONES:1:8
+Function Leo_campo_BONIFICACIONES (campo As String)
+	temp=ADORecordSet.Fields(campo).Value
+	If Isnull(temp) Then
+		temp = "0"
+	Elseif Trim(temp)="" Then	
+		temp = "0"
+	End If
+	Leo_campo_BONIFICACIONES=temp
+	
+End Function
+
+'++LotusScript Development Environment:2:1:DesconectADO:1:8
+Function DesconectADO
+'	ADORecordSet.close
+	ADOConnection.close 
+End Function
+
+'++LotusScript Development Environment:2:1:Conect_AS_ADO:1:8
+Function Conect_AS_ADO (Session As NotesSession, docConfig As NotesDocument)
+	Dim db As NotesDatabase	
+	Dim doc As NotesDocument	
+	Dim doc_AS As NotesDocument	
+	Conn_status= "Connection Closed"
+	
+	Set db = session.CurrentDatabase	
+	Set ADOConnection = CreateObject("ADODB.Connection")
+	Set ADORecordSet = CreateObject("ADODB.RecordSet")
+	Set ADOError = CreateObject( "ADODB.Error" )
+
+	Set Doc=docConfig
+	NombreSource = doc.odbc_DataSource_des(0)  ' Servidor
+	'NombreSource="QS102FA85"	' 172.18.3.3
+	
+	User = doc.odbc_EscrUser_des(0)	
+	Pwd = doc.odbc_EscrPass_des(0)
+	
+	DataSource ="provider=IBMDA400;" &_
+	"Data source=" & NombreSource & ";" &_
+	"User Id=" & User & ";" &_
+	"Password=" & Pwd & ""			
+'	MsgBox DataSource
+REM ABRO LA CONEXION Y BUSCO EL ESTADO DE LA MISMA
+	ADOConnection.Open DataSource
+	Conn_status= "Connection " + GetState( ADOConnection.State ) 
+	
+End Function
+
+'++LotusScript Development Environment:2:1:GetState:1:8
+Function GetState(intState As Integer) As String
+	Select Case intState
+	Case 0
+		GetState = "Closed"
+	Case 1
+		GetState = "Open"
+	End Select
+End Function

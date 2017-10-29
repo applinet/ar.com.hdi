@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom">
+
+	<xp:this.data>
+		<xp:dominoView var="vIns" viewName="v.UI.InsFCs">
+			<xp:this.keys><![CDATA[#{javascript:var strFiltroInspector:String = viewScope.get("filtroInspector");
+if (strFiltroInspector == null) return ("");
+if (strFiltroInspector.equals ("##Todos##")) return ("");
+
+return (strFiltroInspector);}]]></xp:this.keys>
+		</xp:dominoView>
+	</xp:this.data>
+
+	<xp:this.resources>
+		<xp:styleSheet href="/views.css"></xp:styleSheet>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+
+		<xp:script src="/JSS.InsFacturacion.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+
+
+	<xp:this.beforePageLoad><![CDATA[#{javascript:sessionScope.put("viewInsSelection", null);}]]></xp:this.beforePageLoad>
+	<xp:panel style="margin-bottom:20.0px">
+		Filtrar por Inspector&#160;
+		<xp:comboBox id="filtroInspector" defaultValue="##Todos##">
+
+			<xp:selectItem itemLabel="Todos" itemValue="##Todos##"></xp:selectItem>
+			<xp:selectItems>
+				<xp:this.value><![CDATA[#{javascript:var vIns:NotesView = getDbInsFcs().getView ("v.UI.InsFCs");
+var docIns:NotesDocument = vIns.getFirstDocument();
+var strInspector:String;
+var vecAllIns:Vector = new java.util.Vector();
+
+while (docIns != null) {
+	strInspector = docIns.getItemValueString("Inspector_FC");
+	
+	if (vecAllIns.indexOf (strInspector) == -1) {
+		vecAllIns.add (strInspector);
+	}
+	
+	docIns = vIns.getNextDocument(docIns);
+}
+return (vecAllIns)}]]></xp:this.value>
+			</xp:selectItems>
+			<xp:eventHandler event="onchange" submit="true"
+				refreshMode="complete">
+				<xp:this.action><![CDATA[#{javascript:viewScope.put("filtroInspector", getComponent("filtroInspector").getValue());
+sessionScope.put("viewInsSelection", null);}]]></xp:this.action>
+			</xp:eventHandler>
+		</xp:comboBox>
+	</xp:panel>
+	<xp:panel style="width:900.0px">
+		<xp:pager layout="Previous Group Next" partialRefresh="true"
+			id="pager1" for="repeat1">
+		</xp:pager>
+		<xp:panel styleClass="PanelBox" id="PNL_Listing">
+			<xp:br></xp:br>
+			<xp:table cellpadding="5" cellspacing="0" border="0">
+				<xp:tr styleClass="ViewTitle">
+
+					<xp:td>Inspector</xp:td>
+					<xp:td>Factura</xp:td><xp:td>Total</xp:td>
+					<xp:td>Creado</xp:td>
+					<xp:td>Inspecciones</xp:td>
+
+					
+				</xp:tr>
+
+
+				<xp:repeat id="repeat1" rows="30" value="#{vIns}"
+					var="repeatColInspec" indexVar="repeatIndexInspec">
+					<xp:tr id="rowInspeccion" styleClass="ViewRow">
+
+						<xp:td id="td1">
+							<xp:text escape="true"
+								id="computedField2">
+								<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("Inspector_FC");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+							</xp:text>
+							
+						</xp:td>
+						<xp:td align="center" id="td2">
+							<xp:text escape="true"
+								id="computedField1">
+								<xp:this.converter>
+									<xp:convertNumber type="number"></xp:convertNumber>
+								</xp:this.converter>
+								<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("Numero_FC");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+							</xp:text>
+							
+						</xp:td>
+						<xp:td id="td3">
+							<xp:text escape="true"
+								id="computedField3">
+								<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ImpSumaTotal_FC").toString();
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+							</xp:text>
+							
+						</xp:td>
+						<xp:td id="td4">
+							<xp:text escape="true"
+								id="computedField4">
+								<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("Created_FC").toString();
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+							</xp:text>
+							
+						</xp:td>
+						<xp:td id="td5">
+							<xp:text escape="true"
+								id="computedField5">
+								<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("InsConsecutivos_FC");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+							</xp:text>
+							
+						</xp:td>
+
+					<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+						<xp:this.action>
+							<xp:openPage name="/xfDocInsFactura.xsp"
+								target="openDocument"
+								documentId="#{javascript:repeatColInspec.getUniversalID();}">
+							</xp:openPage>
+						</xp:this.action></xp:eventHandler></xp:tr>
+				</xp:repeat>
+			</xp:table>
+		</xp:panel>
+	</xp:panel>
+
+	<xp:br></xp:br>
+
+
+	
+	<xp:br></xp:br>
+
+
+	
+	</xp:view>

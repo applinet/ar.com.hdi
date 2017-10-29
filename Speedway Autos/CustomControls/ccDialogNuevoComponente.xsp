@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" dojoForm="true" dojoParseOnLoad="true" dojoTheme="true" xmlns:xe="http://www.ibm.com/xsp/coreex"
+	xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:xp_1="http://www.ibm.com/xsp/coreex" xmlns:debug="http://www.openntf.org/xsp/debugtoolbar">
+
+	<!-- 20140115 - FPR - Se agrega el dojoForm="true" al xmlns -->
+	<xp:this.resources>
+		<xp:dojoModule name="extlib.dijit.ExtLib"></xp:dojoModule>
+		<xp:dojoModule name="extlib.dijit.Loading"></xp:dojoModule>
+		<!--
+			La libreria DojoDijitDialogXPagesCompatible.js se incluye para poder tomar valores de componentes Xpages (ver mas en comentario de la libreria)
+		-->
+		<xp:script src="/DojoDijitDialogXPagesCompatible.js" clientSide="true" />
+		<!-- Siguiente libreria utiliza la function onChangeDialogNuevoComponente -->
+		<xp:script src="/JSS.veh.general.jss" clientSide="false" />
+		<xp:script src="/JSS.Validation.jss" clientSide="false"></xp:script>
+		<xp:script src="/JSS.Estados.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	<xp:this.afterPageLoad><![CDATA[#{javascript:viewScope.newVeh_Dialog = (viewScope.newVeh_Dialog || new java.util.HashMap());
+viewScope.newVeh_Dialog.put("showInputComponente", "false");
+viewScope.newVeh_Dialog.put("accionInvocada", "");}]]></xp:this.afterPageLoad>
+	<div id="myDialogNuevoComponente">
+		<xe:dialog id="dialogComponente" title="#{javascript:viewScope.newVeh_Dialog.dialogComponenteTitle;}" styleClass="fixWidthComponente">
+			<xe:this.loadingMessage><![CDATA[#{javascript:"pepepe"}]]></xe:this.loadingMessage>
+			<xp:panel id="PNL_DialogNuevoComponente">
+				<xp:this.data>
+					<xp:dominoDocument var="docDlgComp" formName="Componente" action="editDocument" documentId="#{javascript:viewScope.VehSelectedUNID;}"
+						ignoreRequestParams="true">
+					</xp:dominoDocument>
+				</xp:this.data>
+				<xp:panel id="PNL_DialogCabeceraDatosVehiculos" readonly="#{javascript:viewScope.PNL_DialogCabeceraDatosVehiculosRead;}">
+					<xp:table>
+						<xp:tr>
+							<xp:td>
+								<xp:label value="Marca:  " id="Label_xveh_marca_cod" style="font-weight:bold" for="xveh_marca_cod" />
+							</xp:td>
+							<xp:td>
+								<xp:label value="Modelo:  " id="Label_xveh_modelo_cod" style="font-weight:bold" for="xveh_modelo_cod" />
+							</xp:td>
+							<xp:td>
+								<xp:label value="Sub-Modelo:  " id="Label_xveh_submodelo_cod" style="font-weight:bold" for="veh_submodelo_cod" />
+							</xp:td>
+							<xp:td>
+								<xp:label value="Año:  " id="Label_xveh_anio_nro" style="font-weight:bold" for="xveh_anio_nro" />
+							</xp:td>
+							<xp:td>
+								<xp:label value="Valor:  " id="label6" style="font-weight:bold" for="xveh_anio_nro" rendered="#{javascript:!viewScope.PNL_DialogCabeceraDatosVehiculosRead;}" />
+							</xp:td>
+							<xp:td>
+							</xp:td>
+						</xp:tr>
+						<xp:tr>
+							<xp:td>
+								<xp:comboBox id="veh_marca_cod" value="#{docDlgComp.veh_marca_cod}">
+									<xp:selectItem itemLabel="- Seleccionar -" id="selectItem1"></xp:selectItem>
+									<xp:selectItems id="selectItems1">
+										<xp:this.value><![CDATA[#{javascript:importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+var doc:NotesDocument = database.createDocument()
+//doc.appendItemValue("sol_tipoMovimiento_cod", getComponent("sol_tipoMovimiento_cod").getValue());
+jce.getSelectAS("vehTB_SET20497_marca", doc);}]]></xp:this.value>
+									</xp:selectItems>
+									<xp:eventHandler event="onchange" submit="true" refreshMode="partial" refreshId="divVeh_modelo_cod" id="eventHandler1"
+										disableValidators="true">
+										<xp:this.action><![CDATA[#{javascript:if(!viewScope.PNL_Veh_modelo_cod){
+getComponent("veh_modelo_cod").setValue("- Seleccionar -");
+viewScope.put("PNL_Veh_modelo_cod",true);
+getComponent("veh_submodelo_cod").setValue("- Seleccionar -");
+viewScope.put("PNL_Veh_submodelo_cod",false);
+getComponent("veh_anio_cod").setValue("- Seleccionar -");
+viewScope.put("PNL_Veh_anio_cod",false);
+viewScope.newVeh_Dialog.buttonValidarVehiculoVisible = false;
+}}]]></xp:this.action>
+									</xp:eventHandler>
+								</xp:comboBox>
+							</xp:td>
+							<xp:td>
+								<xp:div id="divVeh_modelo_cod">
+									<xp:panel id="PNL_Veh_modelo_cod">
+										<xp:this.rendered><![CDATA[#{javascript:viewScope.get("PNL_Veh_modelo_cod")}]]></xp:this.rendered>
+										<xp:comboBox id="veh_modelo_cod" value="#{docDlgComp.veh_modelo_cod}">
+											<xp:selectItem itemLabel="- Seleccionar -" id="selectItem2"></xp:selectItem>
+											<xp:selectItems id="selectItems2">
+												<xp:this.value><![CDATA[#{javascript:var doc:NotesDocument = database.createDocument()
+doc.appendItemValue("veh_marca_cod", getComponent("veh_marca_cod").getValue());
+importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+jce.getSelectAS("vehTB_SET20497_modelo", doc);}]]></xp:this.value>
+											</xp:selectItems>
+											<xp:eventHandler event="onchange" submit="true" refreshMode="partial" refreshId="divVeh_submodelo_cod" disableValidators="true"
+												id="eventHandler2">
+												<xp:this.action><![CDATA[#{javascript:if(!viewScope.PNL_Veh_submodelo_cod){
+getComponent("veh_submodelo_cod").setValue("- Seleccionar -");
+viewScope.put("PNL_Veh_submodelo_cod",true);
+getComponent("veh_anio_cod").setValue("- Seleccionar -");
+viewScope.put("PNL_Veh_anio_cod",false);
+viewScope.PNL_CargaDatosVehiculos = false;
+viewScope.newVeh_Dialog.buttonValidarVehiculoVisible = false;
+}}]]></xp:this.action>
+											</xp:eventHandler>
+										</xp:comboBox>
+									</xp:panel>
+								</xp:div>
+							</xp:td>
+							<xp:td>
+								<xp:div id="divVeh_submodelo_cod">
+									<xp:panel id="PNL_Veh_submodelo_cod">
+										<xp:this.rendered><![CDATA[#{javascript:viewScope.get("PNL_Veh_submodelo_cod")}]]></xp:this.rendered>
+										<xp:comboBox id="veh_submodelo_cod" value="#{docDlgComp.veh_submodelo_cod}">
+											<xp:selectItem itemLabel="- Seleccionar -" id="selectItem3"></xp:selectItem>
+											<xp:selectItems id="selectItems3">
+												<xp:this.value><![CDATA[#{javascript:var doc:NotesDocument = database.createDocument()
+doc.appendItemValue("veh_marca_cod", getComponent("veh_marca_cod").getValue());
+doc.appendItemValue("veh_modelo_cod", getComponent("veh_modelo_cod").getValue());
+importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+jce.getSelectAS("vehTB_SET20497_submodelo", doc);}]]></xp:this.value>
+											</xp:selectItems>
+											<xp:eventHandler event="onchange" submit="true" refreshMode="partial" refreshId="divVeh_anio_cod" disableValidators="true"
+												id="eventHandler3">
+												<xp:this.action><![CDATA[#{javascript:if(!viewScope.PNL_Veh_anio_cod){
+getComponent("veh_anio_cod").setValue("- Seleccionar -");
+viewScope.put("PNL_Veh_anio_cod",true);
+viewScope.PNL_CargaDatosVehiculos = false;
+viewScope.newVeh_Dialog.buttonValidarVehiculoVisible = false;
+}}]]></xp:this.action>
+											</xp:eventHandler>
+										</xp:comboBox>
+									</xp:panel>
+								</xp:div>
+							</xp:td>
+							<xp:td>
+								<xp:div id="divVeh_anio_cod">
+									<xp:panel id="PNL_Veh_anio_cod">
+										<xp:this.rendered><![CDATA[#{javascript:viewScope.get("PNL_Veh_anio_cod")}]]></xp:this.rendered>
+										<xp:comboBox id="veh_anio_cod" value="#{docDlgComp.veh_anio_nro}">
+											<xp:selectItem itemLabel="- Seleccionar -" id="selectItem4"></xp:selectItem>
+											<xp:selectItems id="selectItems4">
+												<xp:this.value><![CDATA[#{javascript:var doc:NotesDocument = database.createDocument()
+doc.appendItemValue("veh_marca_cod", getComponent("veh_marca_cod").getValue());
+doc.appendItemValue("veh_modelo_cod", getComponent("veh_modelo_cod").getValue());
+doc.appendItemValue("veh_submodelo_cod", getComponent("veh_submodelo_cod").getValue());
+importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+jce.getSelectAS("vehTB_SET20497_anio", doc);}]]></xp:this.value>
+											</xp:selectItems>
+											<xp:eventHandler event="onchange" submit="true" refreshMode="complete" id="eventHandler5">
+												<xp:this.action><![CDATA[#{javascript:var doc:NotesDocument = database.createDocument()
+doc.appendItemValue("veh_marca_cod", getComponent("veh_marca_cod").getValue());
+doc.appendItemValue("veh_modelo_cod", getComponent("veh_modelo_cod").getValue());
+doc.appendItemValue("veh_submodelo_cod", getComponent("veh_submodelo_cod").getValue());
+doc.appendItemValue("veh_anio_nro", getComponent("veh_anio_cod").getValue());
+importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+var strResult = jce.getSelectAS("vehTB_SET20497_CompletoVehiculo", doc);
+onChangeAnioUpdateResto(strResult[0], "vehTB_SET20497_CompletoVehiculo");
+viewScope.newVeh_Dialog.buttonValidarVehiculoVisible = true;}]]></xp:this.action>
+												<xp:this.onStart><![CDATA[XSP.startAjaxLoading('Cargando...')]]></xp:this.onStart>
+												<xp:this.onComplete><![CDATA[XSP.endAjaxLoading()]]></xp:this.onComplete>
+												<xp:this.onError><![CDATA[XSP.endAjaxLoading()]]></xp:this.onError>
+											</xp:eventHandler>
+										</xp:comboBox>
+									</xp:panel>
+								</xp:div>
+							</xp:td>
+							<xp:td>
+								<xp:inputText id="veh_sumaAseguradaTablas_nro" validator="#{MbComponente.getErrorComponente}" style="text-align:right;color:rgb(128,128,128)"
+									readonly="true" value="#{docDlgComp.veh_sumaAseguradaTablas_nro}" rendered="#{javascript:!viewScope.PNL_DialogCabeceraDatosVehiculosRead;}">
+									<xp:this.converter>
+										<xp:convertNumber type="number"></xp:convertNumber>
+									</xp:this.converter>
+								</xp:inputText>
+							</xp:td>
+							<xp:td>
+								<xp:button id="buttonValidarVehiculo">
+									<xp:this.dojoAttributes>
+										<xp:dojoAttribute name="iconClass" value="tildeIcon"></xp:dojoAttribute>
+									</xp:this.dojoAttributes>
+									<xp:this.value><![CDATA[#{javascript:viewScope.PNL_DialogCabeceraDatosVehiculosRead ? "Editar" : "Confirmar";}]]></xp:this.value>
+									<xp:this.rendered><![CDATA[#{javascript:if(viewScope.newVeh_Dialog.enableFields == null){return true};
+if(!viewScope.newVeh_Dialog.enableFields.contains("buttonValidarVehiculo")){return false};
+viewScope.newVeh_Dialog.buttonValidarVehiculoVisible;}]]></xp:this.rendered>
+									<xp:eventHandler event="onclick" submit="true" refreshMode="partial" id="eventHandler4" disableValidators="true"
+										refreshId="divPanelCargaDatosVehiculos">
+										<xp:this.action><![CDATA[#{javascript:var veh_anio_cod = getComponent('veh_anio_cod').getValue();
+if ( veh_anio_cod != "" && veh_anio_cod != "null" && veh_anio_cod != "- Seleccionar -") {
+	var veh_marca_cod = getComponent('veh_marca_cod').getValue();
+	var veh_modelo_cod = getComponent('veh_modelo_cod').getValue();
+	var veh_submodelo_cod = getComponent('veh_submodelo_cod').getValue();
+	if(veh_marca_cod == "- Seleccionar -" || veh_modelo_cod == "- Seleccionar -" || veh_submodelo_cod == "- Seleccionar -"){
+		var msg=new javax.faces.application.FacesMessage();
+		facesContext.addMessage("Error",msg("Por favor seleccione todas las opciones"));
+		return false;
+	}else{
+		var completo:Boolean = viewScope.PNL_DialogCabeceraDatosVehiculosRead ? false : true;
+		viewScope.newVeh_Dialog.showInputComponente = completo;
+		viewScope.PNL_DialogCabeceraDatosVehiculosRead = completo; 
+		viewScope.PNL_CargaDatosVehiculos = completo;
+	}
+} }]]></xp:this.action>
+										<xp:this.onStart><![CDATA[XSP.startAjaxLoading('Cargando...')]]></xp:this.onStart>
+										<xp:this.onError><![CDATA[XSP.endAjaxLoading()]]></xp:this.onError>
+										<xp:this.onComplete><![CDATA[XSP.partialRefreshGet("#{id:PNL_DialogCabeceraDatosVehiculos}");
+XSP.partialRefreshGet("#{id:buttonButtonGrabarVehiculo}");
+XSP.endAjaxLoading();
+]]></xp:this.onComplete>
+									</xp:eventHandler>
+								</xp:button>
+							</xp:td>
+						</xp:tr>
+					</xp:table>
+				</xp:panel>
+				<xp:div id="divPanelCargaDatosVehiculos">
+					<xp:panel id="PNL_CargaDatosVehiculos">
+						<xp:messages id="messagesComponente" style="margin-left:1.0%;margin-right:1.0%"></xp:messages>
+						<xp:this.rendered><![CDATA[#{javascript:viewScope.get("PNL_CargaDatosVehiculos")}]]></xp:this.rendered>
+						<xp:panel id="PNL_DialogDatosComunesInspYveh">
+							<xp:table>
+								<xp:tr>
+									<xp:td>
+										<xp:label value="Suma Asegurada:  " id="Label_xveh_sumaAsegurada_nro" style="font-weight:bold" for="veh_sumaAsegurada_nro" />
+									</xp:td>
+									<xp:td>
+										<xp:inputText value="#{docDlgComp.veh_sumaAsegurada_nro}" id="veh_sumaAsegurada_nro" validator="#{MbComponente.getErrorComponente}"
+											defaultValue="0">
+											<xp:this.converter>
+												<xp:convertNumber type="number"></xp:convertNumber>
+											</xp:this.converter>
+											<xp:this.readonly><![CDATA[#{javascript:if(viewScope.newVeh_Dialog.enableFields == null){return false};
+if(!viewScope.newVeh_Dialog.enableFields.contains("veh_sumaAsegurada_nro")){return true};
+return false;}]]></xp:this.readonly>
+										</xp:inputText>
+									</xp:td>
+									<td style="width:15.0%; text-align:right">
+										<xp:label value="Cobertura:  " id="Label_veh_cobertura_cod" style="font-weight:bold" for="veh_cobertura_cod" />
+									</td>
+									<xp:td colspan="2">
+										<xp:comboBox value="#{docDlgComp.veh_cobertura_cod}" id="veh_cobertura_cod" required="true">
+											<xp:this.readonly><![CDATA[#{javascript:if(viewScope.newVeh_Dialog.enableFields == null){return false};
+if(!viewScope.newVeh_Dialog.enableFields.contains("veh_cobertura_cod")){return true};
+return false;}]]></xp:this.readonly>
+											<xp:selectItems id="selectItems6">
+												<xp:this.value><![CDATA[#{javascript:importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+jce.getSelectAS("vehTB_SET22599");}]]></xp:this.value>
+											</xp:selectItems>
+											<xp:eventHandler event="onchange" submit="true" refreshMode="partial" refreshId="veh_franquiciaValor_nro"
+												disableValidators="true">
+												<xp:this.action><![CDATA[#{javascript:var fqcia:String = getFranquiciaWs(docDlgComp);
+if(!fqcia.equals("")){
+	getComponent("veh_franquiciaValor_nro").setValue(parseFloat(fqcia));
+}else{
+	getComponent("veh_franquiciaValor_nro").setValue(0);
+}		
+//Actualizo Suma Asegurada. Si Cobertura = A -->0 sino Suma Asegurada
+if(getComponent("veh_cobertura_cod").getValue().equals('A')){
+	getComponent("veh_sumaAsegurada_nro").setValue(0);
+}else{
+	var sa:String = getSumaAseguradaTablas(docDlgComp.getDocument());
+	if(sa == "[]") return;	
+	getComponent("veh_sumaAsegurada_nro").setValue(sa);
+	// No puedo actualizar --> getComponent("veh_sumaAseguradaTablas_nro").setValue(sa);
+}}]]></xp:this.action>
+												<xp:this.onComplete><![CDATA[XSP.partialRefreshGet("#{id:veh_sumaAsegurada_nro}");
+XSP.partialRefreshGet("#{id:veh_sumaAseguradaTablas_nro}");]]></xp:this.onComplete>
+											</xp:eventHandler>
+										</xp:comboBox>
+									</xp:td>
+								</xp:tr>
+								<xp:tr>
+									<xp:td style="height:21.0px">
+										<xp:label value="Patente:  " id="Label_veh_patente_des" style="font-weight:bold" for="veh_patente_des" />
+									</xp:td>
+									<xp:td>
+										&#160;
+										<xc:ccFxPatenteTrigger></xc:ccFxPatenteTrigger>
+									</xp:td>
+									<td style="width:15.0%; text-align:right">
+										<xp:label value="Tarifa:  " id="label4" style="font-weight:bold" for="veh_cobertura_cod" />
+									</td>
+									<xp:td>
+										<xp:comboBox value="#{docDlgComp.veh_tarifa_cod}" id="veh_tarifa_cod" required="true">
+											<xp:this.readonly><![CDATA[#{javascript:if(viewScope.newVeh_Dialog.enableFields == null){return false};
+if(!viewScope.newVeh_Dialog.enableFields.contains("veh_tarifa_cod")){return true};
+return false;}]]></xp:this.readonly>
+											<xp:selectItems id="selectItems5">
+												<xp:this.value><![CDATA[#{javascript:getTarifasWs();}]]></xp:this.value>
+											</xp:selectItems>
+											<xp:eventHandler event="onchange" submit="true" refreshMode="partial" refreshId="veh_franquiciaValor_nro"
+												disableValidators="true">
+												<xp:this.action><![CDATA[#{javascript:var fqcia:String = getFranquiciaWs(docDlgComp);
+if(!fqcia.equals("")){
+	getComponent("veh_franquiciaValor_nro").setValue(parseFloat(fqcia));
+}else{
+	getComponent("veh_franquiciaValor_nro").setValue(0);
+}	
+}]]></xp:this.action>
+											</xp:eventHandler>
+										</xp:comboBox>
+									</xp:td>
+									<xp:td></xp:td>
+								</xp:tr>
+								<xp:tr>
+									<xp:td>
+										<xp:label value="Nro. Motor:  " id="Label_veh_motor_des" style="font-weight:bold;text-align:right" for="veh_motor_des" />
+									</xp:td>
+									<xp:td>
+										<xp:inputText id="veh_motor_des"
+											value="#{docDlgComp.veh_motor_des}" required="true"
+											disableClientSideValidation="true"
+											dojoType="dijit.form.TextBox">
+											<xp:this.validators>
+												<xp:validateRequired
+													message="El Nro. de motor es un dato obligatorio.">
+												</xp:validateRequired>
+												<xp:validateLength
+													minimum="4"
+													message="El Nro. de motor como mínimo debe tener 4 caracteres.">
+												</xp:validateLength>
+												<xp:validateLength
+													maximum="24"
+													message="El Nro. de motor como máximo debe tener 24 caracteres.">
+												</xp:validateLength>
+												<xp:validateConstraint
+													message="El Nro. de motor solo puede contener números y letras.">
+
+													<xp:this.regex><![CDATA[^[a-zA-Z0-9]+$]]></xp:this.regex>
+												</xp:validateConstraint>
+											</xp:this.validators>
+											<xp:this.dojoAttributes>
+												<xp:dojoAttribute
+													name="trim" value="true">
+												</xp:dojoAttribute>
+											</xp:this.dojoAttributes>
+										</xp:inputText>
+									</xp:td>
+									<xp:td></xp:td>
+									<xp:td></xp:td>
+									<xp:td></xp:td>
+								</xp:tr>
+								<xp:tr>
+									<xp:td style="width:110.0px">
+										<xp:label value="Nro. Chasis:  " id="Label_veh_chasis_des" style="font-weight:bold;text-align:right" for="veh_chasis_des" />
+									</xp:td>
+									<xp:td>
+										<xp:inputText
+											id="veh_chasis_des" value="#{docDlgComp.veh_chasis_des}"
+											required="true" disableClientSideValidation="true"
+											dojoType="dijit.form.TextBox">
+											<xp:this.validators>
+												<xp:validateRequired
+													message="El Nro. de chasis es un dato obligatorio.">
+												</xp:validateRequired>
+												<xp:validateLength
+													minimum="4"
+													message="El Nro. de chasis como mínimo debe tener 6 caracteres.">
+												</xp:validateLength>
+												<xp:validateLength
+													maximum="24"
+													message="El Nro. de chasis como máximo debe tener 24 caracteres.">
+												</xp:validateLength>
+												<xp:validateConstraint
+													message="El Nro. de chasis solo puede contener números y letras.">
+													<xp:this.regex><![CDATA[^[a-zA-Z0-9]+$]]></xp:this.regex>
+												</xp:validateConstraint>
+											</xp:this.validators>
+											<xp:this.dojoAttributes>
+												<xp:dojoAttribute
+													name="trim" value="true">
+												</xp:dojoAttribute>
+											</xp:this.dojoAttributes>
+										</xp:inputText>
+									</xp:td>
+									<td>
+										<xp:checkBox text="Cero km" id="veh_0km_opt" value="#{docDlgComp.veh_0km_opt}" checkedValue="1" uncheckedValue="0">
+											<xp:this.readonly><![CDATA[#{javascript:if(viewScope.newVeh_Dialog.enableFields == null){return false};
+if(!viewScope.newVeh_Dialog.enableFields.contains("veh_okm_gnc_ave")){return true};
+return false;}]]></xp:this.readonly>
+										</xp:checkBox>
+									</td>
+									<xp:td>
+										<xp:checkBox text="G.N.C." id="veh_gnc_opt" value="#{docDlgComp.veh_gnc_opt}" checkedValue="1" uncheckedValue="0">
+											<xp:this.readonly><![CDATA[#{javascript:if(viewScope.newVeh_Dialog.enableFields == null){return false};
+if(!viewScope.newVeh_Dialog.enableFields.contains("veh_okm_gnc_ave")){return true};
+return false;}]]></xp:this.readonly>
+										</xp:checkBox>
+									</xp:td>
+									<xp:td>
+										<xp:checkBox text="Averías" id="veh_averias_opt" value="#{docDlgComp.veh_averias_opt}" checkedValue="1" uncheckedValue="0">
+											<xp:this.readonly><![CDATA[#{javascript:if(viewScope.newVeh_Dialog.enableFields == null){return false};
+if(!viewScope.newVeh_Dialog.enableFields.contains("veh_okm_gnc_ave")){return true};
+return false;}]]></xp:this.readonly>
+										</xp:checkBox>
+									</xp:td>
+								</xp:tr>
+								<xp:tr>
+									<xp:td colspan="2">
+										<xp:table style="width:328.0px">
+											<xp:tr>
+												<xp:td style="height:41.0px">
+													<xp:label value="Zona de Riesgo:  " id="Label_veh_zonaRiesgo_cod" style="font-weight:bold" for="veh_zonaRiesgo_cod" />
+												</xp:td>
+												<xp:td>
+													<xp:comboBox value="#{docDlgComp.veh_zonaRiesgo_cod}" id="veh_zonaRiesgo_cod" required="true">
+														<xp:this.readonly><![CDATA[#{javascript:if(viewScope.newVeh_Dialog.enableFields == null){return false};
+if(!viewScope.newVeh_Dialog.enableFields.contains("veh_zonaRiesgo_cod")){return true};
+return false;}]]></xp:this.readonly>
+														<xp:this.defaultValue><![CDATA[#{javascript:var sol_asegurado_cod:String = compositeData.property_sol_asegurado_cod;
+if (sol_asegurado_cod == "" || sol_asegurado_cod == "0"){return ""};
+
+importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+var doc:NotesDocument = database.createDocument()
+doc.appendItemValue("sol_asegurado_cod", sol_asegurado_cod);
+var arrResult:Array = jce.getSelectAS("vehTB_GNTLOC_default", doc);
+if(arrResult.toString().equals("[]")){
+	return "";
+};
+var result:String = arrResult[0];
+doc.recycle();
+
+return result;}]]></xp:this.defaultValue>
+														<xp:selectItems id="selectItems8">
+															<xp:this.value><![CDATA[#{javascript:importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+jce.getSelectAS("vehTB_GNTLOC");}]]></xp:this.value>
+														</xp:selectItems>
+														<xp:eventHandler event="onchange" submit="true" refreshMode="partial" refreshId="veh_franquiciaValor_nro"
+															disableValidators="true">
+															<xp:this.action><![CDATA[#{javascript:var fqcia:String = getFranquiciaWs(docDlgComp);
+if(!fqcia.equals("")){
+	getComponent("veh_franquiciaValor_nro").setValue(parseFloat(fqcia));
+}else{
+	getComponent("veh_franquiciaValor_nro").setValue(0);
+}}]]></xp:this.action>
+														</xp:eventHandler>
+													</xp:comboBox>
+												</xp:td>
+												<xp:td style="height:21.0px"></xp:td>
+												<xp:td>
+													<xp:label value="Uso:  " id="Label_veh_uso_cod" style="font-weight:bold" for="veh_uso_cod" />
+												</xp:td>
+												<xp:td>
+													<xp:comboBox value="#{docDlgComp.veh_uso_cod}" id="veh_uso_cod" required="true">
+														<xp:this.readonly><![CDATA[#{javascript:if(viewScope.newVeh_Dialog.enableFields == null){return false};
+if(!viewScope.newVeh_Dialog.enableFields.contains("veh_uso_cod")){return true};
+return false;}]]></xp:this.readonly>
+														<xp:selectItems id="selectItems7">
+															<xp:this.value><![CDATA[#{javascript:importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+jce.getSelectAS("vehTB_SET211");}]]></xp:this.value>
+														</xp:selectItems>
+													</xp:comboBox>
+												</xp:td>
+											</xp:tr>
+											<xp:tr>
+												<xp:td style="width:110.0px" colspan="5">
+													<xp:table style="width:100.0%">
+														<xp:tr>
+															<xp:td></xp:td>
+															<xp:td></xp:td>
+															<xp:td></xp:td>
+															<xp:td></xp:td>
+														</xp:tr>
+													</xp:table>
+												</xp:td>
+											</xp:tr>
+										</xp:table>
+									</xp:td>
+									<xp:td></xp:td>
+									<xp:td>
+										<xp:checkBox text="Franquicia" id="veh_franquiciaInforma_opt" value="#{docDlgComp.veh_franquiciaInforma_opt}" checkedValue="1"
+											uncheckedValue="0">
+											<xp:this.readonly><![CDATA[#{javascript:if(viewScope.newVeh_Dialog.enableFields == null){return false};
+if(!viewScope.newVeh_Dialog.enableFields.contains("veh_franquicia")){return true};
+return false;}]]></xp:this.readonly>
+										</xp:checkBox>
+									</xp:td>
+									<xp:td>
+										<xp:inputText value="#{docDlgComp.veh_franquiciaValor_nro}" id="veh_franquiciaValor_nro" defaultValue="0" style="width:50.0%">
+											<xp:this.converter>
+												<xp:convertNumber type="number" integerOnly="false"></xp:convertNumber>
+											</xp:this.converter>
+											<xp:this.readonly><![CDATA[#{javascript:if(viewScope.newVeh_Dialog.enableFields == null){return false};
+if(!viewScope.newVeh_Dialog.enableFields.contains("veh_franquicia")){return true};
+return false;}]]></xp:this.readonly>
+										</xp:inputText>
+									</xp:td>
+								</xp:tr>
+							</xp:table>
+						</xp:panel>
+						<xp:panel id="PNL_DialogBotones" style="text-align:right">
+							<xp:button value="Confirmar" id="buttonConfirmarInspeccion" rendered="#{javascript:return !viewScope.containsKey('docxProp')}">
+								<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="PNL_CargaDatosVehiculos">
+									<xp:this.onStart><![CDATA[XSP.startAjaxLoading('Cargando...')]]></xp:this.onStart>
+									<xp:this.onError><![CDATA[XSP.endAjaxLoading()]]></xp:this.onError>
+									<xp:this.onComplete>
+										<![CDATA[XSP.partialRefreshGet("#{id:PNL_Veh}");XSP.partialRefreshGet("#{id:PNL_Inspeccion}");XSP.endAjaxLoading();									]]></xp:this.onComplete>
+									<xp:this.action><![CDATA[#{javascript:confirmarAltaDesdeInspeccion();}]]></xp:this.action>
+								</xp:eventHandler>
+							</xp:button>
+							<xp:button value="Confirmar" id="buttonButtonGrabarVehiculo" rendered="#{javascript:return viewScope.containsKey('docxProp')}">
+								<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="PNL_CargaDatosVehiculos">
+									<xp:this.action><![CDATA[#{javascript:confirmarAltaVehiculo (true);}]]></xp:this.action>
+									<xp:this.onStart><![CDATA[XSP.startAjaxLoading('Cargando...')]]></xp:this.onStart>
+									<xp:this.onError><![CDATA[XSP.endAjaxLoading()]]></xp:this.onError>
+									<xp:this.onComplete>
+										<![CDATA[XSP.partialRefreshGet("#{id:PNL_Left}");XSP.endAjaxLoading();
+									]]></xp:this.onComplete>
+								</xp:eventHandler>
+							</xp:button>
+							
+							<xp:button value="Confirmar sin Validar" id="button1">
+								<xp:this.rendered><![CDATA[#{javascript:var strErr:String = viewScope.get("VehValError");
+if (strErr == null) return false;
+if (strErr.equals ("")) return false;
+return true;}]]></xp:this.rendered>
+								<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="PNL_CargaDatosVehiculos">
+									<xp:this.action><![CDATA[#{javascript:confirmarAltaVehiculo (false);}]]></xp:this.action>
+									<xp:this.onStart><![CDATA[XSP.startAjaxLoading('Cargando...')]]></xp:this.onStart>
+									<xp:this.onError><![CDATA[XSP.endAjaxLoading()]]></xp:this.onError>
+									<xp:this.onComplete><![CDATA[XSP.partialRefreshGet("#{id:PNL_Left}");XSP.endAjaxLoading();
+									]]></xp:this.onComplete>
+								</xp:eventHandler>
+							</xp:button>
+							<xp:button value="Cancelar" id="buttonCancelar">
+								<xp:eventHandler event="onclick" submit="false">
+									<xp:this.script><![CDATA[XSP.closeDialog('#{id:dialogComponente}');]]></xp:this.script>
+								</xp:eventHandler>
+							</xp:button>
+							<xp:br></xp:br>
+						</xp:panel>
+					</xp:panel>
+					<xp:div id="divOcultoRolDialogDatosVeh" style="background-color:#EEEEEE; border: 1px solid #000;border-color:rgb(255,0,0)" rendered="false">
+						<xp:label value="Este div solo es visible por el rol 'ShowHiddenDivs'" id="label5" style="font-weight:bold;color:rgb(255,0,0)">
+						</xp:label>
+						<xp:table>
+							<xp:tr>
+								<xp:td>
+									<xp:label value="Veh_componente_nro:" id="veh_componente_nro_Label1" for="veh_componente_nro1"></xp:label>
+								</xp:td>
+								<xp:td>
+									<xp:inputText value="#{docDlgComp.veh_componente_nro}" id="veh_componente_nro">
+										<xp:this.converter>
+											<xp:convertNumber type="number"></xp:convertNumber>
+										</xp:this.converter>
+									</xp:inputText>
+								</xp:td>
+							</xp:tr>
+							<xp:tr>
+								<xp:td>veh_spwvehABM_cod:</xp:td>
+								<xp:td>
+									<xp:inputText value="#{docDlgComp.veh_spwvehABM_cod}" id="veh_spwvehABM_cod" defaultValue="A"></xp:inputText>
+								</xp:td>
+								<xp:td></xp:td>
+								<xp:td></xp:td>
+							</xp:tr>
+							<xp:tr>
+								<xp:td>veh_statusGaus_des:</xp:td>
+								<xp:td>
+									<xp:inputText value="#{docDlgComp.veh_statusGaus_des}" id="veh_statusGaus_des" defaultValue=""></xp:inputText>
+								</xp:td>
+								<xp:td></xp:td>
+								<xp:td></xp:td>
+							</xp:tr>
+							<xp:tr>
+								<xp:td>
+									<xp:label value="Veh_status_cod:" id="veh_status_cod_Label1" for="veh_status_cod1"></xp:label>
+								</xp:td>
+								<xp:td>
+									<xp:inputText value="#{docDlgComp.veh_status_cod}" id="veh_status_cod"></xp:inputText>
+								</xp:td>
+								<td></td>
+								<xp:td></xp:td>
+							</xp:tr>
+							<xp:tr>
+								<xp:td>
+									<xp:label value="Veh_status_des:" id="veh_status_des_Label1" for="veh_status_des1"></xp:label>
+								</xp:td>
+								<xp:td>
+									<xp:inputText value="#{docDlgComp.veh_status_des}" id="veh_status_des"></xp:inputText>
+								</xp:td>
+								<td></td>
+								<xp:td></xp:td>
+							</xp:tr>
+							<xp:tr>
+								<xp:td>
+									<xp:label value="Veh_origen_opt:" id="veh_origen_opt_Label1" for="veh_origen_opt"></xp:label>
+								</xp:td>
+								<xp:td>
+									<xp:inputText value="#{docDlgComp.veh_origen_opt}" id="veh_origen_opt"></xp:inputText>
+								</xp:td>
+								<td></td>
+								<xp:td></xp:td>
+							</xp:tr>
+							<xp:tr>
+								<xp:td>
+									<xp:label value="Veh_capitulo_nro:" id="veh_capitulo_nro_Label1" for="veh_capitulo_nro"></xp:label>
+								</xp:td>
+								<xp:td>
+									<xp:inputText value="#{docDlgComp.veh_capitulo_nro}" id="veh_capitulo_nro"></xp:inputText>
+								</xp:td>
+								<xp:td />
+								<xp:td></xp:td>
+							</xp:tr>
+							<xp:tr>
+								<xp:td>
+									<xp:label value="Veh_variante rc_nro:" id="veh_varianteRc_nro_Label1" for="veh_varianteRc_nro"></xp:label>
+								</xp:td>
+								<xp:td>
+									<xp:inputText value="#{docDlgComp.veh_varianteRc_nro}" id="veh_varianteRc_nro"></xp:inputText>
+								</xp:td>
+								<td></td>
+								<xp:td></xp:td>
+							</xp:tr>
+							<xp:tr>
+								<xp:td>
+									<xp:label value="Veh_variante air_nro:" id="veh_varianteAir_nro_Label1" for="veh_varianteAir_nro"></xp:label>
+								</xp:td>
+								<xp:td>
+									<xp:inputText value="#{docDlgComp.veh_varianteAir_nro}" id="veh_varianteAir_nro"></xp:inputText>
+								</xp:td>
+								<td></td>
+								<xp:td></xp:td>
+							</xp:tr>
+							<xp:tr>
+								<xp:td>
+									<xp:label value="Veh_tarifa diferencial_nro:" id="veh_tarifaDiferencial_nro_Label1" for="veh_tarifaDiferencial_nro1">
+									</xp:label>
+								</xp:td>
+								<xp:td>
+									<xp:inputText value="#{docDlgComp.veh_tarifaDiferencial_nro}" id="veh_tarifaDiferencial_nro"></xp:inputText>
+								</xp:td>
+								<td></td>
+								<xp:td></xp:td>
+							</xp:tr>
+							<xp:tr>
+								<xp:td>
+									<xp:label value="Marca des:  " id="label1" style="font-weight:bold" for="veh_sumaAsegurada_nro" />
+								</xp:td>
+								<xp:td>
+									<xp:inputText value="#{docDlgComp.veh_marca_des}" id="veh_marca_des"></xp:inputText>
+								</xp:td>
+								<xp:td></xp:td>
+								<xp:td></xp:td>
+							</xp:tr>
+							<xp:tr>
+								<xp:td>
+									<xp:label value="Modelo des:   " id="label2" style="font-weight:bold" for="veh_sumaAsegurada_nro" />
+								</xp:td>
+								<xp:td>
+									<xp:inputText value="#{docDlgComp.veh_modelo_des}" id="veh_modelo_des"></xp:inputText>
+								</xp:td>
+								<xp:td></xp:td>
+								<xp:td></xp:td>
+							</xp:tr>
+							<xp:tr>
+								<xp:td>
+									<xp:label value="SubModelo des:  " id="label3" style="font-weight:bold" for="veh_sumaAsegurada_nro" />
+								</xp:td>
+								<xp:td>
+									<xp:inputText value="#{docDlgComp.veh_submodelo_des}" id="veh_submodelo_des"></xp:inputText>
+								</xp:td>
+								<xp:td></xp:td>
+								<xp:td></xp:td>
+							</xp:tr>
+							<xp:tr>
+								<xp:td>
+									<xp:label value="Veh_id padre_cod:" id="idPadre_cod_Label1" for="idPadre_cod"></xp:label>
+								</xp:td>
+								<xp:td>
+									<xp:inputText value="#{docDlgComp.idPadre_cod}" id="idPadre_cod"></xp:inputText>
+								</xp:td>
+								<xp:td></xp:td>
+								<xp:td></xp:td>
+							</xp:tr>
+							<xp:this.rendered><![CDATA[#{javascript:var v:Array = database.queryAccessRoles(session.getEffectiveUserName());
+@IsMember("[ShowHiddenDivs]", v)}]]></xp:this.rendered>
+						</xp:table>
+					</xp:div>
+				</xp:div>
+			</xp:panel>
+			<xp:eventHandler event="onShow" submit="false">
+				<xe:this.script><![CDATA[XSP.partialRefreshGet("#{id:PNL_DialogNuevoComponente}");
+XSP.endAjaxLoading();]]></xe:this.script>
+			</xp:eventHandler>
+		</xe:dialog>
+	</div>
+</xp:view>

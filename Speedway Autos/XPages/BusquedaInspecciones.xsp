@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:debug="http://www.openntf.org/xsp/debugtoolbar">
+	<xc:oneuiLayout>
+		<xp:this.facets>
+			<debug:toolbar defaultCollapsed="false" collapseTo="left" xp:key="facet_1"></debug:toolbar>
+			<xc:faceted_search_Inspecciones xp:key="facet_2"></xc:faceted_search_Inspecciones>
+		</xp:this.facets>
+	</xc:oneuiLayout>
+</xp:view>

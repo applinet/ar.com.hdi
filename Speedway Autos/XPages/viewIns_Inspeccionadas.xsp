@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom">
+
+	<xc:oneuiLayout><xp:this.facets>
+	<xc:ccView_Ins_Estado xp:key="facet_2"
+		id="embeddedCustomControlViewEstado" ccPropEstado="30">
+	</xc:ccView_Ins_Estado>
+	<xc:ccNavIns xp:key="facet_3" ccPropEstado="30"></xc:ccNavIns>
+
+
+
+</xp:this.facets></xc:oneuiLayout>
+	</xp:view>

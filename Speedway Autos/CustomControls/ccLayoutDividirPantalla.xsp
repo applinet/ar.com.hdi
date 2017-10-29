@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+Para setear el alto o ancho se setea con css en el Dojo Content Pane, se ve en todas las propiedades
+(width:50% para el trailing que es el panel de la derecha donde se visualiza el contenido del mail)
+--><xp:view
+	xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xe="http://www.ibm.com/xsp/coreex"
+	dojoParseOnLoad="true"
+	dojoTheme="true">
+
+	<xp:this.resources>
+		<xp:styleSheet
+			href="/layoutDividirPantalla.css" />
+		<xp:script
+			src="/layoutDividirPantalla.js"
+			clientSide="true">
+		</xp:script>
+	</xp:this.resources>
+
+	<xe:djBorderContainer
+		id="djBorderContainer_layout"
+		design="#{compositeData.borderContainer.bC_design}"
+		dir="#{compositeData.borderContainer.bC_dir}"
+		gutters="#{compositeData.borderContainer.bC_gutters}"
+		liveSplitters="#{compositeData.borderContainer.bC_liveSplitters}"
+		persist="#{compositeData.borderContainer.bC_persist}"
+		rendered="#{compositeData.borderContainer.bC_rendered}"
+		styleClass="#{compositeData.borderContainer.bC_styleClass}"
+		themeId="${compositeData.borderContainer.bC_themeId}">
+
+		<xe:djContentPane id="djContentPane_top" dir="#{compositeData.contentPane_top.cP_dir}"
+			errorMessage="#{compositeData.contentPane_top.cP_errorMessage}" extractContent="#{compositeData.contentPane_top.cP_extractContents}"
+			href="#{compositeData.contentPane_top.cP_href}" loadingMessage="#{compositeData.contentPane_top.cP_loadingMessage}"
+			partialRefresh="#{compositeData.contentPane_top.cP_partialRefresh}" preload="#{compositeData.contentPane_top.cP_preload}"
+			preventCache="#{compositeData.contentPane_top.cP_preventCache}" refreshOnShow="#{compositeData.contentPane_top.cP_refreshOnShow}"
+			rendered="#{compositeData.contentPane_top.cP_rendered}" parseOnLoad="#{compositeData.contentPane_top.cP_parseOnLoad}"
+			styleClass="#{compositeData.contentPane_top.cP_styleClass}" themeId="${compositeData.contentPane_top.cP_themeId}"
+			style="height:40.0%;"
+		>
+			<xe:this.dojoAttributes>
+				<xp:dojoAttribute name="region" value="#{compositeData.contentPane_top.cP_region}">
+					<xp:this.loaded><![CDATA[${javascript:var r = false;
+					if(compositeData.contentPane_top) {
+if (compositeData.contentPane_top.cP_region !== null || compositeData.contentPane_top.cP_region !== "") {
+ r = true;
+}};
+return r;}]]></xp:this.loaded>
+				</xp:dojoAttribute>
+				<xp:dojoAttribute name="minSize" value="#{compositeData.contentPane_top.cP_minSize}">
+					<xp:this.loaded><![CDATA[${javascript:var r = false;
+					if(compositeData.contentPane_top) {
+if (compositeData.contentPane_top.cP_minSize !== null || compositeData.contentPane_top.cP_minSize !== "") {
+ r = true;
+}};
+return r;}]]></xp:this.loaded>
+				</xp:dojoAttribute>
+				<xp:dojoAttribute name="maxSize" value="#{compositeData.contentPane_top.cP_maxSize}">
+					<xp:this.loaded><![CDATA[${javascript:var r = false;
+					if(compositeData.contentPane_top) {
+if (compositeData.contentPane_top.cP_maxSize !== null || compositeData.contentPane_top.cP_maxSize !== "") {
+ r = true;
+}};
+return r;}]]></xp:this.loaded>
+				</xp:dojoAttribute>
+				<xp:dojoAttribute name="splitter">
+					<xp:this.loaded><![CDATA[${javascript:var r = false;
+var arg = compositeData.contentPane_top;
+if(arg) {
+	if(arg.cP_splitter !== null || arg.cP_splitter !== "") {
+		r = true;
+	};
+};
+return r;}]]></xp:this.loaded>
+					<xp:this.value><![CDATA[#{javascript:var arg = compositeData.contentPane_top.cP_splitter;
+if(arg) {
+	arg.toString();
+}}]]></xp:this.value>
+				</xp:dojoAttribute>
+			</xe:this.dojoAttributes>
+			<xp:callback facetName="contentPane_top_bodycontent" id="contentPane_top_bodycontent"></xp:callback>
+		</xe:djContentPane>
+		<xe:djContentPane id="djContentPane_center" dir="#{compositeData.contentPane_center.cP_dir}"
+			errorMessage="#{compositeData.contentPane_center.cP_errorMessage}"
+			extractContent="#{compositeData.contentPane_center.cP_extractContents}" href="#{compositeData.contentPane_center.cP_href}"
+			loadingMessage="#{compositeData.contentPane_center.cP_loadingMessage}"
+			partialRefresh="#{compositeData.contentPane_center.cP_partialRefresh}" preload="#{compositeData.contentPane_center.cP_preload}"
+			preventCache="#{compositeData.contentPane_center.cP_preventCache}" refreshOnShow="#{compositeData.contentPane_center.cP_refreshOnShow}"
+			rendered="#{compositeData.contentPane_center.cP_rendered}" parseOnLoad="#{compositeData.contentPane_center.cP_parseOnLoad}"
+			styleClass="#{compositeData.contentPane_center.cP_styleClass}" themeId="${compositeData.contentPane_center.cP_themeId}"
+			style="height:20.0%;"
+		>
+			<xe:this.dojoAttributes>
+				<xp:dojoAttribute name="region" value="#{compositeData.contentPane_center.cP_region}">
+					<xp:this.loaded><![CDATA[${javascript:var r = false;
+if(compositeData.contentPane_center) {
+if (compositeData.contentPane_center.cP_region !== null || compositeData.contentPane_center.cP_region !== "") {
+ r = true;
+}};
+return r;}]]></xp:this.loaded>
+				</xp:dojoAttribute>
+				<xp:dojoAttribute name="minSize" value="#{compositeData.contentPane_center.cP_minSize}">
+					<xp:this.loaded><![CDATA[${javascript:var r = false;
+if(compositeData.contentPane_center) {
+if (compositeData.contentPane_center.cP_minSize !== null || compositeData.contentPane_center.cP_minSize !== "") {
+ r = true;
+}};
+return r;}]]></xp:this.loaded>
+				</xp:dojoAttribute>
+				<xp:dojoAttribute name="maxSize" value="#{compositeData.contentPane_center.cP_maxSize}">
+					<xp:this.loaded><![CDATA[${javascript:var r = false;
+if(compositeData.contentPane_center) {
+if (compositeData.contentPane_center.cP_maxSize !== null || compositeData.contentPane_center.cP_maxSize !== "") {
+ r = true;
+}};
+return r;}]]></xp:this.loaded>
+				</xp:dojoAttribute>
+				<xp:dojoAttribute name="splitter">
+					<xp:this.loaded><![CDATA[${javascript:var r = false;
+var arg = compositeData.contentPane_center;
+if(arg) {
+	if(arg.cP_splitter !== null || arg.cP_splitter !== "") {
+		r = true;
+	};
+};
+return r;}]]></xp:this.loaded>
+					<xp:this.value><![CDATA[#{javascript:var arg = compositeData.contentPane_center.cP_splitter;
+if(arg) {
+	arg.toString();
+}}]]></xp:this.value>
+				</xp:dojoAttribute>
+			</xe:this.dojoAttributes>
+			<xp:callback facetName="contentPane_center_bodycontent" id="contentPane_center_bodycontent"></xp:callback>
+		</xe:djContentPane>
+		<xe:djContentPane id="djContentPane_trailing" dir="#{compositeData.contentPane_trailing.cP_dir}"
+			errorMessage="#{compositeData.contentPane_trailing.cP_errorMessage}"
+			extractContent="#{compositeData.contentPane_trailing.cP_extractContents}" href="#{compositeData.contentPane_trailing.cP_href}"
+			loadingMessage="#{compositeData.contentPane_trailing.cP_loadingMessage}"
+			partialRefresh="#{compositeData.contentPane_trailing.cP_partialRefresh}" preload="#{compositeData.contentPane_trailing.cP_preload}"
+			preventCache="#{compositeData.contentPane_trailing.cP_preventCache}"
+			refreshOnShow="#{compositeData.contentPane_trailing.cP_refreshOnShow}" rendered="#{compositeData.contentPane_trailing.cP_rendered}"
+			parseOnLoad="#{compositeData.contentPane_trailing.cP_parseOnLoad}" styleClass="#{compositeData.contentPane_trailing.cP_styleClass}"
+			themeId="${compositeData.contentPane_trailing.cP_themeId}" style="width:50%;"
+		>
+			<xe:this.dojoAttributes>
+				<xp:dojoAttribute name="region" value="#{compositeData.contentPane_trailing.cP_region}">
+					<xp:this.loaded><![CDATA[${javascript:var r = false;
+if(compositeData.contentPane_trailing) {
+if (compositeData.contentPane_trailing.cP_region !== null || compositeData.contentPane_trailing.cP_region !== "") {
+ r = true;
+}};
+return r;}]]></xp:this.loaded>
+				</xp:dojoAttribute>
+				<xp:dojoAttribute name="minSize" value="#{compositeData.contentPane_trailing.cP_minSize}">
+					<xp:this.loaded><![CDATA[${javascript:var r = false;
+if(compositeData.contentPane_trailing) {
+if (compositeData.contentPane_trailing.cP_minSize !== null || compositeData.contentPane_trailing.cP_minSize !== "") {
+ r = true;
+}};
+return r;}]]></xp:this.loaded>
+				</xp:dojoAttribute>
+				<xp:dojoAttribute name="maxSize" value="#{compositeData.contentPane_trailing.cP_maxSize}">
+					<xp:this.loaded><![CDATA[${javascript:var r = false;
+if(compositeData.contentPane_trailing) {
+if (compositeData.contentPane_trailing.cP_maxSize !== null || compositeData.contentPane_trailing.cP_maxSize !== "") {
+ r = true;
+}};
+return r;}]]></xp:this.loaded>
+				</xp:dojoAttribute>
+				<xp:dojoAttribute name="splitter">
+					<xp:this.loaded><![CDATA[${javascript:var r = false;
+var arg = compositeData.contentPane_trailing;
+if(arg) {
+	if(arg.cP_splitter !== null || arg.cP_splitter !== "") {
+		r = true;
+	};
+};
+return r;}]]></xp:this.loaded>
+					<xp:this.value><![CDATA[#{javascript:var arg = compositeData.contentPane_trailing.cP_splitter;
+if(arg) {
+	arg.toString();
+}}]]></xp:this.value>
+				</xp:dojoAttribute>
+			</xe:this.dojoAttributes>
+			<xp:callback facetName="contentPane_trailing_bodycontent" id="contentPane_trailing_bodycontent"></xp:callback>
+		</xe:djContentPane>
+		<xe:djContentPane id="djContentPane_bottom" dir="#{compositeData.contentPane_bottom.cP_dir}"
+			errorMessage="#{compositeData.contentPane_bottom.cP_errorMessage}"
+			extractContent="#{compositeData.contentPane_bottom.cP_extractContents}" href="#{compositeData.contentPane_bottom.cP_href}"
+			loadingMessage="#{compositeData.contentPane_bottom.cP_loadingMessage}"
+			partialRefresh="#{compositeData.contentPane_bottom.cP_partialRefresh}" preload="#{compositeData.contentPane_bottom.cP_preload}"
+			preventCache="#{compositeData.contentPane_bottom.cP_preventCache}" refreshOnShow="#{compositeData.contentPane_bottom.cP_refreshOnShow}"
+			rendered="#{compositeData.contentPane_bottom.cP_rendered}" parseOnLoad="#{compositeData.contentPane_bottom.cP_parseOnLoad}"
+			styleClass="#{compositeData.contentPane_bottom.cP_styleClass}" themeId="${compositeData.contentPane_bottom.cP_themeId}"
+			style="background-color:#000000;height:40.0%;"
+		>
+			<xe:this.dojoAttributes>
+				<xp:dojoAttribute name="region" value="#{compositeData.contentPane_bottom.cP_region}">
+					<xp:this.loaded><![CDATA[${javascript:var r = false;
+if(compositeData.contentPane_bottom) {
+if (compositeData.contentPane_bottom.cP_region !== null || compositeData.contentPane_bottom.cP_region !== "") {
+ r = true;
+}};
+return r;}]]></xp:this.loaded>
+				</xp:dojoAttribute>
+				<xp:dojoAttribute name="minSize" value="#{compositeData.contentPane_bottom.cP_minSize}">
+					<xp:this.loaded><![CDATA[${javascript:var r = false;
+if(compositeData.contentPane_bottom) {
+if (compositeData.contentPane_bottom.cP_minSize !== null || compositeData.contentPane_bottom.cP_minSize !== "") {
+ r = true;
+}};
+return r;}]]></xp:this.loaded>
+				</xp:dojoAttribute>
+				<xp:dojoAttribute name="maxSize" value="#{compositeData.contentPane_bottom.cP_maxSize}">
+					<xp:this.loaded><![CDATA[${javascript:var r = false;
+if(compositeData.contentPane_bottom) {
+if (compositeData.contentPane_bottom.cP_maxSize !== null || compositeData.contentPane_bottom.cP_maxSize !== "") {
+ r = true;
+}};
+return r;}]]></xp:this.loaded>
+				</xp:dojoAttribute>
+				<xp:dojoAttribute name="splitter">
+					<xp:this.loaded><![CDATA[${javascript:var r = false;
+var arg = compositeData.contentPane_bottom;
+if(arg) {
+	if(arg.cP_splitter !== null || arg.cP_splitter !== "") {
+		r = true;
+	};
+};
+return r;}]]></xp:this.loaded>
+					<xp:this.value><![CDATA[#{javascript:var arg = compositeData.contentPane_bottom.cP_splitter;
+if(arg) {
+	arg.toString();
+}}]]></xp:this.value>
+				</xp:dojoAttribute>
+			</xe:this.dojoAttributes>
+			<xp:callback facetName="contentPane_bottom_bodycontent" id="contentPane_bottom_bodycontent"></xp:callback>
+		</xe:djContentPane>
+	</xe:djBorderContainer>
+
+	<xp:scriptBlock>
+		<xp:this.value><![CDATA[var djBorderContainer_layout = '#{id:djBorderContainer_layout}';
+var djContentPane_top = '#{id:djContentPane_top}';
+var djContentPane_leading = '#{id:djContentPane_leading}';
+var djContentPane_center = '#{id:djContentPane_center}';
+var djContentPane_trailing = '#{id:djContentPane_trailing}';
+var djContentPane_bottom = '#{id:djContentPane_bottom}';]]></xp:this.value>
+	</xp:scriptBlock>
+
+</xp:view>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="03257E5A006E447C" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="91a" sequence="25" unid="AD9D8BEA8924A46A03257D17006B4EED">
+<created><datetime>20140716T163205,57-03</datetime></created>
+<modified><datetime>20170829T080834,44-03</datetime></modified>
+<revised><datetime>20170829T080834,43-03</datetime></revised>
+<lastaccessed><datetime>20170829T080834,43-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170437,03-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name="$FlagsExt" sign="true"><text>D</text></item>
+<item name="$FileModDT" sign="true"><datetime>20140716T163427,80-03</datetime></item>
+<item name="$EditFilePath" sign="true"><text>C:\Users\RODRIG~1\AppData\Local\Temp\notes15D3A6\~ConstanciaCobertura.docx</text></item>
+<item name="$Flags"><text>345CgQ</text></item>
+<item name="$TITLE" sign="true"><text>Old_ConstanciaCobertura.docx</text></item>
+<item name="$DesignerVersion" sign="true"><text>8.5.3</text></item>
+
+
+
+
+
+
+<item name="$FileNames" sign="true"><text>Old_ConstanciaCobertura.docx</text></item></note>

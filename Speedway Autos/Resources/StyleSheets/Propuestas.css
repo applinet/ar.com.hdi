@@ -1,0 +1,20 @@
+
+
+.colIzq {
+	float: left;
+	width: 55;
+}
+.colDer {
+	float: left;
+	width: 40%;
+}
+
+.PropFormColumnIzq {
+	float:left;
+	width: 650px;
+}
+.PropFormColumnDer {
+	float:right;
+	width: 550px;
+
+}

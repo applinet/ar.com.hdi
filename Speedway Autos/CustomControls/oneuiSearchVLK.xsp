@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:debug="http://www.openntf.org/xsp/debugtoolbar">
+	<xp:this.resources>
+		<xp:styleSheet href="/demo.css"></xp:styleSheet>
+		<xp:styleSheet href="/hdi_gerling.css"></xp:styleSheet>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	<xp:this.data>
+		<xp:dominoView var="viewToSearch" sortOrder="descending" sortColumn="orden_nro" ignoreRequestParams="false">
+			<xp:this.categoryFilter><![CDATA[#{javascript:context.getUrlParameter("searchValue")}]]></xp:this.categoryFilter>
+			<xp:this.viewName><![CDATA[#{javascript:context.getUrlParameter("searchOption")}]]></xp:this.viewName>
+		</xp:dominoView>
+	</xp:this.data>
+	<div id="wrapper">
+		<xp:viewPanel value="#{viewToSearch}" id="viewPanel1" pageName="/xfdocPropuesta.xsp" var="rowData" viewStyle="width:100%">
+			<xp:viewColumn columnName="orden_nro" id="viewColumn1" displayAs="link" openDocAsReadonly="true" style="text-align:center">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Nro Orden" xp:key="header" id="viewColumnHeader1" styleClass="SWcolorBackgroundHdiGreenLight1"
+						style="text-align:left">
+					</xp:viewColumnHeader>
+				</xp:this.facets>
+				<xp:this.value><![CDATA[#{javascript:if(!context.getUrlParameter("searchOption").equals("VLK_SearchPatente")) return rowData.getColumnValue("orden_nro");
+var docProp:NotesDocument = getDbPropuestas().getDocumentByUNID(rowData.getColumnValue("idPadre_cod"));
+return docProp.getItemValueInteger("orden_nro") }]]></xp:this.value>
+				<xp:this.converter>
+					<xp:convertNumber type="number" integerOnly="true"></xp:convertNumber>
+				</xp:this.converter>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+					<xp:this.action><![CDATA[#{javascript:var url:String = "xfdocPropuesta.xsp?action=openDocument&documentId=" 
+if(context.getUrlParameter("searchOption").equals("VLK_SearchPatente")){
+	url += rowData.getColumnValue("idPadre_cod");
+}else{
+	url += rowData.getUniversalID();
+}
+facesContext.getExternalContext().redirect(url);}]]></xp:this.action>
+				</xp:eventHandler>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="sol_articulo_cod" id="viewColumn2">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Art" xp:key="header" id="viewColumnHeader2" styleClass="SWcolorBackgroundHdiGreenLight1"
+						style="text-align:left">
+					</xp:viewColumnHeader>
+				</xp:this.facets>
+				<xp:this.value><![CDATA[#{javascript:if(!context.getUrlParameter("searchOption").equals("VLK_SearchPatente")) return rowData.getColumnValue("sol_articulo_cod");
+var docProp:NotesDocument = getDbPropuestas().getDocumentByUNID(rowData.getColumnValue("idPadre_cod"));
+return docProp.getItemValueString("sol_articulo_cod") }]]></xp:this.value>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+					<xp:this.action><![CDATA[#{javascript:var url:String = "xfdocPropuesta.xsp?action=openDocument&documentId=" 
+if(context.getUrlParameter("searchOption").equals("VLK_SearchPatente")){
+	url += rowData.getColumnValue("idPadre_cod");
+}else{
+	url += rowData.getUniversalID();
+}
+facesContext.getExternalContext().redirect(url);}]]></xp:this.action>
+				</xp:eventHandler>
+			</xp:viewColumn>
+			<xp:viewColumn id="viewColumnIcon" style="text-align:center;width:auto" columnName="Icon" displayAs="hidden">
+				<xp:this.facets></xp:this.facets>
+				<xp:this.iconSrc><![CDATA[#{javascript:var url:XSPUrl = new XSPUrl(database.getHttpURL());
+var path = "/icons/vwicn";
+//var idx = rowData.getColumnValues().get(3);
+
+if(!context.getUrlParameter("searchOption").equals("VLK_SearchPatente")){
+	var idx = rowData.getColumnValue("icon");
+}else{
+	var docProp:NotesDocument = getDbPropuestas().getDocumentByUNID(rowData.getColumnValue("idPadre_cod"));
+	var tipoMovimiento:String = docProp.getItemValueString("sol_tipoMovimiento_cod");
+	var idx;
+	
+	switch (tipoMovimiento) {
+		case "1":
+			idx ="114";
+			break;
+		case "2":
+			idx ="117";
+			break;
+		case "3":
+			idx ="120";
+			break;
+		case "4":
+			idx = "115";
+			break;
+		default:
+			idx = "119";
+			break;
+	}
+}
+
+if (idx < 10)
+path += ("00"+idx).left(3);
+else if (idx < 100)
+path += ("0"+idx).left(3);
+else
+path += idx;
+path += ".gif";
+url.setPath(path);
+url.removeAllParameters();
+return url.toString();}]]></xp:this.iconSrc>
+				<xp:viewColumnHeader id="viewColumnHeaderIcon" styleClass="SWcolorBackgroundHdiGreenLight1"
+					style="text-align:justify;color:rgb(102,196,133)" value="Icon">
+				</xp:viewColumnHeader>
+			</xp:viewColumn>
+			<xp:viewColumn id="viewColumn9" style="text-align:center" columnName="Icon" displayAs="hidden">
+				<xp:this.facets></xp:this.facets>
+				<xp:this.iconSrc><![CDATA[#{javascript:var url:XSPUrl = new XSPUrl(database.getHttpURL());
+var path = "/icons/vwicn";
+
+if(!context.getUrlParameter("searchOption").equals("VLK_SearchPatente")){
+	var idx = rowData.getColumnValue("web_icon_cod");
+}else{
+	var docProp:NotesDocument = getDbPropuestas().getDocumentByUNID(rowData.getColumnValue("idPadre_cod"));
+	var idx:String = docProp.getItemValueString("web_icon_cod");	
+}
+
+if(idx == "") return "";
+if (idx < 10)
+path += ("00"+idx).left(3);
+else if (idx < 100)
+path += ("0"+idx).left(3);
+else
+path += idx;
+path += ".gif";
+url.setPath(path);
+url.removeAllParameters();
+return url.toString();}]]></xp:this.iconSrc>
+				<xp:viewColumnHeader id="viewColumnHeader3" styleClass="SWcolorBackgroundHdiGreenLight1"
+					style="text-align:justify;color:rgb(102,196,133)" value=".">
+				</xp:viewColumnHeader>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="sol_poliza_nro" id="viewColumn4" style="text-align:right;font-weight:bold">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Nro Póliza" xp:key="header" id="viewColumnHeader4" styleClass="SWcolorBackgroundHdiGreenLight1"
+						style="text-align:left">
+					</xp:viewColumnHeader>
+				</xp:this.facets>
+				<xp:this.value><![CDATA[#{javascript:if(!context.getUrlParameter("searchOption").equals("VLK_SearchPatente")) return rowData.getColumnValue("sol_poliza_nro");
+var docProp:NotesDocument = getDbPropuestas().getDocumentByUNID(rowData.getColumnValue("idPadre_cod"));
+return docProp.getItemValueInteger("sol_poliza_nro") }]]></xp:this.value>
+				<xp:this.converter>
+					<xp:convertNumber type="number" integerOnly="true"></xp:convertNumber>
+				</xp:this.converter>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+					<xp:this.action><![CDATA[#{javascript:var url:String = "xfdocPropuesta.xsp?action=openDocument&documentId=" 
+if(context.getUrlParameter("searchOption").equals("VLK_SearchPatente")){
+	url += rowData.getColumnValue("idPadre_cod");
+}else{
+	url += rowData.getUniversalID();
+}
+facesContext.getExternalContext().redirect(url);}]]></xp:this.action>
+				</xp:eventHandler>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="sol_status_des" id="viewColumn3">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Estado" xp:key="header" styleClass="SWcolorBackgroundHdiGreenLight1" style="text-align:left">
+					</xp:viewColumnHeader>
+				</xp:this.facets>
+				<xp:this.value><![CDATA[#{javascript:if(!context.getUrlParameter("searchOption").equals("VLK_SearchPatente")) return rowData.getColumnValue("sol_status_des");
+var docProp:NotesDocument = getDbPropuestas().getDocumentByUNID(rowData.getColumnValue("idPadre_cod"));
+return docProp.getItemValueString("sol_status_des") }]]></xp:this.value>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+					<xp:this.action><![CDATA[#{javascript:var url:String = "xfdocPropuesta.xsp?action=openDocument&documentId=" 
+if(context.getUrlParameter("searchOption").equals("VLK_SearchPatente")){
+	url += rowData.getColumnValue("idPadre_cod");
+}else{
+	url += rowData.getUniversalID();
+}
+facesContext.getExternalContext().redirect(url);}]]></xp:this.action>
+				</xp:eventHandler>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="productor" id="viewColumn5">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Productor" xp:key="header" id="viewColumnHeader5" styleClass="SWcolorBackgroundHdiGreenLight1"></xp:viewColumnHeader>
+				</xp:this.facets>
+				<xp:this.value><![CDATA[#{javascript:if(!context.getUrlParameter("searchOption").equals("VLK_SearchPatente")) return rowData.getColumnValue("productor");
+var docProp:NotesDocument = getDbPropuestas().getDocumentByUNID(rowData.getColumnValue("idPadre_cod"));
+return docProp.getItemValueString("sol_productor_cod") + " - " + docProp.getItemValueString("sol_productor_des");}]]></xp:this.value>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+					<xp:this.action><![CDATA[#{javascript:var url:String = "xfdocPropuesta.xsp?action=openDocument&documentId=" 
+if(context.getUrlParameter("searchOption").equals("VLK_SearchPatente")){
+	url += rowData.getColumnValue("idPadre_cod");
+}else{
+	url += rowData.getUniversalID();
+}
+facesContext.getExternalContext().redirect(url);}]]></xp:this.action>
+				</xp:eventHandler>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="sol_asegurado_des" id="viewColumn6">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Asegurado" xp:key="header" id="viewColumnHeader6" styleClass="SWcolorBackgroundHdiGreenLight1"
+						style="text-align:left">
+					</xp:viewColumnHeader>
+				</xp:this.facets>
+				<xp:this.value><![CDATA[#{javascript:if(!context.getUrlParameter("searchOption").equals("VLK_SearchPatente")) return rowData.getColumnValue("sol_asegurado_des");
+var docProp:NotesDocument = getDbPropuestas().getDocumentByUNID(rowData.getColumnValue("idPadre_cod"));
+return docProp.getItemValueString("sol_asegurado_des") }]]></xp:this.value>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+					<xp:this.action><![CDATA[#{javascript:var url:String = "xfdocPropuesta.xsp?action=openDocument&documentId=" 
+if(context.getUrlParameter("searchOption").equals("VLK_SearchPatente")){
+	url += rowData.getColumnValue("idPadre_cod");
+}else{
+	url += rowData.getUniversalID();
+}
+facesContext.getExternalContext().redirect(url);}]]></xp:this.action>
+				</xp:eventHandler>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="sol_tipoOperacion_des" id="viewColumn7">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Operación" xp:key="header" id="viewColumnHeader7" styleClass="SWcolorBackgroundHdiGreenLight1"
+						style="text-align:left">
+					</xp:viewColumnHeader>
+				</xp:this.facets>
+				<xp:this.value><![CDATA[#{javascript:if(!context.getUrlParameter("searchOption").equals("VLK_SearchPatente")) return rowData.getColumnValue("sol_tipoOperacion_des");
+var docProp:NotesDocument = getDbPropuestas().getDocumentByUNID(rowData.getColumnValue("idPadre_cod"));
+return docProp.getItemValueString("sol_tipoOperacion_des") }]]></xp:this.value>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+					<xp:this.action><![CDATA[#{javascript:var url:String = "xfdocPropuesta.xsp?action=openDocument&documentId=" 
+if(context.getUrlParameter("searchOption").equals("VLK_SearchPatente")){
+	url += rowData.getColumnValue("idPadre_cod");
+}else{
+	url += rowData.getUniversalID();
+}
+facesContext.getExternalContext().redirect(url);}]]></xp:this.action>
+				</xp:eventHandler>
+			</xp:viewColumn>
+			<xp:viewColumn columnName="sol_cotizacion_nro" id="viewColumn8" style="text-align:center">
+				<xp:this.facets>
+					<xp:viewColumnHeader value="Nro Web" xp:key="header" id="viewColumnHeader8" styleClass="SWcolorBackgroundHdiGreenLight1">
+					</xp:viewColumnHeader>
+				</xp:this.facets>
+				<xp:this.value><![CDATA[#{javascript:if(!context.getUrlParameter("searchOption").equals("VLK_SearchPatente")) return rowData.getColumnValue("sol_cotizacion_nro");
+var docProp:NotesDocument = getDbPropuestas().getDocumentByUNID(rowData.getColumnValue("idPadre_cod"));
+return docProp.getItemValueString("sol_cotizacion_nro")}]]></xp:this.value>
+				<xp:this.converter>
+					<xp:convertNumber type="number" integerOnly="true"></xp:convertNumber>
+				</xp:this.converter>
+				<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+					<xp:this.action><![CDATA[#{javascript:var url:String = "xfdocPropuesta.xsp?action=openDocument&documentId=" 
+if(context.getUrlParameter("searchOption").equals("VLK_SearchPatente")){
+	url += rowData.getColumnValue("idPadre_cod");
+}else{
+	url += rowData.getUniversalID();
+}
+facesContext.getExternalContext().redirect(url);}]]></xp:this.action>
+				</xp:eventHandler>
+			</xp:viewColumn>
+			<xp:this.facets>
+				<xp:pager partialRefresh="true" layout="Previous Group Next" xp:key="footerPager" id="pager2" alwaysCalculateLast="true"></xp:pager>
+				<xp:viewTitle xp:key="viewTitle" id="viewTitle1" panelPosition="left">
+					<xp:this.value><![CDATA[#{javascript:"Cantidad:  " + getComponent("viewPanel1").getRowCount()}]]></xp:this.value>
+				</xp:viewTitle>
+			</xp:this.facets>
+		</xp:viewPanel>
+	</div>
+</xp:view>

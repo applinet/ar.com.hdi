@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core">
+	<xp:this.data>
+		<xp:dominoView var="viewEstados" viewName="(Sys\vLK_Estados Propuesta Ordenados)   -   v.Sys.vLK_EstadosOrdenados"
+			ignoreRequestParams="true">
+			<xp:this.databaseName><![CDATA[#{javascript:var docConfig: NotesDocument = database.getView("Configuracion").getDocumentByKey("Configuracion");
+return docConfig.getItemValueString("conf_path");}]]></xp:this.databaseName>
+		</xp:dominoView>
+	</xp:this.data>
+	<xp:viewPanel value="#{viewEstados}" id="viewPanel1" pageName="/xfdocEstados.xsp">
+		<xp:this.facets>
+			<xp:pager partialRefresh="true" layout="Previous Group Next" xp:key="headerPager" id="pager1"></xp:pager>
+		</xp:this.facets>
+		<xp:viewColumn columnName="est_Codigo_des" id="viewColumn1" displayAs="link">
+			<xp:this.facets>
+				<xp:viewColumnHeader value="Est_ codigo_des" xp:key="header" id="viewColumnHeader1"></xp:viewColumnHeader>
+			</xp:this.facets>
+		</xp:viewColumn>
+		<xp:viewColumn columnName="est_Nombre_des" id="viewColumn2" displayAs="link">
+			<xp:this.facets>
+				<xp:viewColumnHeader value="Desc.  estados" xp:key="header" id="viewColumnHeader2"></xp:viewColumnHeader>
+			</xp:this.facets>
+		</xp:viewColumn>
+		
+	</xp:viewPanel></xp:view>

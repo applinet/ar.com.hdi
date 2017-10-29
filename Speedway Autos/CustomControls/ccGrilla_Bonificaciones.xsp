@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--Grilla de Bonificaciones tomada desde gaus-->
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:xe="http://www.ibm.com/xsp/coreex">
+	<xp:panel style="width:500px;">
+		
+		
+	</xp:panel>
+	
+</xp:view>

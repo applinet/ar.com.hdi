@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="03257E5A006E447C" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="2f6" sequence="44" unid="7875216928E09F2403257CF6003AFB5F">
+<created><datetime>20140613T074414,39-03</datetime></created>
+<modified><datetime>20170829T080809,20-03</datetime></modified>
+<revised><datetime>20170829T080809,19-03</datetime></revised>
+<lastaccessed><datetime>20170829T080809,19-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170428,65-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name="$TITLE"><text>ccView_Cfg_Administracion.xsp</text></item>
+<item name="$Flags"><text>gC~4;</text></item>
+
+
+
+
+<item name="$FileNames" sign="true"><text>ccView_Cfg_Administracion.xsp</text></item>
+
+
+
+<item name="$DesignerVersion" sign="true"><text>8.5</text></item>
+
+</note>

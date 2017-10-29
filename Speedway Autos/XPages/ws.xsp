@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view
+	xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xe="http://www.ibm.com/xsp/coreex">
+	<xp:this.resources>
+		<xp:script src="/RESTObjectFunctions.jss" clientSide="false"></xp:script>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	<xp:table style="width:622.0px">
+		<xp:tr>
+			<xp:td></xp:td>
+			<xp:td style="font-weight:bold">Descripcion</xp:td>
+		</xp:tr>
+		<xp:tr>
+			<xp:td>
+				<xe:restService id="restService1" pathInfo="VehN">
+					<xe:this.service>
+						<xe:customRestService contentType="application/json" requestContentType="text/plain" requestVar="JWA">
+							<xe:this.doPost><![CDATA[#{javascript:// checkeo JWA. Si está vacio, no hago nada
+print("HAgo un post");
+//var jsLog:NotesLog = session.createLog("REST POST SSJS - Alta de Vehiculo");
+//jsLog.openNotesLog("SRVDESA/axin","AgentLog.nsf");
+var arrayOfObjects = eval("(" + JWA 	+ ")");
+//jsLog.logAction("Antes que comience la librería " + JWA);
+//var rtnString = restDoc(arrayOfObjects);
+//jsLog.logAction(rtnString);
+//return(rtnString);}]]></xe:this.doPost>
+						</xe:customRestService>
+					</xe:this.service>
+				</xe:restService>
+			</xp:td>
+			<xp:td>REST Path --&gt; RESTService</xp:td>
+		</xp:tr>
+		<xp:tr>
+			<xp:td>
+				<xe:restService id="restService2" pathInfo="RESTGet" ignoreRequestParams="true">
+					<xe:this.service>
+						<xe:customRestService contentType="application/json" requestContentType="text/plain" requestVar="JWA">
+							<xe:this.doGet><![CDATA[#{javascript:var db: NotesDatabase = session.getCurrentDatabase();
+var rtnString: String = "{\"RESTGet\":";
+
+try {
+    var uriString = facesContext.getExternalContext().getRequest().getRequestURI();
+    AgentLogAutos("RESTGet",0,"1.Comienza SSJS:" + uriString);
+    var unidString = @RightBack(uriString, "RESTGet\/");
+    AgentLogAutos("RESTGet",0,"unid:" + unidString);
+    
+    var imageString = "[";
+    AgentLogAutos("RESTGet",0,"Consulta UNID:" + unidString);
+    try {
+        var doc: NotesDocument = db.getDocumentByUNID(unidString);
+        imageString += doc.getItemValueString('sol_status_des');
+        AgentLogAutos("RESTGet",0,"sol_status_des:" + unidString);
+    } catch (e) {
+    	AgentLogAutos("RESTGet",0,"get doc error: " + e);
+    }
+} catch (e) {
+	AgentLogAutos("RESTGet",0,"error" + e);
+}
+imageString = imageString + "]";
+rtnString = rtnString + imageString;
+rtnString = rtnString + "}";
+return rtnString;}]]></xe:this.doGet>
+						</xe:customRestService>
+					</xe:this.service>
+				</xe:restService>
+			</xp:td>
+			<xp:td>
+				Path Info:&#160;RESTGet&#160;
+				<xp:br></xp:br>
+				http://srvdesa/names.nsf?login&amp;username=fechu2&amp;password=1&amp;redirectto=/Desa/Speedway/Autos/AU_propuestas.nsf/ws.xsp/RESTGet/88A7667811EC945403257D54003BA70B
+			</xp:td>
+		</xp:tr>
+		<xp:tr>
+			<xp:td>
+				<xe:restService id="InspPolPat" pathInfo="InspPolPat">
+					<xe:this.service>
+						<xe:customRestService contentType="application/json">
+							<xe:this.doGet><![CDATA[#{javascript:importPackage(ar.com.hdi.autos.webservice);
+var rtnString: String="";
+try {
+	// --- Input -----
+    var uriString = facesContext.getExternalContext().getRequest().getRequestURI();
+    var strparametros:String = @RightBack(uriString, "InspPolPat\/");
+    var strRama_prm:String = @Word(strparametros,"~",1);//rama
+    var strPoliza_prm:String = @Word(strparametros,"~",2);//poliza
+    var strPatente_prm:String = @Word(strparametros,"~",3);//patente
+     
+    if(strRama_prm.equals("")){
+    	rtnString+= "[{\"ErrMsg\":\"La rama es un parámetro obligatorio\"}]";
+    	return rtnString;
+    }
+    if(strPoliza_prm.equals("")){
+    	rtnString+= "[{\"ErrMsg\":\"La póliza es un parámetro obligatorio\"}]";
+    	return rtnString;
+    }
+    if(strPatente_prm.equals("")){
+    	rtnString+= "[{\"ErrMsg\":\"La patente es un parámetro obligatorio\"}]";
+    	return rtnString;
+    }
+    	
+    // --- Output -----	
+    try {
+		
+		var json = InspPolPat.getDocAsJSON("ws_InspPolPat", strRama_prm,strPoliza_prm, strPatente_prm)
+		
+		
+		
+    } catch (e) {
+    	AgentLogAutos("InspPolPat",0,"get doc error: " + e);
+    }
+} catch (e) {
+	AgentLogAutos("InspPolPat",0,"error" + e);
+}
+return json;
+}]]></xe:this.doGet>
+						</xe:customRestService>
+					</xe:this.service>
+				</xe:restService>
+				<xe:restService id="InspPolPatd" pathInfo="InspPolPatd">
+					<xe:this.service>
+						<xe:customRestService contentType="application/json">
+							<xe:this.doGet><![CDATA[#{javascript:importPackage(ar.com.hdi.autos.webservice);
+var rtnString: String="";
+try {
+	// --- Input -----
+    var uriString = facesContext.getExternalContext().getRequest().getRequestURI();
+    var strparametros:String = @RightBack(uriString, "InspPolPatd\/");
+    var strRama_prm:String = @Word(strparametros,"~",1);//rama
+    var strPoliza_prm:String = @Word(strparametros,"~",2);//poliza
+    var strPatente_prm:String = @Word(strparametros,"~",3);//patente
+     
+    if(strRama_prm.equals("")){
+    	rtnString+= "[{\"ErrMsg\":\"La rama es un parámetro obligatorio\"}]";
+    	return rtnString;
+    }
+    if(strPoliza_prm.equals("")){
+    	rtnString+= "[{\"ErrMsg\":\"La póliza es un parámetro obligatorio\"}]";
+    	return rtnString;
+    }
+    if(strPatente_prm.equals("")){
+    	rtnString+= "[{\"ErrMsg\":\"La patente es un parámetro obligatorio\"}]";
+    	return rtnString;
+    }
+    	
+    // --- Output -----	
+    try {
+		
+		var json = InspPolPat.getDocAsJSONdesa("ws_InspPolPat", strRama_prm,strPoliza_prm, strPatente_prm)
+		
+		
+		
+    } catch (e) {
+    	AgentLogAutos("InspPolPat",0,"get doc error: " + e);
+    }
+} catch (e) {
+	AgentLogAutos("InspPolPat",0,"error" + e);
+}
+return json;
+}]]></xe:this.doGet>
+						</xe:customRestService>
+					</xe:this.service>
+				</xe:restService></xp:td>
+			<xp:td>
+				InspPolPat: devuelve JSON de inspecciones seleccionadas segun Poliza / Patente.
+				<xp:br></xp:br>
+				La rama,&#160;poliza y patente se reciben en la url
+			</xp:td>
+		</xp:tr>
+		<xp:tr>
+			<xp:td>
+				<xe:restService id="dbPathInfo" pathInfo="dbPathInfo">
+					<xe:this.service>
+						<xe:viewJsonService viewName="v.UI.Ins.Estado" search="IPA-293028" contentType="text/json">
+							<xe:this.columns>
+								<xe:restViewColumn columnName="ins_Consecutivo_des" name="ins_Consecutivo_des"></xe:restViewColumn>
+								<xe:restViewColumn columnName="ins_Veh_cod" name="ins_Veh_cod"></xe:restViewColumn>
+							</xe:this.columns>
+						</xe:viewJsonService>
+					</xe:this.service>
+				</xe:restService></xp:td>
+			<xp:td>PathInfo:&#160;dbPathInfo
+				</xp:td>
+		</xp:tr>
+		<xp:tr>
+			<xp:td>
+				
+			<xe:restService pathInfo="soln" id="soln">
+				<xe:this.service>
+					<xe:viewJsonService viewName="v.Sys.Prop.Cod" count="50" contentType="application/json">
+						<xe:this.columns>
+							<xe:restViewColumn columnName="$2" name="SOLN"></xe:restViewColumn>
+							<xe:restViewColumn columnName="sol_articulo_cod" name="ARCD"></xe:restViewColumn>
+							<xe:restViewColumn columnName="$4" name="POLI"></xe:restViewColumn>
+							<xe:restViewColumn columnName="$1" name="ID"></xe:restViewColumn>
+						</xe:this.columns>
+					</xe:viewJsonService>
+				</xe:this.service>
+			</xe:restService></xp:td>
+			<xp:td>PathInfo: soln<xp:br></xp:br>Para pruebas de sergio<xp:br></xp:br>http://srvdesa/names.nsf?login&amp;username=fechu2&amp;password=1&amp;redirectto=/Desa/Speedway/Autos/AU_propuestas.nsf/ws.xsp/soln?search=accinelli</xp:td>
+		</xp:tr>
+	</xp:table>
+</xp:view>

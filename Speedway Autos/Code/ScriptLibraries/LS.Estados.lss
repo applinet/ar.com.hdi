@@ -1,0 +1,69 @@
+'++LotusScript Development Environment:2:5:(Options):0:74
+%REM
+	Library LS.Estados
+	Created Jun 25, 2013 by Diego L/axin
+	Description: Comments for Library
+%END REM
+Option Public
+Option Declare
+
+Use "LS.general.BE.v01"
+
+'++LotusScript Development Environment:2:5:(Forward):0:1
+Declare Class Estado
+
+'++LotusScript Development Environment:2:5:(Declarations):0:10
+%REM
+	Class Estado
+	Description: Comments for Class
+%END REM
+Class Estado
+	
+	docStatus As NotesDocument
+	strNombre As String
+	
+	%REM
+		Sub New
+		Description: Comments for Sub
+	%END REM
+	Sub New (strCode_param As String)
+		On Error GoTo errHandler
+		
+		Dim dbCfg As NotesDatabase
+		Dim vEstados As NotesView
+		
+		
+		Set dbCfg = getCfgDB ()
+		If dbCfg.Isopen = False Then Error 9999, "No se encontró la base de Configuración"
+		
+		Set vEstados = dbCfg.Getview("v.Sys.Estados")
+		If vEstados Is Nothing Then Error 9999, "No se encontró la vista v.Sys.Estados"
+		
+		Set Me.docStatus = vEstados.Getdocumentbykey(strCode_param, True)
+		If Me.docStatus Is Nothing Then Error 9999, "No se encontró el estado: " + strCode_param
+		
+		Me.strNombre = Me.docStatus.Getitemvalue("est_Nombre_des")(0)
+		
+		Exit Sub
+errHandler:
+		Print Error$ + Chr (13) + CStr (GetThreadInfo (LSI_THREAD_PROC)) + " - Linea: " + CStr (Erl) + " - ERROR NRO " + CStr (Err)
+	End Sub
+	
+	%REM
+		Function getEstadoNombre
+		Description: Comments for Function
+	%END REM
+	Function getEstadoNombre () As String
+		On Error GoTo errHandler
+		
+		getEstadoNombre = Me.strNombre
+		
+		
+		Exit Function
+errHandler:
+		Error Err, Error$ + Chr (13) + CStr (GetThreadInfo (LSI_THREAD_PROC)) + " - Line " + CStr (Erl)
+		Exit Function
+	End Function
+	
+	
+End Class

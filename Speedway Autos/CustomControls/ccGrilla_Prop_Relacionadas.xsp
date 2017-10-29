@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core">
+	<xp:panel id="PanelPropuestasAsociados" style="width:633.0px">
+		<xp:this.data>
+			<xp:dominoView var="viewVehiculosAsociados" viewName="v.UI.PropAsocPropuesta_EmbView"
+				categoryFilter="#{javascript:documentPropuesta.getDocument().getUniversalID()}">
+				<xp:this.databaseName><![CDATA[#{javascript:var docPropuesta:NotesDocument = viewScope.get("docxProp").getDocument();
+var strPathHistorico:String = docPropuesta.getItemValueString("sol_pathHistorico_des");
+return strPathHistorico == "" ? database.getFilePath() : strPathHistorico;}]]></xp:this.databaseName>
+			</xp:dominoView>
+		</xp:this.data>
+		<xp:panel id="PanelPropuestasAsociados_Content">
+			<xp:this.rendered><![CDATA[#{javascript:getComponent("repeatPropuestasAsociadas").getRowCount() == 0 ? false : true;}]]></xp:this.rendered>
+			<xp:table cellpadding="5" cellspacing="0" border="0" style="width:100.0%" id="TBL_Componentes">
+				<xp:tr styleClass="ViewTitle">
+					<xp:td>Nro solicitud</xp:td>
+					<xp:td>Nro Poliza</xp:td>
+					<xp:td>Estado</xp:td>
+					<xp:td>Movimiento</xp:td>
+				</xp:tr>
+				<xp:repeat id="repeatPropuestasAsociadas" rows="2" var="repeatPropuestaRow" indexVar="repeatPropuestaIndex" value="#{viewVehiculosAsociados}">
+					<xp:tr id="rowPropuestas">
+						<xp:this.styleClass><![CDATA[#{javascript:if (!!viewScope.get("VehSelectedUNID")) { 
+	if (viewScope.get("VehSelectedUNID").equals(repeatPropuestaRow.getUniversalID())) {
+		return "ViewRowSelected";
+	}
+}
+return "ViewRow";}]]></xp:this.styleClass>
+						<xp:td>
+							<xp:text escape="true" value="#{repeatPropuestaRow.orden_nro}" id="grillaNroOrden">
+								<xp:this.converter>
+									<xp:convertNumber type="number" integerOnly="true"></xp:convertNumber>
+								</xp:this.converter>
+							</xp:text>
+						</xp:td>
+						<xp:td>
+							<xp:text escape="true" id="grillaNroPoliza">
+								<xp:this.value><![CDATA[#{javascript:repeatPropuestaRow.getColumnValue("sol_poliza_nro")}]]></xp:this.value>
+								<xp:this.converter>
+									<xp:convertNumber type="number" integerOnly="true"></xp:convertNumber>
+								</xp:this.converter>
+							</xp:text>
+						</xp:td>
+						<xp:td>
+							<xp:text escape="true" id="grillaStatusDes">
+								<xp:this.value><![CDATA[#{javascript:repeatPropuestaRow.getColumnValue("sol_status_des");}]]></xp:this.value>
+							</xp:text>
+						</xp:td>
+						<xp:eventHandler event="onclick" submit="true" refreshMode="norefresh" immediate="true">
+							<xp:this.action>
+								<xp:executeScript>
+									<xp:this.script><![CDATA[#{javascript:var docPropuesta:NotesDocument = viewScope.get("docxProp").getDocument();
+var strPathHistorico:String = docPropuesta.getItemValueString("sol_pathHistorico_des");
+strPathHistorico = (strPathHistorico == "") ? database.getFilePath() : strPathHistorico;
+strPathHistorico = strPathHistorico.replace("\\", "/");
+redirectToOtherDb(strPathHistorico,"xfdocPropuesta",repeatPropuestaRow.getUniversalID(),"read");}]]></xp:this.script>
+								</xp:executeScript>
+							</xp:this.action></xp:eventHandler>
+						<xp:eventHandler event="onmouseout" submit="true" refreshMode="partial" refreshId="PanelPropuestasAsociados">
+						</xp:eventHandler>
+						<xp:td>
+							<xp:text escape="true" value="#{repeatPropuestaRow.Movimiento}" id="computedField1"></xp:text>
+						</xp:td>
+					</xp:tr>
+				</xp:repeat>
+			</xp:table>
+		</xp:panel>
+	</xp:panel>
+</xp:view>

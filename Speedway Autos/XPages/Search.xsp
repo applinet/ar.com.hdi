@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:debug="http://www.openntf.org/xsp/debugtoolbar">
+	<xp:this.beforePageLoad><![CDATA[#{javascript:if (!context.getUrlParameter("searchOption").equals("")){
+	var strTipoBusqueda:String = param.searchOption;
+	var strQuery:String = param.searchValue;
+	if(strTipoBusqueda.contains("~")){ // search syntax
+		 var arrTipoBusqueda = strTipoBusqueda.split("~");
+		 strQuery = arrTipoBusqueda[1] + " " + strQuery;
+		 strTipoBusqueda = arrTipoBusqueda[0];
+	}
+	sessionScope.searchQry = (viewScope.searchQry || new java.util.HashMap());
+	sessionScope.searchQry.put("strQuery", strQuery); //Valor a Buscar
+	sessionScope.searchQry.put("strTipoBusqueda", strTipoBusqueda) //Vista 
+}}]]></xp:this.beforePageLoad>
+	<xp:this.resources>
+		<xp:script src="/JSS.Search.jss" clientSide="false"></xp:script>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	
+	<xc:oneuiLayout>
+		<xp:this.facets>
+			<xc:ccSearchGrid xp:key="facet_2">
+				<xc:this.multiFTSearch_strQuery><![CDATA[#{javascript:return (sessionScope.searchQry == null)? "" : sessionScope.searchQry.strQuery;}]]></xc:this.multiFTSearch_strQuery>
+				<xc:this.multiFTSearch_strTipoBusqueda><![CDATA[#{javascript:return (sessionScope.searchQry == null)? "" : sessionScope.searchQry.strTipoBusqueda;}]]></xc:this.multiFTSearch_strTipoBusqueda>
+			</xc:ccSearchGrid>
+	</xp:this.facets>
+	</xc:oneuiLayout>
+</xp:view>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core">
+  <xp:this.data>
+    <xp:dominoDocument formName="Configuración de Estado   -   f.CfgEst" var="documentCfg">
+    	<xp:this.databaseName><![CDATA[#{javascript:var docConfig: NotesDocument = database.getView("Configuracion").getDocumentByKey("Configuracion");
+return docConfig.getItemValueString("conf_path");}]]></xp:this.databaseName>
+    </xp:dominoDocument>
+  </xp:this.data>
+  <xp:table>
+  	<xp:tr>
+  		<xp:td>
+  			<xp:label value="Código:" id="est_Codigo_des_Label1" for="est_Codigo_des1"></xp:label>
+  		</xp:td>
+  		<xp:td>
+  			<xp:inputText value="#{documentCfg.est_Codigo_des}" id="est_Codigo_des1" readonly="true"></xp:inputText>
+  		</xp:td>
+  	</xp:tr>
+  	<xp:tr>
+  		<xp:td>
+  			<xp:label value="Nombre:" id="est_Nombre_des_Label1" for="est_Nombre_des1"></xp:label>
+  		</xp:td>
+  		<xp:td>
+  			<xp:inputText value="#{documentCfg.est_Nombre_des}" id="est_Nombre_des1" readonly="true"></xp:inputText>
+  		</xp:td>
+  	</xp:tr>
+  	<xp:tr>
+  		<xp:td>
+  			
+  		<xp:label value="Orden en la grilla:" id="est_Orden_nro_Label1" for="est_Orden_nro1"></xp:label></xp:td>
+  		<xp:td>
+  			
+  		<xp:inputText value="#{documentCfg.est_Orden_nro}" id="est_Orden_nro1">
+  			<xp:this.converter>
+  				<xp:convertNumber></xp:convertNumber>
+  			</xp:this.converter>
+  		</xp:inputText></xp:td>
+  	</xp:tr>
+  	<xp:tr>
+  		<xp:td>
+  			<xp:label id="est_VolElSusRec_opt_Label1" for="est_VolElSusRec_opt1"><xp:this.value><![CDATA[¿Estado para volver luego de "Eliminar de Suspendida y Recuperar?]]></xp:this.value></xp:label>
+  		</xp:td>
+  		<xp:td>
+  			<xp:checkBox id="est_VolElSusRec_opt" value="#{documentCfg.est_VolElSusRec_opt}" checkedValue="1" uncheckedValue="0"></xp:checkBox>
+  		</xp:td>
+  	</xp:tr>
+  	<xp:tr>
+  		<xp:td>
+  			<xp:label value="¿Estado permite Emisión?" id="est_PermiteEmision_opt_Label1" for="est_PermiteEmision_opt1"></xp:label>
+  		</xp:td>
+  		<xp:td>
+  			<xp:checkBox id="est_PermiteEmision_opt" value="#{documentCfg.est_PermiteEmision_opt}" checkedValue="1" uncheckedValue="0"></xp:checkBox>
+  		</xp:td>
+  	</xp:tr>
+  	<xp:tr>
+  		<xp:td>
+  			<xp:label value="¿Estado permite Edicion?" id="est_PermiteEdicion_opt_Label1" for="est_PermiteEdicion_opt1"></xp:label></xp:td>
+  		<xp:td>
+  			<xp:checkBox id="est_PermiteEdicion_opt" value="#{documentCfg.est_PermiteEdicion_opt}" checkedValue="1" uncheckedValue="0"></xp:checkBox></xp:td>
+  	</xp:tr>
+  	<xp:tr>
+  		<xp:td>
+  			<xp:label value="¿Ocultar en Navegador?" id="est_OcultarNavega_opt_Label1" for="est_OcultarNavega_opt1"></xp:label></xp:td>
+  		<xp:td>
+  			<xp:checkBox id="est_OcultarNavega_opt" value="#{documentCfg.est_OcultarNavega_opt}" checkedValue="1" uncheckedValue="0"></xp:checkBox></xp:td>
+  	</xp:tr>
+  	<xp:tr>
+  		<xp:td>
+  			<xp:label value="¿Obiga comentario al pasar a este estado?" id="est_ObligaComentario_cod_Label1" for="est_ObligaComentario_cod1"></xp:label></xp:td>
+  		<xp:td>
+  			<xp:checkBox id="est_ObligaComentario_cod" value="#{documentCfg.est_ObligaComentario_cod}" checkedValue="1" uncheckedValue="0"></xp:checkBox></xp:td>
+  	</xp:tr>
+  	<xp:tr>
+  		<xp:td>
+  			<xp:label value="¿Estado Final?" id="est_Final_opt_Label1" for="est_Final_opt1"></xp:label>
+  		</xp:td>
+  		<xp:td>
+  			<xp:checkBox id="est_Final_opt" value="#{documentCfg.est_Final_opt}" checkedValue="1" uncheckedValue="0"></xp:checkBox>
+  		</xp:td>
+  	</xp:tr>
+  	
+  	<xp:tr>
+  		<xp:td>
+  			
+  		</xp:td>
+  		<xp:td>
+  		</xp:td>
+  	</xp:tr>
+  	
+  	
+  	<xp:tr>
+  		<xp:td>
+  			
+  		</xp:td>
+  		<xp:td>
+  			
+  		</xp:td>
+  	</xp:tr>
+  	<xp:tr>
+  		<xp:td>
+  			
+  		</xp:td>
+  		<xp:td>
+  			
+  		</xp:td>
+  	</xp:tr>
+  	<xp:tr>
+  		<xp:td>
+  			
+  		</xp:td>
+  		<xp:td>
+  			
+  		</xp:td>
+  	</xp:tr>
+  	
+  </xp:table>
+  <xp:button value="Guardar" id="button1">
+  	<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+  		<xp:this.action>
+  			<xp:save name="/xvUI_Por_Estado.xsp"></xp:save>
+  		</xp:this.action></xp:eventHandler></xp:button>
+  <xp:button value="Cancelar" id="button2"><xp:eventHandler event="onclick" submit="true" refreshMode="norefresh">
+	<xp:this.action>
+		<xp:openPage name="/xvUI_Por_Estado.xsp"></xp:openPage>
+	</xp:this.action></xp:eventHandler></xp:button>
+  <xp:br></xp:br>
+  
+  <xp:br></xp:br></xp:view>

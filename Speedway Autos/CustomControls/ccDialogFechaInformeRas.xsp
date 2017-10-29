@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xe="http://www.ibm.com/xsp/coreex"
+	xmlns:debug="http://www.openntf.org/xsp/debugtoolbar"
+	xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xp:this.data>
+		<xp:dominoDocument var="documentPropuesta"
+			formName="Propuesta">
+		</xp:dominoDocument>
+	</xp:this.data>
+	<xp:this.resources>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+		<xp:script src="/JSS.Propuestas.jss" clientSide="false"></xp:script>
+		<xp:script src="/JSS.veh.general.jss" clientSide="false"></xp:script>
+		<xp:script src="/SJS.log.BE.v01.jss" clientSide="false"></xp:script>
+		<xp:dojoModule name="extlib.dijit.Loading"></xp:dojoModule>
+	</xp:this.resources>
+	
+	<xp:this.beforeRenderResponse><![CDATA[#{javascript:if (context.getUserAgent().isIE()) {
+	var response = facesContext.getExternalContext().getResponse(); response.setHeader("X-UA-Compatible", "IE=edge,chrome=1");
+}}]]></xp:this.beforeRenderResponse>
+	<!--
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		Esto es para arreglar los dialog en Internet Explorer pero rompe las vistas iniciales <xp:this.beforeRenderResponse><![CDATA[#{javascript: if
+		(context.getUserAgent().isIE()) { var response = facesContext.getExternalContext().getResponse(); response.setHeader("X-UA-Compatible", "IE=8");
+		}}]]></xp:this.beforeRenderResponse>
+	-->
+
+	<xp:div id="divFechaInformeRas">
+		<xe:dialog id="dialogFechaInformeRas"
+			title="Informes de Rastreadores" style="width:500px;">
+			<xp:table style="width:100.0%">
+				<xp:tr>
+					<xp:td style="width:239.0px">
+						<xp:messages id="messagesFechaInformeRas"
+							style="margin-left:1.0%;margin-right:1.0%">
+						</xp:messages>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td style="width:239.0px"></xp:td>
+					<xp:td></xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td style="width:239.0px">
+
+						<xp:radioGroup id="radioRastreadores"
+							layout="pageDirection" style="width:317.0px">
+							<xp:selectItem
+								itemLabel="Reporte Rastreador Iturán" id="selectItem1"
+								itemValue="1">
+							</xp:selectItem>
+							<xp:selectItem
+								itemLabel="Reporte Rastreador LoJack" id="selectItem2"
+								itemValue="2">
+							</xp:selectItem>
+							<xp:selectItem
+								itemLabel="Control de Pedidos de Instalación de Rastreadores"
+								id="selectItem3" itemValue="3">
+							</xp:selectItem>
+
+							<xp:eventHandler event="onclick"
+								submit="true" refreshMode="partial" refreshId="fechaInforme_nro">
+							</xp:eventHandler>
+						</xp:radioGroup>
+					</xp:td>
+					<xp:td>
+						<xp:label value="Fecha del informe:"
+							id="Label_FechaInforme" style="font-weight:bold;text-align:right"
+							for="sol_tipoOperacion_cod" />
+						<xp:br></xp:br>
+						<xp:inputText disableClientSideValidation="true"
+							style="width:107.0px;text-align:right" id="fechaInforme_nro"
+							onfocus="document.getElementById('#{id:fechaInforme_nro}').blur();"
+							onclick="document.getElementById('#{id:fechaInforme_nro}').blur();"
+							onkeydown="document.getElementById('#{id:fechaInforme_nro}').blur();">
+							<xp:this.defaultValue>
+								<![CDATA[#{javascript:@Today();}]]>
+							</xp:this.defaultValue>
+							<xp:this.disabled><![CDATA[#{javascript:if (getComponent('radioRastreadores').value == '3') {
+	return true;
+} else {
+	return false;
+}}]]></xp:this.disabled>
+							<xp:dateTimeHelper
+								id="dateTimeHelper_fechaInforme_nro">
+							</xp:dateTimeHelper>
+							<xp:this.converter>
+								<xp:convertDateTime type="date"
+									locale="es_AR" dateStyle="short">
+								</xp:convertDateTime>
+							</xp:this.converter>
+						</xp:inputText>
+						<xp:span style="font-weight:bold"></xp:span>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td colspan="2">
+						<xp:button value="Generar Informe"
+							id="buttonGenerarInforme"
+							style="text-align:center;margin-left:20.0%" icon="/sol_24x24.png"
+							iconAlt="Generar Informe">
+							<xp:eventHandler event="onclick"
+								submit="true" refreshMode="partial" id="eventHandler2"
+								onComplete="XSP.endAjaxLoading();"
+								onError="XSP.endAjaxLoading();"
+								refreshId="divFechaInformeRas">
+
+								<xp:this.onStart><![CDATA[XSP.startAjaxLoading('Cargando...')]]></xp:this.onStart>
+								<xp:this.script><![CDATA[function validarFecha() {
+	var fecha = document.getElementById('#{id:fechaInforme_nro}');
+	if (fecha == null || fecha.value == '') {
+		alert("La fecha del informe es requerida.");
+		return "";
+	}
+	// regular expression to match required date format
+	re = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+	regs = fecha.value.match(re);
+	fecha = new Date(regs[3], regs[2]-1, regs[1]);
+	fecha.setHours(0,0,0,0);
+	
+	var hoy = new Date();
+	hoy.setHours(0,0,0,0)
+	if (fecha.getTime() > hoy.getTime()) {
+		alert("La fecha del informe debe ser menor o igual a la fecha actual.");
+		return "";
+	}
+	
+	var fechaMinima = new Date();
+	fechaMinima.setDate(fechaMinima.getDate()-14);
+	fechaMinima.setHours(0,0,0,0)
+	if (fecha.getTime() < fechaMinima.getTime()) {
+		alert("La fecha del informe no debe exceder las dos semanas de antigüedad.");
+		return "";
+	}
+	
+	return fecha.getDate() + "/" + (fecha.getMonth()+1) + "/" + fecha.getFullYear();
+}
+
+var radios = document.getElementsByName('#{id:radioRastreadores}');
+var codigodeproc = "";
+for (var i = 0, length = radios.length; i < length; i++) {
+    if (radios[i].checked) {
+        codigodeproc = radios[i].value;
+        break;
+    }
+}
+if (codigodeproc == "") {
+	alert("Debe seleccionar el tipo de informe.");
+	return false;
+}
+var fecha = "";
+var llamadaAgente = "";
+
+switch(codigodeproc) {
+    case "1":
+    	fecha = validarFecha();
+    	if (fecha != "") {
+    		llamadaAgente = "exportExcelWebHtml?OpenAgent&CodProcedimiento=ReporteRastreadorIT&fecha=" + fecha + "&sep";
+    		window.open(llamadaAgente);
+    	} else {
+    		return false;
+    	}
+        break;
+    case "2":
+    	fecha = validarFecha();
+    	if (fecha != "") {
+    		llamadaAgente = "exportExcelWebHtml?OpenAgent&CodProcedimiento=ReporteRastreadorLJ&fecha=" + fecha + "&sep";
+    		window.open(llamadaAgente);
+        } else {
+    		return false;
+    	}
+        break;
+    case "3":
+        llamadaAgente = "exportExcelWebHtmlComponentesXpropuesta?OpenAgent&CodProcedimiento=ControlDePedidosDeInstalacionDeRastreadores&sep";
+        window.open(llamadaAgente);
+        break;
+    default:
+    	return false;
+}]]></xp:this.script>
+								<xp:this.action><![CDATA[#{javascript:getComponent('dialogFechaInformeRas').hide();}]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+					</xp:td>
+
+				</xp:tr>
+				<xp:tr>
+					<xp:td style="width:313.0px">
+
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td></xp:td>
+					<xp:td></xp:td>
+				</xp:tr>
+			</xp:table>
+		</xe:dialog>
+	</xp:div>
+</xp:view>

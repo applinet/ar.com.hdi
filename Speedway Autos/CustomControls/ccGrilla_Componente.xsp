@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex" xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xp:button id="buttonBuscarVehiculo" value="Alta de vehículo" rendered="#{javascript:visibleBtnAltaComponente();}">
+		<xp:eventHandler event="onclick" submit="true" id="eventHandler4" refreshMode="partial" refreshId="buttonBuscarVehiculo">
+			<xp:this.action><![CDATA[#{javascript:viewScope.newVeh_Dialog.accionInvocada = "Alta";
+viewScope.newVeh_Dialog.patente = "Ingresar Patente";
+viewScope.newVeh_Dialog.showInputComponente = "false";
+viewScope.newVeh_Dialog.buttonValidarVehiculoVisible = false;
+viewScope.newVeh_Dialog.dialogComponenteTitle = "Vehículo";
+viewScope.PNL_CargaDatosVehiculos = false;
+viewScope.VehSelectedUNID = "";
+
+
+viewScope.put("PNL_Veh_modelo_cod",false);
+viewScope.put("PNL_Veh_submodelo_cod",false);
+viewScope.put("PNL_Veh_anio_cod",false);
+viewScope.PNL_DialogCabeceraDatosVehiculosRead = false;
+getComponent('dialogComponente').show();
+getComponent("veh_marca_cod").setValue("- Seleccionar -");
+getComponent("veh_modelo_cod").setValue("- Seleccionar -");
+getComponent("veh_submodelo_cod").setValue("- Seleccionar -");
+getComponent("veh_anio_cod").setValue("- Seleccionar -");}]]></xp:this.action>
+		</xp:eventHandler>
+	</xp:button>
+	<xp:button value="Recuperar vehículos" id="btnRecuperarVeh">
+					<xp:this.rendered><![CDATA[#{javascript://Solo se ve para Poliza Nueva
+(documentPropuesta.isEditable()) && (getComponent("sol_tipoMovimiento_cod").getValue().toString() == "1")}]]></xp:this.rendered>
+					<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="recuperarVehDialog">
+						<xp:this.action><![CDATA[#{javascript:getComponent('recuperarVehDialog').show();}]]></xp:this.action>
+					</xp:eventHandler>
+				</xp:button><xp:br></xp:br>
+	<xp:panel id="PNL_DlgCmpContainer">
+		<xp:panel id="PNL_DlgCmpVisibility">
+			<xp:this.rendered><![CDATA[#{javascript:return true;
+
+if (viewScope.get("displayDlgCmp") == null) return false;
+if (viewScope.get("displayDlgCmp") != "1") return false;
+return true;}]]></xp:this.rendered>
+			<xc:ccDialogNuevoComponente>
+				<xc:this.property_sol_asegurado_cod><![CDATA[#{javascript:var docxProp:NotesXspDocument = viewScope.get("docxProp");
+docxProp.getItemValueString("sol_asegurado_cod");}]]></xc:this.property_sol_asegurado_cod>
+			</xc:ccDialogNuevoComponente>
+		</xp:panel>
+	</xp:panel>
+
+	<!-- 	<xc:ccAB_altaVehiculo propertyLabel="Alta de vehiculo"></xc:ccAB_altaVehiculo>  -->
+	<xp:panel id="PanelVehiculosAsociados" style="width:633.0px">
+		<xp:panel id="PanelVehiculosAsociados_Content">
+			<xp:pager layout="Previous Group Next" partialRefresh="true" id="pagerGrillaComponentes" for="repeatComponentes">
+				<xp:this.rendered><![CDATA[#{javascript:getComponent("repeatComponentes").getRowCount() < 5 ? false : true;}]]></xp:this.rendered>
+			</xp:pager>
+			<xp:table cellpadding="5" cellspacing="0" border="0" style="width:100.0%" id="TBL_Componentes">
+				<xp:tr styleClass="ViewTitle">
+					<xp:td align="left" style="text-align:left">
+						<xp:label value="Comp." id="labelNro" style="font-weight:bold;padding-left:5.0%"></xp:label>
+					</xp:td>
+					<xp:td align="left" style="text-align:left">
+						<xp:label value="Marca" id="label1" style="font-weight:bold;padding-left:15.0%"></xp:label>
+					</xp:td>
+					<xp:td style="text-align:left">
+						<xp:label value="Modelo" id="label2" style="font-weight:bold;padding-left:15.0%"></xp:label>
+					</xp:td>
+					<xp:td style="text-align:left">
+						<xp:label value="Patente" id="label3" style="font-weight:bold;padding-left:15.0%"></xp:label>
+					</xp:td>
+					<xp:td style="text-align:left">
+						<xp:label id="label6" value="." style="font-size:1pt;color:rgb(255,255,255)"></xp:label>
+					</xp:td>
+					<xp:td style="text-align:left">
+						<xp:label id="label4" value="Estado" style="font-weight:bold"></xp:label>
+					</xp:td>
+					<xp:td style="text-align:left">
+						<xp:this.rendered><![CDATA[#{javascript:var v:Array = database.queryAccessRoles(session.getEffectiveUserName());
+@IsMember("[Desarrollo]", v)}]]></xp:this.rendered>
+						<xp:label id="label5" value="Envio a Gaus" style="font-weight:bold"></xp:label>
+					</xp:td>
+				</xp:tr>
+				<xp:repeat id="repeatComponentes" rows="5" var="repeatComponenteRow" indexVar="repeatComponenteIndex" value="#{viewVehiculosAsociados}">
+					<xp:tr id="rowInspeccion">
+						<xp:this.styleClass><![CDATA[#{javascript:if (!!viewScope.get("VehSelectedUNID")) { 
+	if (viewScope.get("VehSelectedUNID").equals(repeatComponenteRow.getUniversalID())) {
+		return "ViewRowSelected";
+	}
+}
+return "ViewRow";}]]></xp:this.styleClass>
+						<xp:td style="text-align:left">
+							<xp:this.styleClass><![CDATA[#{javascript:var strStatusGaus:String = repeatComponenteRow.getColumnValue("veh_statusGaus_des").toString();
+var strSpwvehABM:String = repeatComponenteRow.getColumnValue("veh_spwvehABM_cod").toString();
+if(strStatusGaus == "INACTIVO" || strSpwvehABM == "B"){return "redTextRow"}}]]></xp:this.styleClass>
+							<xp:text escape="true" id="grillaNroComponente" style="text-align:left">
+								<xp:this.value><![CDATA[#{javascript:var strMarca:String = repeatComponenteRow.getColumnValue("veh_componente_nro").toString();
+if (strMarca.equals ("")) return "-";
+return strMarca;}]]></xp:this.value>
+							</xp:text>
+						</xp:td>
+						<xp:td style="text-align:left">
+							<xp:this.styleClass><![CDATA[#{javascript:var strStatusGaus:String = repeatComponenteRow.getColumnValue("veh_statusGaus_des").toString();
+var strSpwvehABM:String = repeatComponenteRow.getColumnValue("veh_spwvehABM_cod").toString();
+if(strStatusGaus == "INACTIVO" || strSpwvehABM == "B"){return "redTextRow"}}]]></xp:this.styleClass>
+							<xp:text escape="true" id="grillaMarca">
+								<xp:this.value><![CDATA[#{javascript:var strMarca:String = repeatComponenteRow.getColumnValue("veh_marca_des").toString();
+if (strMarca.equals ("")) return "-";
+return strMarca;}]]></xp:this.value>
+							</xp:text>
+						</xp:td>
+						<xp:td style="text-align:left">
+							<xp:this.styleClass><![CDATA[#{javascript:var strStatusGaus:String = repeatComponenteRow.getColumnValue("veh_statusGaus_des").toString();
+var strSpwvehABM:String = repeatComponenteRow.getColumnValue("veh_spwvehABM_cod").toString();
+if(strStatusGaus == "INACTIVO" || strSpwvehABM == "B"){return "redTextRow"}}]]></xp:this.styleClass>
+							<xp:text escape="true" value="#{repeatComponenteRow.ModeloYSubModelo}" id="grillaModelo"></xp:text>
+						</xp:td>
+						<xp:td>
+							<xp:this.styleClass><![CDATA[#{javascript:var strStatusGaus:String = repeatComponenteRow.getColumnValue("veh_statusGaus_des").toString();
+var strSpwvehABM:String = repeatComponenteRow.getColumnValue("veh_spwvehABM_cod").toString();
+if(strStatusGaus == "INACTIVO" || strSpwvehABM == "B"){return "redTextRow"}}]]></xp:this.styleClass>
+							<xp:text escape="true" value="#{repeatComponenteRow.Patente}" id="grillaPatente"></xp:text>
+						</xp:td>
+						<xp:td style="text-align:center">
+							<xp:image id="image2">
+								<xp:this.url><![CDATA[#{javascript:var strUnidRastreador:String = repeatComponenteRow.getColumnValue("idRastreador_cod").toString();
+return (strUnidRastreador == "") ? "blank.png": "rastreador.png";}]]></xp:this.url>
+							<xp:this.style><![CDATA[height:#{javascript:var strUnidRastreador:String = repeatComponenteRow.getColumnValue("idRastreador_cod").toString();
+return (strUnidRastreador == "") ? 1: 16;}px;width:#{javascript:var strUnidRastreador:String = repeatComponenteRow.getColumnValue("idRastreador_cod").toString();
+return (strUnidRastreador == "") ? 1: 16;}px]]></xp:this.style>
+							</xp:image>
+						</xp:td>
+						<xp:td style="text-align:center">
+							<xp:image id="image1" style="height:16.0px;width:16.0px">
+								<xp:this.url><![CDATA[#{javascript:var strEstado:String = repeatComponenteRow.getColumnValue("veh_status_cod").toString();
+var strveh_spwvehABM_cod:String = repeatComponenteRow.getColumnValue("veh_spwvehABM_cod").toString();
+var strveh_statusGaus_des:String = repeatComponenteRow.getColumnValue("veh_statusGaus_des").toString();
+if(strveh_spwvehABM_cod == "B" || strveh_statusGaus_des == "INACTIVO"){return "flechaRojaAbajo.gif"};
+return (strEstado == 10)?"AG_accept32x32.png":"exclamation.png";}]]></xp:this.url>
+							</xp:image>
+						</xp:td>
+						<xp:td>
+							<xp:this.rendered><![CDATA[#{javascript:var v:Array = database.queryAccessRoles(session.getEffectiveUserName());
+@IsMember("[Desarrollo]", v)}]]></xp:this.rendered>
+							<xp:text escape="true" value="#{repeatComponenteRow.veh_spwvehABM_cod}" id="veh_spwvehABM_cod"></xp:text>
+							<xp:text escape="true" value="#{repeatComponenteRow.veh_statusGaus_des}" id="veh_statusGaus_des"></xp:text>
+						</xp:td>
+						<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="divVehContainer">
+							<xp:this.action><![CDATA[#{javascript:/*
+Tiene que ser FULL Update para que tb se actualice la Clase CSS de esta fila.
+*/
+viewScope.put("VehSelectedUNID", repeatComponenteRow.getUniversalID())}]]></xp:this.action>
+						</xp:eventHandler>
+						<xp:eventHandler event="onmouseout" submit="true" refreshMode="partial" refreshId="PanelVehiculosAsociados">
+						</xp:eventHandler>
+					</xp:tr>
+				</xp:repeat>
+			</xp:table>
+		</xp:panel>
+	</xp:panel>
+	<xp:br></xp:br>
+	<xp:panel id="panelVehContainer" style="width:633.0px">
+		<xp:panel id="panelVeh">
+			<xc:ccFrm_Componente></xc:ccFrm_Componente>
+		</xp:panel>
+	</xp:panel>
+	<!--Formulario para Vehiculos--><xp:this.resources>
+		<xp:script src="/JSS.veh.general.jss" clientSide="false"></xp:script>
+		<xp:styleSheet href="/views.css"></xp:styleSheet>
+	</xp:this.resources><xp:this.data>
+		<xp:dominoView var="viewVehiculosAsociados" viewName="v.UI.VehAsocPropuestas_EmbView" categoryFilter="#{javascript:documentPropuesta.getDocument().getUniversalID()}">
+		</xp:dominoView>
+	</xp:this.data><xp:panel id="panelRecuperarVeh">
+		<xc:ccDialogRecuperarVehiculo></xc:ccDialogRecuperarVehiculo></xp:panel></xp:view>

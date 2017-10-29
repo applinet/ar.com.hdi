@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex" xmlns:xpt="http://www.openntf.org/xsp/xpt" xmlns:xc="http://www.ibm.com/xsp/custom">
+	
+	<xp:button id="btn_ValidarPatente" disabled="#{javascript:!documentPropuesta.isEditable()}">
+		<xp:this.value><![CDATA[#{javascript:if(viewScope.containsKey("patente")){
+	return viewScope.get("patente") == null ? "Patente Clave" : viewScope.get("patente") 
+};
+return "Patente Clave";}]]></xp:this.value>
+		<xp:eventHandler event="onclick" submit="true" refreshMode="partial" immediate="true" refreshId="divCargaPatente">
+			<xp:this.action>
+				<![CDATA[#{javascript:getComponent('dialogPatente').show()}]]>
+			</xp:this.action>
+		</xp:eventHandler>
+	</xp:button>
+	<xp:div id="divCargaPatente">
+		<xe:dialog id="dialogPatente" title="Ingrese la patente">
+			<xp:div id="divValidacion">
+				<xp:table style="margin-left:1.0%;margin-top:1.0%;margin-bottom:1.0%">
+					<xp:tr>
+						<xp:td valign="top" style="width:100.0px">
+							<xp:label value="Tipo:" id="label_veh_patenteTipo_cod"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:comboBox value="#{documentPropuesta.veh_patenteTipo_cod}" id="veh_patenteTipo_cod" defaultValue="NAC" required="true">
+								<xp:selectItems id="selectItems_veh_patenteTipo_cod">
+									<xp:this.value><![CDATA[#{javascript:importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+jce.getSelectAS("vehTB_SETPAM01");}]]></xp:this.value>
+								</xp:selectItems>
+							</xp:comboBox>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td valign="top" style="width:auto">
+							<xp:label value="Patente *:" id="label_veh_patente_des" for="veh_patente_des" />
+						</xp:td>
+						<xp:td>
+							<xp:inputText id="veh_patente_des" value="#{documentPropuesta.veh_patente_des}" required="true" validator="#{MbValidadorPatente.getMaskOnError}" disableClientSideValidation="true"
+								style="text-transform: uppercase"
+							>
+								<xp:this.validators>
+									<xp:validateRequired message="Para validar ingrese la patente"></xp:validateRequired>
+								</xp:this.validators>
+								<xp:this.converter> 
+									<xp:customConverter getAsObject="#{javascript:value}">
+										<xp:this.getAsString><![CDATA[#{javascript:try{ 
+
+       var html=value.toString().toUpperCase(); 
+       return html; 
+        
+
+}catch(e){ 
+       
+       print (e); 
+}}]]></xp:this.getAsString>
+									</xp:customConverter>
+								</xp:this.converter>
+							</xp:inputText>
+						</xp:td>
+					</xp:tr>
+					
+				</xp:table>
+				<xp:panel id="PNL_ErrorMessages">
+					<xp:messages id="messagesPatente" style="margin-left:1.0%;margin-right:1.0%"></xp:messages>
+				</xp:panel>
+			</xp:div>
+			<xp:panel style="text-align:right" id="PNL_bonButtons">
+				
+				<xp:button value="Validar" id="buttonValidar" styleClass="lotusAction">
+					<xp:eventHandler event="onclick" submit="true" refreshMode="partial">
+						<xp:this.onComplete><![CDATA[XSP.partialRefreshGet("#{id:btn_ValidarPatente}");]]></xp:this.onComplete>
+						<xp:this.action><![CDATA[#{javascript:viewScope.put("patente", MbValidadorPatente.getPatenteCompleta());
+documentPropuesta.setValue("sol_patenteClaveTipo_des", MbValidadorPatente.getTipoPatente());
+documentPropuesta.setValue("sol_patenteClave_des", MbValidadorPatente.getNumeroPatente());
+getComponent('dialogPatente').hide();}]]></xp:this.action>
+					</xp:eventHandler>
+				</xp:button>
+			</xp:panel>
+			<br />
+		</xe:dialog>
+	</xp:div>
+</xp:view>

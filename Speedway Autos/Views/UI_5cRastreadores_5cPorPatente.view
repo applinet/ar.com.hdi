@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='utf-8'?>
+<note class='view' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.0'
+ replicaid='03257E5A006E447C'>
+<noteinfo noteid='9e6a' unid='5E49C7BE05D051BB03257F2B006CCC6A' sequence='10'>
+<created><datetime>20151230T164822,18-03</datetime></created>
+<modified><datetime>20170829T080903,32-03</datetime></modified>
+<revised><datetime>20170829T080903,31-03</datetime></revised>
+<lastaccessed><datetime>20170829T080903,31-03</datetime></lastaccessed>
+<addedtofile><datetime>20151230T164822,18-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name
+>CN=Pepe Administrator/O=axin</name><name>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name='$FormulaClass' sign='true'><text>1</text></item>
+<item name='TmpViewDesignCollation' sign='true'><text>es-AR</text></item>
+<item name='$TITLE' sign='true'><text>UI\Rastreadores\PorPatente|vLK_RastreadorPorPatente</text></item>
+<item name='$Index' sign='true'><text/></item>
+<item name='$Formula' summary='true' sign='true'><formula compiled='true'>
+kAACAAwAAgAkM2kAAwAFAFIATgAHAAsAEQAOAAMAAgAJAAQAcGF0ZW50ZV9kZXNyYXNfcHJvdmVl
+ZG9yX29wdHJhc19lc3RhZG9fb3B0bG9nJDMkQ29uZmxpY3QkUkVGBAAEAAAAHgAFAAQARm9ybQEA
+CgBSYXN0cmVhZG9yCgIDAAcADgAIAAlMMVMyUzNT
+</formula></item>
+<item name='$Collation' summary='true'>
+<rawitemdata type='2'>
+MAACAABECGYHAAALAIFmAAsAEQBwYXRlbnRlX2Rlc3Jhc19wcm92ZWVkb3Jfb3B0
+</rawitemdata></item>
+<item name='$Collation1' summary='true'>
+<rawitemdata type='2'>
+DwABAABEgGYAAAACACQz
+</rawitemdata></item>
+<item name='$ViewFormat' summary='true' sign='true'>
+<rawitemdata type='5'>
+AQAFAAkAiAQAAFZDAwQLAAsAAAAAAEMAAQEACgABAAAAAAAAAAICAAAAVkMFABEACwAAAAAAagAB
+AAAKAAAAAAAAAAEAAgIAAABWQwAADgAJAAAAAABmAAEAAAoAAAAAAAAAAAACAgAAQFZDAAADAAgA
+AAAAAGYAAQAACgAAAAAAAAAAAAICAABAVkMAAQIADQAOAAAAewABAAAKAAAAAAAAAAAAAgIAAABw
+YXRlbnRlX2Rlc3BhdGVudGVfZGVzcmFzX3Byb3ZlZWRvcl9vcHRSYXNQcm92ZWRvcnJhc19lc3Rh
+ZG9fb3B0UmFzRXN0YWRvbG9nUmFzRmVjaGEkM0NyZWF0aW9uIERhdGUOAAIADAACACQzaQADACYA
+AQAAAAEBAAkBAAAKAQEOCgAAFQCtKwEAAQABAAAAAAAAAAAAV0MBAQAJAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAA//8AAAAAAAAAAAAAAAAAAFdDAQEACQAAAAAAAAAAAAAAAAAAAAAAAMQAAAAAAP//
+AAAAAAAAAAAAAAAAAABXQwEBAAkAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAD//wAAAAAAAAAAAAAA
+AAAAV0MBAQAJAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAA//8AAAAAAAAAAAAAAAAAAFdDAQEACQAA
+AAAAAAAAAAAAAAAAAAAAAAQAAAAAAP//AAAAAAAAAAAAAAAAAABCAAAAAAABAP///wABAN3/6QAB
+AAAAAAAAAAAAAAAAAAEA////AAEAiP+uAAAAAQAAAAAAAQAAAAAAAQAAAAAAAAAIAAAAAAABAFhD
+AAyAAwAAAAAAAQICAgEBAQEHBAIAAAAAAAAAACAvLzpZQwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+</rawitemdata></item>
+<item name='$Comment' sign='true'><text>vUI_RastreadoresPorPatente</text></item>
+<item name='$Flags'><text>Y</text></item>
+<item name='$DesignerVersion' sign='true'><text>8.5.3</text></item></note>
+

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom">
+
+	<xc:oneuiLayout><xp:this.facets>
+	<xc:ccNavPorConfigEstado xp:key="facet_3" propertyView="v.Sys.vLK_TodosEstadosOrdenados" propertyFormName="RastreadorLJ"></xc:ccNavPorConfigEstado>
+	<xc:ccView_RastreadorEnXX xp:key="facet_2"></xc:ccView_RastreadorEnXX>
+</xp:this.facets></xc:oneuiLayout></xp:view>

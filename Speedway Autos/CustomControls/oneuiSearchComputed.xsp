@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core">
+	<xp:callback id="callback1">
+		<xp:this.facetName><![CDATA[#{javascript:var tipoBusqueda:String =context.getUrlParameter("searchOption").substring(0, 3);
+var ccToDisplay;String = "";
+switch (tipoBusqueda){  //use a JS Switch statement to determine the Custom Control
+    case "VLK":
+        ccToDisplay="oneuiSearchVLK";
+        break;
+     default : 
+        ccToDisplay="oneuiSearchIdx";
+}
+return ccToDisplay;}]]></xp:this.facetName>
+	</xp:callback>
+</xp:view>

@@ -1,0 +1,1114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config>
+  <faces-config-extension>
+    <namespace-uri>http://www.ibm.com/xsp/custom</namespace-uri>
+    <default-prefix>xc</default-prefix>
+  </faces-config-extension>
+  <composite-component>
+    <component-type>ccLayoutDividirPantalla</component-type>
+    <composite-name>ccLayoutDividirPantalla</composite-name>
+    <composite-file>/ccLayoutDividirPantalla.xsp</composite-file>
+    <composite-extension>
+      <designer-extension>
+        <in-palette>true</in-palette>
+        <render-markup>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xd;
+&lt;xp:view xmlns:xp="http://www.ibm.com/xsp/core"&gt;&#xd;
+	&lt;xp:table style="width:100%; vertical-align: top;"&gt;&#xd;
+		&lt;xp:tr&gt;&#xd;
+			&lt;xp:td&gt;&#xd;
+				&lt;xp:callback&#xd;
+					facetName="contentPane_leading_bodycontent"&#xd;
+					id="contentPane_leading_bodycontent"&gt;&#xd;
+				&lt;/xp:callback&gt;&#xd;
+			&lt;/xp:td&gt;&#xd;
+			&lt;xp:td&gt;&#xd;
+				&lt;xp:table style="width:100%; vertical-align: top;"&gt;&#xd;
+					&lt;xp:tr&gt;&#xd;
+						&lt;xp:td&gt;&#xd;
+							&lt;xp:callback&#xd;
+								facetName="contentPane_top_bodycontent"&#xd;
+								id="contentPane_top_bodycontent"&gt;&#xd;
+							&lt;/xp:callback&gt;&#xd;
+						&lt;/xp:td&gt;&#xd;
+					&lt;/xp:tr&gt;&#xd;
+					&lt;xp:tr&gt;&#xd;
+						&lt;xp:td&gt;&#xd;
+							&lt;xp:callback&#xd;
+								facetName="contentPane_center_bodycontent"&#xd;
+								id="contentPane_center_bodycontent"&gt;&#xd;
+							&lt;/xp:callback&gt;&#xd;
+						&lt;/xp:td&gt;&#xd;
+					&lt;/xp:tr&gt;&#xd;
+					&lt;xp:tr&gt;&#xd;
+						&lt;xp:td&gt;&#xd;
+							&lt;xp:callback&#xd;
+								facetName="contentPane_bottom_bodycontent"&#xd;
+								id="contentPane_bottom_bodycontent"&gt;&#xd;
+							&lt;/xp:callback&gt;&#xd;
+						&lt;/xp:td&gt;&#xd;
+					&lt;/xp:tr&gt;&#xd;
+				&lt;/xp:table&gt;&#xd;
+			&lt;/xp:td&gt;&#xd;
+			&lt;xp:td&gt;&#xd;
+				&lt;xp:callback&#xd;
+					facetName="contentPane_trailing_bodycontent"&#xd;
+					id="contentPane_trailing_bodycontent"&gt;&#xd;
+				&lt;/xp:callback&gt;&#xd;
+			&lt;/xp:td&gt;&#xd;
+		&lt;/xp:tr&gt;&#xd;
+	&lt;/xp:table&gt;&#xd;
+&lt;/xp:view&gt;</render-markup>
+      </designer-extension>
+    </composite-extension>
+    <property-type>
+      <property-name>borderContainer</property-name>
+      <property>
+        <property-name>bC_design</property-name>
+        <property-class>string</property-class>
+        <display-name>borderContainer "design"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.workplace.designer.property.editors.comboParameterEditor</editor>
+            <editor-parameter>headline&#xd;
+sidebar</editor-parameter>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. BorderContainer operates in a choice of two layout modes: the design attribute may be set to “headline” (by default) or “sidebar”. With the “headline” layout, the top and bottom sections extend the entire width of the box and the remaining regions are placed in the middle. With the “sidebar” layout, the side panels take priority, extending the full height of the box.</description>
+      </property>
+      <display-name>Dojo borderContainer</display-name>
+      <description>This widget is a container partitioned into up to five regions: left (or leading), right (or trailing), top, and bottom with a mandatory center to fill in any remaining space. Each edge region may have an optional splitter user interface for manual resizing.</description>
+      <property>
+        <property-name>bC_dir</property-name>
+        <property-class>string</property-class>
+        <display-name>borderContainer "dir"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.workplace.designer.property.editors.comboParameterEditor</editor>
+            <editor-parameter>ltr|Left to Right&#xd;
+rtl|Right to Left</editor-parameter>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Bi-directional support, as defined by the HTML DIR attribute. Either left-to-right "ltr" or right-to-left "rtl".</description>
+      </property>
+      <property>
+        <property-name>bC_gutters</property-name>
+        <property-class>boolean</property-class>
+        <display-name>borderContainer "gutters"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+            <default-value>true</default-value>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Give each pane a border and margin. Margin determined by domNode.paddingLeft. When false, only resizable panes have a gutter (i.e. draggable splitter) for resizing.</description>
+      </property>
+      <property>
+        <property-name>bC_liveSplitters</property-name>
+        <property-class>boolean</property-class>
+        <display-name>borderContainer "liveSplitters"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+            <default-value>true</default-value>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Specifies whether splitters resize as you drag (true) or only upon mouseup (false)</description>
+      </property>
+      <property>
+        <property-name>bC_persist</property-name>
+        <property-class>boolean</property-class>
+        <display-name>borderContainer "persist"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Save splitter positions in a cookie.</description>
+      </property>
+      <property>
+        <property-name>bC_rendered</property-name>
+        <property-class>boolean</property-class>
+        <display-name>borderContainer "rendered"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Pass-thru "rendered" XPage Control value.</description>
+      </property>
+      <property>
+        <property-name>bC_parseOnLoad</property-name>
+        <property-class>boolean</property-class>
+        <display-name>borderContainer "parseOnLoad"</display-name>
+        <description>Optional. Parse content and create the widgets, if any.</description>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+      </property>
+      <property>
+        <property-name>bC_styleClass</property-name>
+        <property-class>string</property-class>
+        <display-name>borderContainer "styleClass"</display-name>
+        <description>Optional. Pass-thru "styleClass" XPage Control value.</description>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+      </property>
+      <property>
+        <property-name>bC_themeId</property-name>
+        <property-class>string</property-class>
+        <display-name>borderContainer "themeId"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Pass-thru "themeId" XPage Control value.</description>
+      </property>
+    </property-type>
+    <property-type>
+      <property-name>contentPane_top</property-name>
+      <property>
+        <property-name>cP_dir</property-name>
+        <property-class>string</property-class>
+        <description>Optional. Bi-directional support, as defined by the HTML DIR attribute. Either left-to-right "ltr" or right-to-left "rtl".</description>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.workplace.designer.property.editors.comboParameterEditor</editor>
+            <editor-parameter>ltr|Left to Right&#xd;
+rtl|Right to Left</editor-parameter>
+          </designer-extension>
+        </property-extension>
+        <display-name>contentPane "dir"</display-name>
+      </property>
+      <display-name>"top" contentPane</display-name>
+      <property>
+        <property-name>cP_errorMessage</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "errorMessage"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Message that shows if an error occurs</description>
+      </property>
+      <property>
+        <property-name>cP_extractContent</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "extractContent"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Extract visible content from inside of &lt;body&gt; .... &lt;/body&gt;</description>
+      </property>
+      <property>
+        <property-name>cP_href</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "href"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Must reside in same domain, as this relies on the Dojo AJAX calls to either load the entire target resource based on the defined URI or extract the &lt;body&gt; contents.</description>
+      </property>
+      <property>
+        <property-name>cP_loadingMessage</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "loadingMessage"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Message that shows while downloading.</description>
+      </property>
+      <property>
+        <property-name>cP_maxSize</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "maxSize"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Specifies a maximum size (in pixels) for this control when resized by a splitter.</description>
+      </property>
+      <property>
+        <property-name>cP_minSize</property-name>
+        <property-class>string</property-class>
+        <description>Optional. Specifies a minimum size (in pixels) for this control when resized by a splitter.</description>
+        <display-name>contentPane "minSize"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+      </property>
+      <property>
+        <property-name>cP_parseOnLoad</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "parseOnLoad"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Parse content and create the widgets, if any.</description>
+      </property>
+      <property>
+        <property-name>cP_partialRefresh</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "partialRefresh"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Tells the control to load the contents without a complete page re-submission.</description>
+      </property>
+      <property>
+        <property-name>cP_refreshOnShow</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "refreshOnShow"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Refresh (re-download) content when pane goes from hidden to shown.</description>
+      </property>
+      <property>
+        <property-name>cP_region</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "region"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.workplace.designer.property.editors.comboParameterEditor</editor>
+            <editor-parameter>top&#xd;
+bottom&#xd;
+left&#xd;
+right&#xd;
+center&#xd;
+leading&#xd;
+trailing</editor-parameter>
+            <default-value>top</default-value>
+          </designer-extension>
+          <required>true</required>
+        </property-extension>
+        <description>Defines the position of the contentPane. Values: "top", "bottom", "left", "right", "center", "leading", "trailing".</description>
+      </property>
+      <property>
+        <property-name>cP_rendered</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "rendered"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Pass-thru "rendered" XPage Control value.</description>
+      </property>
+      <property>
+        <property-name>cP_splitter</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "splitter"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+            <default-value>true</default-value>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Specifies whether splitters resize as you drag (true) or only upon mouseup (false)</description>
+      </property>
+      <property>
+        <property-name>cP_themeId</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "themeId"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Pass-thru "themeId" XPage Control value.</description>
+      </property>
+      <property>
+        <property-name>cP_styleClass</property-name>
+        <property-class>string</property-class>
+        <description>Optional. Pass-thru "styleClass" XPage Control value.</description>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <display-name>contentPane "styleClass"</display-name>
+      </property>
+    </property-type>
+    <property-type>
+      <property-name>contentPane_leading</property-name>
+      <property>
+        <property-name>cP_dir</property-name>
+        <property-class>string</property-class>
+        <description>Optional. Bi-directional support, as defined by the HTML DIR attribute. Either left-to-right "ltr" or right-to-left "rtl".</description>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.workplace.designer.property.editors.comboParameterEditor</editor>
+            <editor-parameter>ltr|Left to Right&#xd;
+rtl|Right to Left</editor-parameter>
+          </designer-extension>
+        </property-extension>
+        <display-name>contentPane "dir"</display-name>
+      </property>
+      <display-name>"leading" contentPane</display-name>
+      <property>
+        <property-name>cP_errorMessage</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "errorMessage"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Message that shows if an error occurs</description>
+      </property>
+      <property>
+        <property-name>cP_extractContent</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "extractContent"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Extract visible content from inside of &lt;body&gt; .... &lt;/body&gt;</description>
+      </property>
+      <property>
+        <property-name>cP_href</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "href"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Must reside in same domain, as this relies on the Dojo AJAX calls to either load the entire target resource based on the defined URI or extract the &lt;body&gt; contents.</description>
+      </property>
+      <property>
+        <property-name>cP_loadingMessage</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "loadingMessage"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Message that shows while downloading.</description>
+      </property>
+      <property>
+        <property-name>cP_maxSize</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "maxSize"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Specifies a maximum size (in pixels) for this control when resized by a splitter.</description>
+      </property>
+      <property>
+        <property-name>cP_minSize</property-name>
+        <property-class>string</property-class>
+        <description>Optional. Specifies a minimum size (in pixels) for this control when resized by a splitter.</description>
+        <display-name>contentPane "minSize"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+      </property>
+      <property>
+        <property-name>cP_parseOnLoad</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "parseOnLoad"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Parse content and create the widgets, if any.</description>
+      </property>
+      <property>
+        <property-name>cP_partialRefresh</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "partialRefresh"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Tells the control to load the contents without a complete page re-submission.</description>
+      </property>
+      <property>
+        <property-name>cP_refreshOnShow</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "refreshOnShow"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Refresh (re-download) content when pane goes from hidden to shown.</description>
+      </property>
+      <property>
+        <property-name>cP_region</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "region"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.workplace.designer.property.editors.comboParameterEditor</editor>
+            <editor-parameter>top&#xd;
+bottom&#xd;
+left&#xd;
+right&#xd;
+center&#xd;
+leading&#xd;
+trailing</editor-parameter>
+            <default-value>leading</default-value>
+          </designer-extension>
+          <required>true</required>
+        </property-extension>
+        <description>Defines the position of the contentPane. Values: "top", "bottom", "left", "right", "center", "leading", "trailing".</description>
+      </property>
+      <property>
+        <property-name>cP_rendered</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "rendered"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Pass-thru "rendered" XPage Control value.</description>
+      </property>
+      <property>
+        <property-name>cP_splitter</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "splitter"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+            <default-value>true</default-value>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Specifies whether splitters resize as you drag (true) or only upon mouseup (false)</description>
+      </property>
+      <property>
+        <property-name>cP_themeId</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "themeId"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Pass-thru "themeId" XPage Control value.</description>
+      </property>
+      <property>
+        <property-name>cP_styleClass</property-name>
+        <property-class>string</property-class>
+        <description>Optional. Pass-thru "styleClass" XPage Control value.</description>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <display-name>contentPane "styleClass"</display-name>
+      </property>
+    </property-type>
+    <property-type>
+      <property-name>contentPane_center</property-name>
+      <property>
+        <property-name>cP_dir</property-name>
+        <property-class>string</property-class>
+        <description>Optional. Bi-directional support, as defined by the HTML DIR attribute. Either left-to-right "ltr" or right-to-left "rtl".</description>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.workplace.designer.property.editors.comboParameterEditor</editor>
+            <editor-parameter>ltr|Left to Right&#xd;
+rtl|Right to Left</editor-parameter>
+          </designer-extension>
+        </property-extension>
+        <display-name>contentPane "dir"</display-name>
+      </property>
+      <display-name>"center" contentPane</display-name>
+      <property>
+        <property-name>cP_errorMessage</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "errorMessage"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Message that shows if an error occurs</description>
+      </property>
+      <property>
+        <property-name>cP_extractContent</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "extractContent"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Extract visible content from inside of &lt;body&gt; .... &lt;/body&gt;</description>
+      </property>
+      <property>
+        <property-name>cP_href</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "href"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Must reside in same domain, as this relies on the Dojo AJAX calls to either load the entire target resource based on the defined URI or extract the &lt;body&gt; contents.</description>
+      </property>
+      <property>
+        <property-name>cP_loadingMessage</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "loadingMessage"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Message that shows while downloading.</description>
+      </property>
+      <property>
+        <property-name>cP_maxSize</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "maxSize"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Specifies a maximum size (in pixels) for this control when resized by a splitter.</description>
+      </property>
+      <property>
+        <property-name>cP_minSize</property-name>
+        <property-class>string</property-class>
+        <description>Optional. Specifies a minimum size (in pixels) for this control when resized by a splitter.</description>
+        <display-name>contentPane "minSize"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+      </property>
+      <property>
+        <property-name>cP_parseOnLoad</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "parseOnLoad"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Parse content and create the widgets, if any.</description>
+      </property>
+      <property>
+        <property-name>cP_partialRefresh</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "partialRefresh"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Tells the control to load the contents without a complete page re-submission.</description>
+      </property>
+      <property>
+        <property-name>cP_refreshOnShow</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "refreshOnShow"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Refresh (re-download) content when pane goes from hidden to shown.</description>
+      </property>
+      <property>
+        <property-name>cP_region</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "region"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.workplace.designer.property.editors.comboParameterEditor</editor>
+            <editor-parameter>top&#xd;
+bottom&#xd;
+left&#xd;
+right&#xd;
+center&#xd;
+leading&#xd;
+trailing</editor-parameter>
+            <default-value>center</default-value>
+          </designer-extension>
+          <required>true</required>
+        </property-extension>
+        <description>Defines the position of the contentPane. Values: "top", "bottom", "left", "right", "center", "leading", "trailing".</description>
+      </property>
+      <property>
+        <property-name>cP_rendered</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "rendered"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Pass-thru "rendered" XPage Control value.</description>
+      </property>
+      <property>
+        <property-name>cP_splitter</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "splitter"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+            <default-value>true</default-value>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Specifies whether splitters resize as you drag (true) or only upon mouseup (false)</description>
+      </property>
+      <property>
+        <property-name>cP_themeId</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "themeId"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Pass-thru "themeId" XPage Control value.</description>
+      </property>
+      <property>
+        <property-name>cP_styleClass</property-name>
+        <property-class>string</property-class>
+        <description>Optional. Pass-thru "styleClass" XPage Control value.</description>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <display-name>contentPane "styleClass"</display-name>
+      </property>
+    </property-type>
+    <property-type>
+      <property-name>contentPane_trailing</property-name>
+      <property>
+        <property-name>cP_dir</property-name>
+        <property-class>string</property-class>
+        <description>Optional. Bi-directional support, as defined by the HTML DIR attribute. Either left-to-right "ltr" or right-to-left "rtl".</description>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.workplace.designer.property.editors.comboParameterEditor</editor>
+            <editor-parameter>ltr|Left to Right&#xd;
+rtl|Right to Left</editor-parameter>
+          </designer-extension>
+        </property-extension>
+        <display-name>contentPane "dir"</display-name>
+      </property>
+      <display-name>"trailing" contentPane</display-name>
+      <property>
+        <property-name>cP_errorMessage</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "errorMessage"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Message that shows if an error occurs</description>
+      </property>
+      <property>
+        <property-name>cP_extractContent</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "extractContent"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Extract visible content from inside of &lt;body&gt; .... &lt;/body&gt;</description>
+      </property>
+      <property>
+        <property-name>cP_href</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "href"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Must reside in same domain, as this relies on the Dojo AJAX calls to either load the entire target resource based on the defined URI or extract the &lt;body&gt; contents.</description>
+      </property>
+      <property>
+        <property-name>cP_loadingMessage</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "loadingMessage"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Message that shows while downloading.</description>
+      </property>
+      <property>
+        <property-name>cP_maxSize</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "maxSize"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Specifies a maximum size (in pixels) for this control when resized by a splitter.</description>
+      </property>
+      <property>
+        <property-name>cP_minSize</property-name>
+        <property-class>string</property-class>
+        <description>Optional. Specifies a minimum size (in pixels) for this control when resized by a splitter.</description>
+        <display-name>contentPane "minSize"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+      </property>
+      <property>
+        <property-name>cP_parseOnLoad</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "parseOnLoad"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Parse content and create the widgets, if any.</description>
+      </property>
+      <property>
+        <property-name>cP_partialRefresh</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "partialRefresh"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Tells the control to load the contents without a complete page re-submission.</description>
+      </property>
+      <property>
+        <property-name>cP_refreshOnShow</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "refreshOnShow"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Refresh (re-download) content when pane goes from hidden to shown.</description>
+      </property>
+      <property>
+        <property-name>cP_region</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "region"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.workplace.designer.property.editors.comboParameterEditor</editor>
+            <editor-parameter>top&#xd;
+bottom&#xd;
+left&#xd;
+right&#xd;
+center&#xd;
+leading&#xd;
+trailing</editor-parameter>
+            <default-value>trailing</default-value>
+          </designer-extension>
+          <required>true</required>
+        </property-extension>
+        <description>Defines the position of the contentPane. Values: "top", "bottom", "left", "right", "center", "leading", "trailing".</description>
+      </property>
+      <property>
+        <property-name>cP_rendered</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "rendered"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Pass-thru "rendered" XPage Control value.</description>
+      </property>
+      <property>
+        <property-name>cP_splitter</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "splitter"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+            <default-value>true</default-value>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Specifies whether splitters resize as you drag (true) or only upon mouseup (false)</description>
+      </property>
+      <property>
+        <property-name>cP_themeId</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "themeId"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Pass-thru "themeId" XPage Control value.</description>
+      </property>
+      <property>
+        <property-name>cP_styleClass</property-name>
+        <property-class>string</property-class>
+        <description>Optional. Pass-thru "styleClass" XPage Control value.</description>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <display-name>contentPane "styleClass"</display-name>
+      </property>
+    </property-type>
+    <property-type>
+      <property-name>contentPane_bottom</property-name>
+      <property>
+        <property-name>cP_dir</property-name>
+        <property-class>string</property-class>
+        <description>Optional. Bi-directional support, as defined by the HTML DIR attribute. Either left-to-right "ltr" or right-to-left "rtl".</description>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.workplace.designer.property.editors.comboParameterEditor</editor>
+            <editor-parameter>ltr|Left to Right&#xd;
+rtl|Right to Left</editor-parameter>
+          </designer-extension>
+        </property-extension>
+        <display-name>contentPane "dir"</display-name>
+      </property>
+      <display-name>"bottom" contentPane</display-name>
+      <property>
+        <property-name>cP_errorMessage</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "errorMessage"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Message that shows if an error occurs</description>
+      </property>
+      <property>
+        <property-name>cP_extractContent</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "extractContent"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Extract visible content from inside of &lt;body&gt; .... &lt;/body&gt;</description>
+      </property>
+      <property>
+        <property-name>cP_href</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "href"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Must reside in same domain, as this relies on the Dojo AJAX calls to either load the entire target resource based on the defined URI or extract the &lt;body&gt; contents.</description>
+      </property>
+      <property>
+        <property-name>cP_loadingMessage</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "loadingMessage"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Message that shows while downloading.</description>
+      </property>
+      <property>
+        <property-name>cP_maxSize</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "maxSize"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Specifies a maximum size (in pixels) for this control when resized by a splitter.</description>
+      </property>
+      <property>
+        <property-name>cP_minSize</property-name>
+        <property-class>string</property-class>
+        <description>Optional. Specifies a minimum size (in pixels) for this control when resized by a splitter.</description>
+        <display-name>contentPane "minSize"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+      </property>
+      <property>
+        <property-name>cP_parseOnLoad</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "parseOnLoad"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Parse content and create the widgets, if any.</description>
+      </property>
+      <property>
+        <property-name>cP_partialRefresh</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "partialRefresh"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Tells the control to load the contents without a complete page re-submission.</description>
+      </property>
+      <property>
+        <property-name>cP_refreshOnShow</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "refreshOnShow"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Refresh (re-download) content when pane goes from hidden to shown.</description>
+      </property>
+      <property>
+        <property-name>cP_region</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "region"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.workplace.designer.property.editors.comboParameterEditor</editor>
+            <editor-parameter>top&#xd;
+bottom&#xd;
+left&#xd;
+right&#xd;
+center&#xd;
+leading&#xd;
+trailing</editor-parameter>
+            <default-value>bottom</default-value>
+          </designer-extension>
+          <required>true</required>
+        </property-extension>
+        <description>Defines the position of the contentPane. Values: "top", "bottom", "left", "right", "center", "leading", "trailing".</description>
+      </property>
+      <property>
+        <property-name>cP_rendered</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "rendered"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+          </designer-extension>
+        </property-extension>
+        <description>Pass-thru "rendered" XPage Control value.</description>
+      </property>
+      <property>
+        <property-name>cP_splitter</property-name>
+        <property-class>boolean</property-class>
+        <display-name>contentPane "splitter"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.Boolean</editor>
+            <editor-parameter/>
+            <default-value>true</default-value>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Specifies whether splitters resize as you drag (true) or only upon mouseup (false)</description>
+      </property>
+      <property>
+        <property-name>cP_themeId</property-name>
+        <property-class>string</property-class>
+        <display-name>contentPane "themeId"</display-name>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <description>Optional. Pass-thru "themeId" XPage Control value.</description>
+      </property>
+      <property>
+        <property-name>cP_styleClass</property-name>
+        <property-class>string</property-class>
+        <description>Optional. Pass-thru "styleClass" XPage Control value.</description>
+        <property-extension>
+          <designer-extension>
+            <editor>com.ibm.std.String</editor>
+          </designer-extension>
+        </property-extension>
+        <display-name>contentPane "styleClass"</display-name>
+      </property>
+    </property-type>
+  </composite-component>
+</faces-config>

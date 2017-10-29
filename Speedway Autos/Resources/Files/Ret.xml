@@ -1,0 +1,21 @@
+<!--Este archivo lo tomo para mostrar en el Tab "SERGIO" 
+Lo muestro en el campo "Desde Archivo"
+Es un servicio de poliza vigente   
+-->
+<?xml version="1.0" encoding="UTF-8"?>
+<Request>
+	<Name>Poliza Vigente</Name>
+	<Server>
+		<SrvName>S10C80DB</SrvName>
+		<SrvIP>172.18.3.2</SrvIP>
+	</Server>
+	<InParms>
+		<inEmpr>A</inEmpr>
+		<inSucu>CA</inSucu>
+		<inRama>03</inRama>
+		<inPoli>352654</inPoli>
+	</InParms>
+	<OuParms>
+		<Vig>S</Vig>
+	</OuParms>
+</Request>

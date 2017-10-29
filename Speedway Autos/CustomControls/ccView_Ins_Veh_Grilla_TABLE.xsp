@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xe="http://www.ibm.com/xsp/coreex">
+	<xp:this.data>
+		<xp:dominoView var="viewInspecciones" viewName="v.UI.Ins.Veh">
+			<xp:this.categoryFilter><![CDATA[#{javascript:var strUnid:String = viewScope.get("VehSelectedUNID");
+if (strUnid==null) return;
+
+var dbProp:NotesDatabase = getDbPropuestas();
+var docVeh:NotesDocument = dbProp.getDocumentByUNID(strUnid);
+
+docVeh.getItemValueString("idPadre_cod") + docVeh.getItemValueString("veh_componente_nro")
+
+}]]></xp:this.categoryFilter>
+		</xp:dominoView>
+
+
+
+
+	</xp:this.data>
+
+
+
+
+	<xp:this.resources>
+		<xp:styleSheet href="/views.css"></xp:styleSheet>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+		<xp:styleSheet href="/viewIns.css"></xp:styleSheet>
+	</xp:this.resources>
+	<xp:span style="font-weight:bold"></xp:span>
+	<xp:br style="color:rgb(255,0,0)" rendered="false"></xp:br>
+
+
+
+<xp:panel styleClass="PanelBox" id="PNL_Listing">
+		<xp:table cellpadding="5" cellspacing="0" border="0">
+			<xp:tr styleClass="ViewTitle">
+				<xp:td>Número</xp:td>
+				<xp:td>Inspector</xp:td>
+				<xp:td>Combinada</xp:td>
+				<xp:td>Estado</xp:td>
+				<xp:td>Cobertura</xp:td>
+				
+			</xp:tr>
+
+			<xp:repeat id="repeat1" rows="30"
+				value="#{viewInspecciones}" var="repeatColInspec"
+				indexVar="repeatIndexInspec">
+
+				<xp:tr id="rowInspeccion" styleClass="ViewRow">
+					<xp:td align="center">
+						<xp:text escape="true" id="computedField1">
+							<xp:this.converter>
+								<xp:convertNumber type="number"></xp:convertNumber>
+							</xp:this.converter>
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_Consecutivo_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>
+					<xp:td>
+						<xp:text escape="true" id="computedField2">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_Inspect_opt");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>
+					<xp:td>
+						<xp:text escape="true" id="computedField3">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_iFecha_dat");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>
+					<xp:td>
+						<xp:text escape="true" id="computedField4">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_iEst_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>
+					<xp:td>
+						<xp:text escape="true" id="computedField5">
+							<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatColInspec.getColumnValue("ins_iCobAprob_des");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+						</xp:text>
+					</xp:td>
+					<xp:eventHandler event="onclick" submit="true"
+						refreshMode="complete">
+						<xp:this.action>
+							<xp:openPage name="/xfDocInspeccion.xsp"
+								target="openDocument"
+								documentId="#{javascript:repeatColInspec.getUniversalID();}">
+							</xp:openPage>
+						</xp:this.action>
+					</xp:eventHandler>
+				</xp:tr>
+			</xp:repeat>
+		</xp:table>
+	</xp:panel>
+		
+	<xp:br></xp:br>
+	
+
+</xp:view>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex" xmlns:xc="http://www.ibm.com/xsp/custom"
+	dojoParseOnLoad="true" dojoTheme="true">
+	<xp:table>
+		<xp:tr>
+			<xp:td>
+				<xp:button value="Rastreadores" id="botonRastreadores">
+					<xp:eventHandler event="onclick" submit="true"
+						refreshMode="partial" refreshId="divFechaInformeRas"
+						immediate="true">
+						<xp:this.action><![CDATA[#{javascript:getComponent('dialogFechaInformeRas').show();}]]></xp:this.action>
+					</xp:eventHandler></xp:button>
+				
+			</xp:td><xp:td style="width:50.0%"></xp:td>
+			<xp:td style="text-align:right">
+				<xp:label value="Nro Poliza" id="labelPoliza" style="color:rgb(0,132,0);font-weight:bold"></xp:label>
+				<xe:djValidationTextBox id="searchMostradorValue" value="#{viewScope.searchMostrador}" invalidMessage="Solo puede ingresar numeros"
+					regExp="^(\s*|\d+)$" style="width: 10em;" tooltip="Ingrese la poliza a buscar" title="Ingrese el nro. de póliza a filtrar..">
+					<xp:eventHandler event="onkeypress" submit="false">
+						<xp:this.script><![CDATA[getEvent = event.keyCode;
+if (getEvent == "13") {
+document.getElementById("#{id:btnBuscar}").click()
+}]]></xp:this.script>
+					</xp:eventHandler>
+				</xe:djValidationTextBox>
+				<xp:link escape="true" id="btnBuscar" title="Filtrar">
+					<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="viewPanelPropuestas">
+						<xp:this.onComplete><![CDATA[XSP.getElementById("#{id:searchMostradorValue}").value = '';]]></xp:this.onComplete>
+					</xp:eventHandler>
+					<xp:image id="image1" url="/iconValuePicker.png" alt="Filtrar"></xp:image>
+				</xp:link>
+			</xp:td>
+		</xp:tr>
+	</xp:table>
+	<xp:br></xp:br>
+	<xp:button id="button1" value="Generar Mail" rendered="false">
+		<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+			<xp:this.action>
+				<xp:openPage target="newDocument" name="/demoCreateMailMostrador.xsp"></xp:openPage>
+			</xp:this.action>
+		</xp:eventHandler>
+	</xp:button>
+	<xp:this.data>
+		<xp:dominoView var="DSviewMostrador" viewName="vUI_Mostrador" ignoreRequestParams="true" expandLevel="#{javascript:viewScope.CollapseExpand}"
+			sortOrder="descending" startKeys="2014">
+			<xp:this.search><![CDATA[#{javascript:if(!viewScope.containsKey("searchMostrador")) return;
+if(@Trim(viewScope.get("searchMostrador")) == "") return;
+return "FIELD sol_poliza_nro = " + viewScope.get("searchMostrador");}]]></xp:this.search>
+		</xp:dominoView>
+		<xp:dominoDocument var="documentPropuesta" action="openDocument" formName="Propuesta"></xp:dominoDocument>
+	</xp:this.data>
+	<xp:this.resources>
+		<xp:dojoModule name="dijit.Tooltip"></xp:dojoModule>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	<xp:viewPanel value="#{DSviewMostrador}" id="viewPanelPropuestas" rows="15" var="rowData">
+		<xp:this.facets>
+			<xp:panel id="panel1" xp:key="headerPager">
+				<xp:link escape="true" id="link1">
+					<xp:this.text><![CDATA[#{javascript:if(viewScope.CollapseExpand == null || viewScope.CollapseExpand == "0"){
+return "Colapsar todo"
+}else{
+return "Expandir todo"
+}}]]></xp:this.text>
+					<xp:eventHandler event="onclick" submit="true" refreshMode="complete" id="eventHandler1">
+						<xp:this.action><![CDATA[#{javascript:if(viewScope.CollapseExpand == null || viewScope.CollapseExpand == "0"){
+viewScope.CollapseExpand = "1"
+}else{
+viewScope.CollapseExpand = "0"
+}}]]></xp:this.action>
+					</xp:eventHandler>
+				</xp:link>
+				<xp:pager partialRefresh="true" layout="Previous Group Next" id="pager1" for="viewPanelPropuestas" style="display:inline"></xp:pager>
+			</xp:panel>
+		</xp:this.facets>
+		&lt;xp:viewColumn columnName=&quot;fechaEnvio_nro&quot; id=&quot;viewColumnFechaEnvio&quot; style=&quot;text-align:center;width:auto&quot;
+		displayAs=&quot;link&quot; &gt; &lt;xp:this.facets&gt; &lt;xp:viewColumnHeader value=&quot;Creado&quot; xp:key=&quot;header&quot;
+		id=&quot;viewColumnHeaderFechaEnvio&quot; &gt; &lt;/xp:viewColumnHeader&gt; &lt;/xp:this.facets&gt; &lt;xp:this.converter&gt; &lt;xp:convertDateTime
+		type=&quot;date&quot;&gt;&lt;/xp:convertDateTime&gt; &lt;/xp:this.converter&gt; &lt;/xp:viewColumn&gt;
+		<xp:viewColumn columnName="$13" id="viewColumn1"
+			displayAs="hidden">
+		</xp:viewColumn>
+		<xp:viewColumn columnName="fechaEnvio_nro" id="viewColumnProductor" style="width:auto">
+			<xp:this.facets>
+			</xp:this.facets>
+		</xp:viewColumn>
+		<xp:viewColumn id="viewColumnIcon" style="text-align:center;width:auto" columnName="Icon" displayAs="hidden">
+			<xp:this.facets></xp:this.facets>
+			<xp:this.iconSrc><![CDATA[#{javascript:var url:XSPUrl = new XSPUrl(database.getHttpURL());
+var path = "/icons/vwicn";
+//var idx = rowData.getColumnValues().get(3);
+var idx = rowData.getColumnValue("icon");
+if (idx < 10)
+path += ("00"+idx).left(3);
+else if (idx < 100)
+path += ("0"+idx).left(3);
+else
+path += idx;
+path += ".gif";
+url.setPath(path);
+url.removeAllParameters();
+return url.toString();}]]></xp:this.iconSrc>
+			<xp:this.iconAlt><![CDATA[#{javascript:var idx = rowData.getColumnValue("icon");
+switch(idx){
+	case "114": return "Nueva - Pza. " + rowData.getColumnValue("sol_poliza_nro");
+	break;
+	case "117": return "Renovación - Pza. " + rowData.getColumnValue("sol_poliza_nro");
+	break;
+	case "120": return "Endoso - Pza. " + rowData.getColumnValue("sol_poliza_nro");
+	break;
+	case "115": return "Anulación - Pza. " + rowData.getColumnValue("sol_poliza_nro");
+	break;
+	case "119": return "Rehabilitación - Pza. " + rowData.getColumnValue("sol_poliza_nro");
+	break;
+	case "130": return rowData.getColumnValue("SubjectCompleto");
+	break;
+	default: return "Resto";
+	break;
+}}]]></xp:this.iconAlt>
+		</xp:viewColumn>
+		<xp:viewColumn columnName="mai_flota_opt" displayAs="hidden" id="viewColumn4">
+			<xp:this.facets></xp:this.facets>
+			<xp:this.facets></xp:this.facets>
+			<xp:this.iconSrc><![CDATA[#{javascript:var url:XSPUrl = new XSPUrl(database.getHttpURL());
+var path = "/icons/vwicn";
+var idx = rowData.getColumnValue("mai_flota_opt");
+if (idx == ""){idx=999};
+if (idx < 10)
+path += ("00"+idx).left(3);
+else if (idx < 100)
+path += ("0"+idx).left(3);
+else
+path += idx;
+path += ".gif";
+url.setPath(path);
+url.removeAllParameters();
+return url.toString();}]]></xp:this.iconSrc>
+		</xp:viewColumn>
+		<xp:viewColumn id="viewColumnIcon2" columnName="Icon 2" contentType="html">
+			<xp:this.facets>
+				<xp:viewColumnHeader xp:key="header"
+					id="viewColumnHeader1">
+
+
+
+
+
+
+
+
+				</xp:viewColumnHeader>
+			</xp:this.facets>
+
+
+			
+		<xp:this.value><![CDATA[#{javascript:var url:XSPUrl = new XSPUrl(database.getHttpURL());
+var path = "/icons/vwicn";
+var idx = rowData.getColumnValue("icon_2");
+
+if (idx == "" || idx == null) {
+	return "";
+} else {
+	//Obtiene el texto alternativo para la imagen
+	//Obtiene la base Configuracion
+	var dbConf:NotesDatabase = getDbCfg();
+	if (dbConf != null) {
+		//Obtiene el documento de configuracion del icono
+		var viewIconos:NotesView = dbConf.getView("v.Sys.IconosClave");
+		var idx = rowData.getColumnValue("icon_2");
+		var docIcono:NotesDocument = viewIconos.getDocumentByKey(idx.toString(), true);
+		var strAlt = "";
+		if (docIcono != null) {
+			strAlt = docIcono.getItemValue("ico_ToolTip_des")[0];
+		}
+	}
+
+	//Obtiene la url del icono
+	path += ("00"+idx).right(3);
+	path += ".gif";
+	url.setPath(path);
+	url.removeAllParameters();
+	var strIcon = '<img src="' + url.toString() + '" alt="' + strAlt + '" title="' + strAlt + '">';
+	
+	if (typeof(strIcon) == "object") {
+		return strIcon.join(" ");
+	} else {
+		return strIcon;	
+	}
+}}]]></xp:this.value></xp:viewColumn>
+		<xp:viewColumn contentType="html" columnName="LinkHTML"
+			id="LinkHTML">
+		</xp:viewColumn>
+		<xp:viewColumn id="viewColumnAsegurado" columnName="subject" style="width:auto"></xp:viewColumn>
+		<xp:this.facets>
+		</xp:this.facets>
+		<xp:viewColumn columnName="sol_poliza_nro" id="viewColumn3" style="color:rgb(0,132,0);font-weight:bold">
+			<xp:this.facets></xp:this.facets>
+			<xp:this.facets></xp:this.facets>
+			<xp:this.converter>
+				<xp:convertNumber type="number" integerOnly="true"></xp:convertNumber>
+			</xp:this.converter>
+		</xp:viewColumn>
+	</xp:viewPanel>
+	<xp:br></xp:br>
+	<xc:ccDialogFechaInformeRas></xc:ccDialogFechaInformeRas></xp:view>

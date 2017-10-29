@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="03257E5A006E447C" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="31a3e" sequence="6" unid="AD82DDB1151ED65A032580A3006B3B36">
+<created><datetime>20170109T163115,10-03</datetime></created>
+<modified><datetime>20170829T080904,69-03</datetime></modified>
+<revised><datetime>20170829T080904,68-03</datetime></revised>
+<lastaccessed><datetime>20170829T080904,68-03</datetime></lastaccessed>
+<addedtofile><datetime>20170112T110410,17-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Pepe Administrator/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name="$TITLE"><text>Averias16x16.png</text></item>
+<item name="$Flags"><text>34CiQ</text></item>
+<item name="$FlagsExt"><text>D</text></item>
+<item name="$ImagesWide" sign="true"><number>1</number></item>
+<item name="$ImagesHigh" sign="true"><number>1</number></item>
+<item name="$ImagesColorize" sign="true"><number>0</number></item>
+
+
+<item name="$MimeType" sign="true"><text>image/png</text></item>
+<item name="$FileModDT" sign="true"><datetime>20161124T211100,91-03</datetime></item>
+<item name="$ImageNames" sign="true"><text>Averias16x16.png</text></item>
+<item name="$DesignerVersion"><text>8.5.3</text></item></note>

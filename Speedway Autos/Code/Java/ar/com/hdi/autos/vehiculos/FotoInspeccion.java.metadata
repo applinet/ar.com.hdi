@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="03257E5A006E447C" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="e76" sequence="29" unid="DE907B629A5E7A5E03257D88006ABBC5">
+<created><datetime>20141106T162548,85-03</datetime></created>
+<modified><datetime>20170829T080845,08-03</datetime></modified>
+<revised><datetime>20170829T080845,07-03</datetime></revised>
+<lastaccessed><datetime>20170829T080845,07-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170443,73-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name="$Flags"><text>34567Cg~[</text></item>
+<item name="$TITLE"><text>ar/com/hdi/autos/vehiculos/FotoInspeccion.java</text></item>
+
+
+
+<item name="$DesignerVersion" sign="true"><text>8.5.3</text></item>
+
+
+<item name="$FileNames" sign="true"><text>ar/com/hdi/autos/vehiculos/FotoInspeccion.java</text></item></note>

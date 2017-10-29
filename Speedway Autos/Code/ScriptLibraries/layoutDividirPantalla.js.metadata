@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?><note class="filter" maintenanceversion="1.0" replicaid="03257E5A006E447C" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="44e" sequence="21" unid="6D08303CFEDD0A6503257CF6003B244B">
+<created><datetime>20140613T074559,15-03</datetime></created>
+<modified><datetime>20170829T080813,31-03</datetime></modified>
+<revised><datetime>20170829T080813,30-03</datetime></revised>
+<lastaccessed><datetime>20170829T080813,30-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170430,17-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name="$TITLE" sign="true"><text>layoutDividirPantalla.js</text></item>
+<item name="$Flags"><text>h534Q</text></item>
+<item name="$PublicAccess" sign="true"><text>1</text></item>
+<item name="$DesignerVersion" sign="true"><text>8.5.3</text></item>
+
+<item name="$Comment" sign="true"><text>Border Container</text></item>
+<item name="$POID"><datetime>20170112T110842,19-03</datetime></item></note>

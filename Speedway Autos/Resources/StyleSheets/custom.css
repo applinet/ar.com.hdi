@@ -1,0 +1,33 @@
+ul.messages {
+	padding: 0;
+	margin: 0;	
+} 
+ 
+/* icon for messages */
+.lotusWarning {
+	background-image: url(/oneuiv2/images/iconWarning16.png);
+	background-repeat: no-repeat;
+	background-position: 8px 5px;
+	padding-left: 30px;
+}
+
+.lotusError {
+	background-image: url(/oneuiv2/images/iconError16.png);
+	background-repeat: no-repeat;
+	background-position: 58px 55px;
+	padding-left: 30px;
+}
+
+.lotusInfo {
+	background-image: url(/oneuiv2/images/iconInfo16.png);
+	background-repeat: no-repeat;
+	background-position: 8px 5px;
+	padding-left: 30px;
+}
+
+.lotusConfirm {
+	background-image: url(/oneuiv2/images/iconConfirmation16.png);
+	background-repeat: no-repeat;
+	background-position: 8px 5px;
+	padding-left: 30px;
+}

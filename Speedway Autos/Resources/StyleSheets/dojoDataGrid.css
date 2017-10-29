@@ -1,0 +1,26 @@
+/* Saca 2 checkBox que no se de donde salen */
+.dojoxGridHiddenFocus{
+	display: none; 
+}
+
+/* Grid Row -- Alternate Row Background Color*/
+.dojoxGridRowOdd tr {
+	background-color: #E5F5EA;
+}
+
+/* Grid Row - Hover Styles */
+.dojoxGridRow tr:hover td {
+  background-color: #99D7AD !important;
+  color: #2F4F4F !important;
+}
+
+/* Grid Header - Styles */
+.dojoxGridHeader .dojoxGridCell {
+  background-image: none !important;
+  background-color: #009C33 !important;
+}
+ 
+.dojoxGridHeader .dojoxGridCell div {
+  color: white;
+  font-size: 12px;
+}

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xp:this.resources>
+		<xp:styleSheet href="/hdi_buttons.css"></xp:styleSheet>
+	</xp:this.resources>
+	<xp:panel style="margin-left:5.0%">
+		<xp:table>
+			<xp:tr>
+				<xp:td>
+					<xp:button id="buttonNuevaSolicitud" styleClass="solAdd" iconAlt="Nueva Solicitud">
+						<xp:eventHandler event="onclick" submit="true" id="eventHandler4" refreshMode="partial">
+							<xp:this.action><![CDATA[#{javascript:viewScope.put("PNL_SubTipoOperacion",false);
+viewScope.put("PNL_sol_poliza_nro", false);
+getComponent('dialogNuevaOperacion').show();}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+				</xp:td>
+				<xp:td>
+					<xp:button id="buttonSolEdit" styleClass="solEdit" rendered="false">
+						<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.action><![CDATA[#{javascript:var ID="1"
+if(DocLock.isLocked(ID)){
+var ID="1"
+ return "Yes - By "+DocLock.getLock(ID)
+}else{
+ return "No"
+}}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+				</xp:td>
+				<xp:td>
+					<xp:button id="buttonSolDelete" styleClass="solDelete" rendered="false">
+						<xp:eventHandler event="onclick" submit="true" refreshMode="complete" id="eventHandler1">
+							<xp:this.action>
+								<xp:actionGroup>
+									<xp:deleteSelectedDocuments view="viewPanelPropuestas"
+										message="Con esta acción se eliminarán las ordenes seleccionadas. Esta seguro?"
+										noFilesSelectedMessage="No ha seleccionado ningún documento para eliminar">
+									</xp:deleteSelectedDocuments>
+								</xp:actionGroup>
+							</xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+				</xp:td>
+				<xp:td></xp:td>
+				<xp:td>
+					<xp:button value="Open url" id="button2" rendered="false">
+						<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.action><![CDATA[#{javascript:    var url = "http://www.gmail.com";
+    facesContext.getExternalContext().redirect(url);
+}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+				</xp:td>
+			</xp:tr>
+		</xp:table>
+	</xp:panel>
+	<xp:br></xp:br>
+	<xc:ccDialogNuevaOperacion propertyFechaEnvio="#{javascript:@Today().toDateString()}" propertyCreatedFrom="View"></xc:ccDialogNuevaOperacion>
+</xp:view>

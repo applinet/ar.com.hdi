@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xc:oneuiLayout><xp:this.facets>
+	<xc:ccView_PropuestasEnXX xp:key="facet_2" property_Estado="20"></xc:ccView_PropuestasEnXX></xp:this.facets>
+		
+	</xc:oneuiLayout>
+</xp:view>

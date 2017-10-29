@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="03257E5A006E447C" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="70e92" sequence="258" unid="D6AB336D22F2F206032580C00053EC35">
+<created><datetime>20170207T121639,57-03</datetime></created>
+<modified><datetime>20170829T080906,43-03</datetime></modified>
+<revised><datetime>20170829T080906,42-03</datetime></revised>
+<lastaccessed><datetime>20170829T080906,42-03</datetime></lastaccessed>
+<addedtofile><datetime>20170207T121639,57-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Nicolas Laurenzano/O=axin</name><name>CN=Pepe Administrator/O=axin</name><name>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name="$Flags"><text>gC~4;</text></item>
+
+
+<item name="$TITLE" sign="true"><text>ccDialogFechaInformeRas.xsp</text></item>
+
+
+
+<item name="$DesignerVersion"><text>8.5.1</text></item>
+
+
+<item name="$FileNames" sign="true"><text>ccDialogFechaInformeRas.xsp</text></item>
+
+</note>

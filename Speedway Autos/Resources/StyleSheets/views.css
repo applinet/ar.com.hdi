@@ -1,0 +1,75 @@
+.ViewRow {
+	cursor:pointer;
+	margin-right:10px;
+}
+.ViewRow:hover {
+	background-color:#36B75C;
+}
+.ViewTitle {
+	font-weight:bold;
+}
+
+.ViewTitleLeft {
+	font-weight:bold;
+}
+
+.ViewTitle td {
+	border-bottom: solid 1px gray;
+	text-align: center;	
+}
+.ViewRow td, .ViewRowSelected td {
+	border-bottom: solid 1px gray;
+	font-size: 12px;
+	font-family: Verdana;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+.ViewRowSelected td {
+	background-color: #1B8D3D;
+	color:white;
+}
+
+.MiGrilla {
+	margin: 0;
+	float: left;
+	list-style:none;
+}
+
+.MiGrillaTitulo {
+	font-weight:bold;
+	border-bottom: solid 1px gray;
+	margin: 0;
+	float: left;
+	
+}
+.MiGrillaCol {
+	float: left;
+	width: 100px;
+	text-align: center;
+}
+.MiGrillaFila {
+	padding:5px;
+	cursor:pointer;
+	border-bottom: solid 1px gray;
+	margin: 0;
+	float: left;
+}
+.MiGrillaFila:hover {
+	background-color:#36B75C;
+}
+
+.yellowRow {
+background-color: #FFFF00;
+}
+ 
+.redRow {
+background-color: #FF0000;
+}
+
+.yellowTextRow {
+color: #FFFF00;
+}
+ 
+.redTextRow {
+color: #FF0000;
+} 

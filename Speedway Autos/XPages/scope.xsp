@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core">
+	id:&#160;
+	<xp:inputText id="id"></xp:inputText>
+	- valor:
+	<xp:inputText id="valor"></xp:inputText>
+	<xp:button value="Label" id="button1">
+		<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+			<xp:this.action><![CDATA[#{javascript:sessionScope.AnulacionEmitidaPorReemplazo = (sessionScope.AnulacionEmitidaPorReemplazo || new java.util.HashMap());
+sessionScope.AnulacionEmitidaPorReemplazo.put(getComponent("id").getValue(), getComponent("valor").getValue())}]]></xp:this.action>
+		</xp:eventHandler>
+	</xp:button>
+</xp:view>

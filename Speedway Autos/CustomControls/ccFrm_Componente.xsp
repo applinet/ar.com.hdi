@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xe="http://www.ibm.com/xsp/coreex"
+	xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:debug="http://www.openntf.org/xsp/debugtoolbar"
+	xmlns:wgpoi="http://www.webgate.biz/xsp/poi">
+	
+	<!--Formulario para Vehiculos-->
+	<xp:this.resources>
+		<xp:script src="/JSS.veh.general.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	<xp:this.data>
+		<xp:dominoDocument var="documentComponente"
+			formName="Componente" action="openDocument"
+			ignoreRequestParams="true">
+			<xp:this.documentId><![CDATA[#{javascript:viewScope.get("VehSelectedUNID");}]]></xp:this.documentId>
+		</xp:dominoDocument>
+	</xp:this.data>
+
+	<xp:div id="divVehContainer">
+		<xp:div id="divVehSelection">
+			<xp:this.rendered><![CDATA[#{javascript:viewScope.get("VehSelectedUNID") != "" && viewScope.get("VehSelectedUNID") != null}]]></xp:this.rendered>
+			<xp:tabbedPanel id="tabbedPanel1">
+				<xp:tabPanel label="Datos del vehículo"
+					id="tabPanelVehDatos">
+					<xp:panel id="panelVehNew">
+						<xp:button id="buttonEditarVehiculo"
+							value="Editar"
+							rendered="#{javascript:visibleBtnEditarComponente();}"
+							execMode="partial">
+							<xp:eventHandler event="onclick"
+								submit="true" id="eventHandler5" refreshMode="partial"
+								onComplete="XSP.startAjaxLoading('Cargando...');"
+								refreshId="buttonEditarVehiculo">
+								<xp:this.action><![CDATA[#{javascript:btnEditarVehiculo()}]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+						<xp:button id="buttonEditarVehiculoModCompo"
+							value="Editar"
+							rendered="#{javascript:visibleBtnEditarComponenteEndoso();}"
+							execMode="partial">
+							<xp:eventHandler event="onclick"
+								submit="true" id="eventHandler1" refreshMode="partial"
+								onComplete="XSP.startAjaxLoading('Cargando...');"
+								refreshId="buttonEditarVehiculoModCompo">
+								<xp:this.action><![CDATA[#{javascript:btnEditarVehiculoModCompo();}]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+						<xp:button value="Eliminar" id="button1"
+							rendered="#{javascript:visibleBtnEliminarComponente()}">
+							<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.action>
+								<xp:actionGroup>
+									<xp:executeScript>
+										<xp:this.script><![CDATA[#{javascript:var nroComponente:Integer = documentComponente.getItemValueInteger("veh_componente_nro");
+//Elimino Rastreadores Asociados
+var collRas:DocumentCollection = getCollectionByKey(getDbPropuestas(), "v.UI.RasAsocComponente_EmbView", documentComponente.getDocument().getUniversalID());
+if(collRas.getCount() > 0){
+	var docRas:NotesDocument = collRas.getFirstDocument();
+	while (docRas != null) {
+		var tmpdoc = collRas.getNextDocument();
+		docRas.remove(true);
+		docRas = tmpdoc;
+	}		
+}
+//Elimino Accesorios Asociados
+var collAcc:DocumentCollection = getCollectionByKey(getDbPropuestas(), "v.UI.AccAsocComponente_EmbView", documentComponente.getDocument().getUniversalID());
+if(collAcc.getCount() > 0){
+	var docVeh:NotesDocument = collAcc.getFirstDocument();
+	while (docVeh != null) {
+		var tmpdoc = collAcc.getNextDocument();
+		docVeh.remove(true);
+		docVeh = tmpdoc;
+	}		
+}
+
+//Con las inspecciones que hago??
+desvincularInspeccionDePropuesta
+
+//Desvinculo Inspecciones Asociadas
+var collInsp:DocumentCollection = getCollectionByKey(getDbPropuestas(), "v.Sys.Ins.Veh", documentComponente.getDocument().getUniversalID());
+if(collInsp.getCount() > 0){
+	var docInsp:NotesDocument = collInsp.getFirstDocument();
+	while (docInsp != null) {
+		var tmpdoc = collInsp.getNextDocument();
+		//Desvinculo de la propuesta y vehiculo
+		docInsp.replaceItemValue("ins_Prop_nro", "");
+		docInsp.replaceItemValue("ins_PropUnid_des", "");
+		docInsp.replaceItemValue("ins_Veh_cod", "");
+		docInsp.save();
+		docInsp.recicle();		
+		docInsp = tmpdoc;
+	}		
+}
+
+documentComponente.getDocument().remove(true);
+viewScope.VehSelectedUNID = null;
+if(getComponent("repeatComponentes").getRowCount() != nroComponente){
+	//Renumero componentes 
+	print("tengo que renumerar, no es el último");
+	renumerarVehiculosDePropuesta(viewScope.get("docxProp").getDocument().getUniversalID());	
+}}]]></xp:this.script>
+									</xp:executeScript>
+								</xp:actionGroup>
+							</xp:this.action>
+							<xp:this.script><![CDATA[if(!confirm("Seguro que quiere eliminar el vehiculo?")){
+	return false;
+}]]></xp:this.script>
+						</xp:eventHandler>
+						</xp:button>
+						&#160;&#160;&#160;&#160;
+
+
+						<xp:button id="buttonBajaComponente"
+							rendered="#{javascript:visibleBtnBajaComponente()}">
+							<xp:this.value><![CDATA[#{javascript:var veh_spwvehABM_cod:String = documentComponente.getItemValueString("veh_spwvehABM_cod");
+if(veh_spwvehABM_cod == ""){
+	return "Baja de Componente";
+}else{
+	return "Quitar Baja de Componente";
+}}]]></xp:this.value>
+							<xp:eventHandler event="onclick"
+								submit="true" refreshMode="complete">
+								<xp:this.action><![CDATA[#{javascript:var veh_spwvehABM_cod:String = documentComponente.getItemValueString("veh_spwvehABM_cod");
+if(veh_spwvehABM_cod == ""){
+	documentComponente.replaceItemValue("veh_spwvehABM_cod", "B");
+}else{
+	documentComponente.replaceItemValue("veh_spwvehABM_cod", "");
+}
+documentComponente.save();}]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+						
+
+						<xp:button value="oldcc" id="Constancia" rendered="false">
+							<xp:eventHandler event="onclick"
+								submit="true" refreshMode="complete">
+								<xp:this.action><![CDATA[#{javascript:sessionScope.Marca=documentComponente.getItemValueString("veh_marca_des");
+sessionScope.modelo=documentComponente.getItemValueString("veh_modelo_des");
+sessionScope.submodelo=documentComponente.getItemValueString("veh_submodelo_des");
+sessionScope.anio=documentComponente.getItemValueString("veh_anio_nro");
+sessionScope.motor=documentComponente.getItemValueString("veh_motor_des");
+sessionScope.Patente=documentComponente.getItemValueString("veh_patente_des");
+sessionScope.uso=documentComponente.getItemValueString("veh_uso_cod");
+sessionScope.suma=documentComponente.getItemValueInteger("veh_sumaAsegurada_nro");
+sessionScope.Cobertura=documentComponente.getItemValueString("veh_cobertura_cod");
+sessionScope.chasis=documentComponente.getItemValueString("veh_chasis_des");
+sessionScope.nombre=documentPropuesta.getItemValueString("sol_asegurado_des");
+sessionScope.NroPoliza=documentPropuesta.getItemValueInteger("sol_poliza_nro");
+ 
+ 
+sessionScope.VigH=documentPropuesta.getItemValueDate("sol_vigenciaDesdeCabecera_nro");
+sessionScope.VigD=documentPropuesta.getItemValueDate("sol_vigenciaHastaCabecera_nro");
+//var datH= documentPropuesta.getItemValue("sol_vigenciaDesdeCabecera_nro");
+//sessionScope.VigH=datH ;
+//print : sessionScope.VigH;
+
+
+
+context.redirectToPage("xfdocConstancia.xsp")
+
+							}]]></xp:this.action>
+
+							</xp:eventHandler></xp:button>
+						<xp:button value="iText" id="buttonItext" rendered="false">
+							<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+								<xp:this.action><![CDATA[#{javascript:importPackage(com.itextpdf);
+importPackage(java.io);
+ 
+//Initialization
+var con = facesContext.getExternalContext();
+var response:com.ibm.xsp.webapp.XspHttpServletResponse = con.getResponse();
+ 
+//setting response headers for browser to recognize data
+response.setContentType("application/pdf");
+response.setHeader("Cache-Control", "no-cache");
+response.setDateHeader("Expires", -1);
+response.setHeader( "Content-Disposition", "attachment; filename=\"test.pdf\"" );
+ 
+// Setup the PDF Output Stream
+var newPDF:com.itextpdf.text.Document = new com.itextpdf.text.Document();
+var writer = com.itextpdf.text.pdf.PdfWriter.getInstance(newPDF,response.getOutputStream());
+var htmlWorker = new com.itextpdf.text.html.simpleparser.HTMLWorker(newPDF);
+ 
+// Open the PDF and write the PDF header info
+newPDF.open();
+newPDF.addAuthor("Fernando Rodriguez");
+newPDF.addCreationDate();
+newPDF.addCreator("Speedway Autos");
+newPDF.addTitle("Constancia de Cobertura");
+ 
+//add a Hello World text to the PDF
+
+var helloWorld = new com.itextpdf.text.Paragraph(documentComponente.getItemValueString("veh_marca_des"))
+newPDF.add(helloWorld);
+ 
+//Create a table with 3 cells, width = 100%
+var table = new com.itextpdf.text.pdf.PdfPTable(3); // 3 columns.
+var cell1 = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Paragraph("Table Cell 1"));
+var cell2 = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Paragraph("Table Cell 2"));
+var cell3 = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Paragraph("Table Cell 3"));
+table.setWidthPercentage(100);
+table.addCell(cell1);
+table.addCell(cell2);
+table.addCell(cell3);
+newPDF.add(table);
+ 
+// Add a Chunk to the PDF; chunks do not add a CRLF when the leght exceeds page width. Better use phrases
+newPDF.add(new com.itextpdf.text.Chunk("This is a chunk. "));
+ 
+// Add a Phrase to the PDF
+newPDF.add(new com.itextpdf.text.Phrase("This is a phrase. "));
+ 
+// Add a ordered List to the PDF
+var orderedList = new com.itextpdf.text.List(com.itextpdf.text.List.ORDERED);
+orderedList.add(new com.itextpdf.text.ListItem("Item 1"));
+orderedList.add(new com.itextpdf.text.ListItem("Item 2"));
+orderedList.add(new com.itextpdf.text.ListItem("Item 3"));
+newPDF.add(orderedList)
+ 
+// Add a link to the PDF
+var anchor = new com.itextpdf.text.Anchor("Speedway Anchor");
+anchor.setReference("http://srvdesa/Speedway/AU_propuestas.nsf");
+newPDF.add(anchor);
+ 
+// Add HTML to the PDF
+var str = "<html><head><title>titlu</title></head><body><table><tr><td><br /><br /><a href=’http://srvdesa/Speedway/AU_propuestas.nsf’>Link 2 Propuestas</a><br /><br /><br />Test</td></tr></table></body></html>";
+htmlWorker.parse(new java.io.StringReader(str));
+ 
+// Finish
+newPDF.close();
+writer.close();
+facesContext.responseComplete();
+ }]]></xp:this.action>
+							</xp:eventHandler></xp:button>
+						<xp:button id="buttonConstanciaWord" icon="/iconword.gif" iconAlt="Constancia de Cobertura">
+				<xp:this.rendered><![CDATA[#{javascript:!documentPropuesta.isEditable() && getIsGroupMember("spwAU.N3.TECN.USR_CRUD")}]]></xp:this.rendered><xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+					<xp:this.action>
+							<xp:actionGroup>
+								<xp:executeScript>
+									<xp:this.script><![CDATA[#{javascript:viewScope.cc_poi_downloadFileName = "constancia.docx";
+viewScope.cc_poi_pdfOutput = false;
+viewScope.cc_poi_FileName = "ConstanciaCoberturaW.docx"
+importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+var arrTemp = jce.getSelectAS("vehTB_SET211");
+var result:String;
+for (i=0;i<arrTemp.size();i++) {
+	if (arrTemp.get(i).split('|')[1] == documentComponente.getItemValueString("veh_uso_cod").toString()){result = arrTemp.get(i).split('|')[0]}
+}
+viewScope.cc_veh_uso_cod = result;
+result = "";
+var arrTemp = jce.getSelectAS("vehTB_SET22599"); 
+for (i=0;i<arrTemp.size();i++) {
+	if (arrTemp.get(i).split('|')[1] == documentComponente.getItemValueString("veh_cobertura_cod")){result = arrTemp.get(i).split('|')[0].split('-')[0]}
+}
+viewScope.cc_veh_cobertura_cod = result;
+
+viewScope.cc_veh_suma_cod = @Text(documentComponente.getItemValue("veh_sumaAsegurada_nro")[0],"F,2");
+
+if(documentComponente.getItemValueInteger("veh_franquiciaValor_nro") > 0){
+	print("hay fqcia");
+	viewScope.cc_veh_franquicia_nro = @Text(documentComponente.getItemValue("veh_franquiciaValor_nro")[0],"F,2");
+}
+getDetalleCoberturasWs(documentComponente.getItemValueString("veh_cobertura_cod"));}]]></xp:this.script>
+								</xp:executeScript>
+								<wgpoi:generateDocument documentId="docCobertura" loaded="true"></wgpoi:generateDocument>
+							</xp:actionGroup>
+					</xp:this.action>
+				</xp:eventHandler></xp:button>
+						<xp:button id="buttonConstanciaPdf" icon="/iconpdf.jpg" iconAlt="Constancia de Cobertura" rendered="#{javascript:!documentPropuesta.isEditable()}">
+							
+							<xp:eventHandler event="onclick" submit="true" refreshMode="complete" immediate="false" save="false">
+								<xp:this.action>
+									<xp:actionGroup>
+										<xp:executeScript>
+											<xp:this.script><![CDATA[#{javascript:viewScope.cc_poi_downloadFileName = "constancia.pdf";
+viewScope.cc_poi_pdfOutput = true;
+viewScope.cc_poi_FileName = "ConstanciaCobertura.docx"
+importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+var arrTemp = jce.getSelectAS("vehTB_SET211");
+var veh_cobertura_des:String = "";
+var veh_cobertura_cod;String;
+for (i=0;i<arrTemp.size();i++) {
+	if (arrTemp.get(i).split('|')[1] == documentComponente.getItemValueString("veh_uso_cod").toString()){result = arrTemp.get(i).split('|')[0]}
+}
+viewScope.cc_veh_uso_cod = result;
+var arrTemp = jce.getSelectAS("vehTB_SET22599"); 
+for (i=0;i<arrTemp.size();i++) {
+	if (arrTemp.get(i).split('|')[1] == documentComponente.getItemValueString("veh_cobertura_cod")){
+		veh_cobertura_des = arrTemp.get(i).split('|')[0].split('-')[0]
+	}
+}
+if(documentPropuesta.getItemValueString("sol_status_cod") != "90"){
+	veh_cobertura_cod = "A";
+	veh_cobertura_des = "RESP. CIVIL"
+	viewScope.cc_veh_suma_cod = "0"
+}else{
+	veh_cobertura_cod = documentComponente.getItemValueString("veh_cobertura_cod");
+	viewScope.cc_veh_suma_cod = @Text(documentComponente.getItemValue("veh_sumaAsegurada_nro")[0],"F,2");
+	if(documentComponente.getItemValueInteger("veh_franquiciaValor_nro") > 0){
+		veh_cobertura_des += " ( " + @Text(documentComponente.getItemValue("veh_franquiciaValor_nro")[0],"F,2") + " )";
+	}
+}
+
+viewScope.cc_veh_cobertura_cod = veh_cobertura_des;
+getDetalleCoberturasWs(veh_cobertura_cod);}]]></xp:this.script>
+										</xp:executeScript>
+										<wgpoi:generateDocument documentId="docCobertura" loaded="true"></wgpoi:generateDocument>
+									</xp:actionGroup>
+								</xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+						<wgpoi:document id="docCobertura" downloadFileName="#{javascript:viewScope.cc_poi_downloadFileName}" pathInfo="download"
+							pdfOutput="#{javascript:viewScope.cc_poi_pdfOutput}">
+							<wgpoi:this.bookmarks>
+								<wgpoi:docbookmark name="fecha">
+									<wgpoi:this.value><![CDATA[#{javascript:session.createDateTime("Today12").getDateOnly()}]]></wgpoi:this.value>
+								</wgpoi:docbookmark>
+								<wgpoi:docbookmark name="poliza">
+									<wgpoi:this.value><![CDATA[#{javascript:var result:Integer = documentPropuesta.getItemValueInteger("sol_poliza_nro");
+if(result == 0){return "En Trámite"}
+result}]]></wgpoi:this.value>
+								</wgpoi:docbookmark>
+								<wgpoi:docbookmark name="asegurado">
+									<wgpoi:this.value><![CDATA[#{javascript:documentPropuesta.getItemValueString("sol_asegurado_des");}]]></wgpoi:this.value>
+								</wgpoi:docbookmark>
+								<wgpoi:docbookmark name="vigenciadesde">
+									<wgpoi:this.value><![CDATA[#{javascript:var dt:NotesDateTime = documentPropuesta.getItemValue("sol_vigenciaDesdeCabecera_nro")[0];
+dt.getDateOnly()}]]></wgpoi:this.value>
+								</wgpoi:docbookmark>
+								<wgpoi:docbookmark name="vigenciahasta">
+									<wgpoi:this.value><![CDATA[#{javascript:var dt:NotesDateTime = documentPropuesta.getItemValue("sol_vigenciaHastaCabecera_nro")[0];
+dt.getDateOnly()
+}]]></wgpoi:this.value>
+								</wgpoi:docbookmark>
+								<wgpoi:docbookmark name="auto">
+									<wgpoi:this.value><![CDATA[#{javascript:documentComponente.getItemValueString("veh_marca_des") + " " + documentComponente.getItemValueString("veh_modelo_des")
++ " " + documentComponente.getItemValueString("veh_submodelo_des") }]]></wgpoi:this.value>
+								</wgpoi:docbookmark>
+								<wgpoi:docbookmark name="patente">
+									<wgpoi:this.value><![CDATA[#{javascript:var patente:String = documentComponente.getItemValueString("veh_patente_des");
+if(patente == "-"){return "A declarar"}
+return patente;}]]></wgpoi:this.value>
+								</wgpoi:docbookmark>
+								<wgpoi:docbookmark name="motor">
+									<wgpoi:this.value><![CDATA[#{javascript:documentComponente.getItemValueString("veh_motor_des")}]]></wgpoi:this.value>
+								</wgpoi:docbookmark>
+								<wgpoi:docbookmark name="chasis">
+									<wgpoi:this.value><![CDATA[#{javascript:documentComponente.getItemValueString("veh_chasis_des")}]]></wgpoi:this.value>
+								</wgpoi:docbookmark>
+								<wgpoi:docbookmark name="uso" value="#{javascript:viewScope.cc_veh_uso_cod}"></wgpoi:docbookmark>
+								<wgpoi:docbookmark name="suma" value="#{javascript:viewScope.cc_veh_suma_cod}"></wgpoi:docbookmark>
+								<wgpoi:docbookmark name="cobertura">
+									<wgpoi:this.value><![CDATA[#{javascript:var fqcia:String = (viewScope.cc_veh_franquicia_nro == null) ? "" : "(" + viewScope.cc_veh_franquicia_nro + ")";
+
+viewScope.cc_veh_cobertura_cod + " " + fqcia; }]]></wgpoi:this.value>
+								</wgpoi:docbookmark>
+								<wgpoi:docbookmark name="acctotal" value="#{javascript:viewScope.cc_ws_Acct}"></wgpoi:docbookmark>
+								<wgpoi:docbookmark name="accparcial" value="#{javascript:viewScope.cc_ws_Accp}"></wgpoi:docbookmark>
+								<wgpoi:docbookmark name="inctotal" value="#{javascript:viewScope.cc_ws_Inct}"></wgpoi:docbookmark>
+								<wgpoi:docbookmark name="incparcial" value="#{javascript:viewScope.cc_ws_Incp}"></wgpoi:docbookmark>
+								<wgpoi:docbookmark name="robototal" value="#{javascript:viewScope.cc_ws_Robt}"></wgpoi:docbookmark>
+								<wgpoi:docbookmark name="roboparcial" value="#{javascript:viewScope.cc_ws_Robp}"></wgpoi:docbookmark>
+								<wgpoi:docbookmark name="limiterc" value="#{javascript:viewScope.cc_ws_Lirc}"></wgpoi:docbookmark>
+							</wgpoi:this.bookmarks>
+							<wgpoi:this.templateSource>
+								<wgpoi:resourcetemplate fileName="#{javascript:viewScope.cc_poi_FileName}"></wgpoi:resourcetemplate>
+							</wgpoi:this.templateSource>
+						</wgpoi:document>
+						<xp:button id="buttonAverias" icon="/Averias16x16.png" iconAlt="Marcar Averias">
+							<xp:this.rendered><![CDATA[#{javascript:isStatusCheckFlag(getComponent("sol_status_cod").getValue(), "est_MarcaAverias_opt") && getIsGroupMember("spwAU.N3.JEFE.USR_CRUD");}]]></xp:this.rendered>
+							<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="cf_veh_averias_opt">
+								<xp:this.action><![CDATA[#{javascript:var averias:String = documentComponente.getItemValueString("veh_averias_opt");
+var itemLog:NotesItem = documentComponente.getDocument().getFirstItem("log_des");
+print ("logs:" + documentPropuesta.getDocument().getItemValueString("log_des"));
+if (averias == "1"){
+	documentComponente.replaceItemValue("veh_averias_opt", "0");
+	setLogBackEnd (documentPropuesta.getDocument(), "Quitó la marca de averias en el componente " + documentComponente.getItemValueString("veh_patente_des"));
+}else{
+	documentComponente.replaceItemValue("veh_averias_opt", "1");
+	setLogBackEnd (documentPropuesta.getDocument(), "Agregó la marca de averias en el componente " + documentComponente.getItemValueString("veh_patente_des"));
+}
+documentPropuesta.save();
+documentComponente.save();}]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+						<xe:tooltip id="tooltipButtonAverias" for="buttonAverias" label="Marcar/Desmarcar Averias" position="below"></xe:tooltip>
+						<xp:table style="width:70%">
+							<xp:tr>
+								<xp:td style="width:20.0%">
+									<xp:label value="Patente:" id="labelPatenteComputed" for="cf_veh_patente_des" style="font-weight:bold"></xp:label>
+								</xp:td>
+								<xp:td>
+									<xp:inputText value="#{documentComponente.veh_patenteTipo_cod}" id="veh_patenteTipo_cod"
+										style="text-align:left;">
+									</xp:inputText>
+									&#160;
+									<xp:inputText value="#{documentComponente.veh_patente_des}" id="veh_patente_des"></xp:inputText>
+								</xp:td>
+								<xp:td></xp:td>
+								<xp:td style="width:15.0%">
+									<xp:label value="Año:" id="labelAnioComputed" for="cf_veh_anio_nro" style="text-align:right;font-weight:bold">
+									</xp:label>
+								</xp:td>
+								<xp:td>
+									<xp:inputText value="#{documentComponente.veh_anio_nro}" id="veh_anio_nro">
+										<xp:this.converter>
+											<xp:convertNumber type="number" integerOnly="true"></xp:convertNumber>
+										</xp:this.converter>
+									</xp:inputText>
+								</xp:td>
+								<xp:td></xp:td>
+								
+								<xp:td>
+									<xp:checkBox text="Averías" id="cf_veh_averias_opt" value="#{documentComponente.veh_averias_opt}" checkedValue="1" uncheckedValue="0">
+										</xp:checkBox>
+								</xp:td>
+							</xp:tr>
+							<xp:tr>
+								<xp:td>
+									<xp:label value="Cobertura:" id="labelCoberturaComputed" for="cf_veh_patente_des"
+										style="text-align:right;font-weight:bold">
+									</xp:label>
+								</xp:td>
+								<xp:td>
+									<xp:inputText value="#{documentComponente.veh_cobertura_cod}" id="veh_cobertura_cod"></xp:inputText>
+								</xp:td>
+								<xp:td></xp:td>
+								<xp:td>
+									<xp:label value="Zona:" for="cf_veh_patente_des" style="text-align:right;font-weight:bold"
+										id="LabelZonaRiesgoComputed">
+									</xp:label>
+								</xp:td>
+								<xp:td>
+									<xp:inputText value="#{documentComponente.veh_zonaRiesgo_cod}" id="veh_zona_riesgo_nro"
+										style="text-align:center">
+									</xp:inputText>
+								</xp:td>
+								<xp:td></xp:td>
+								<xp:td>
+									<xp:checkBox text="G.N.C." id="checkBoxGNC" value="#{documentComponente.veh_gnc_opt}" checkedValue="1" uncheckedValue="0">
+										</xp:checkBox>
+								</xp:td>
+							</xp:tr>
+							<xp:tr>
+								<xp:td style="width:71.0px">
+									<xp:label value="Suma Aseg:" id="label2" for="cf_veh_patente_des" style="text-align:right;font-weight:bold">
+									</xp:label>
+									</xp:td>
+								<xp:td>
+									<xp:inputText value="#{documentComponente.veh_sumaAsegurada_nro}" id="veh_sumaAsegurada_nro1">
+										<xp:this.converter>
+											<xp:convertNumber></xp:convertNumber>
+										</xp:this.converter>
+									</xp:inputText>
+								</xp:td>
+								<xp:td></xp:td>
+								<xp:td></xp:td>
+								<xp:td></xp:td>
+								<xp:td></xp:td>
+								<xp:td>
+									<xp:checkBox text="Cero km" id="checkBoxCeroKm" value="#{documentComponente.veh_0km_opt}" checkedValue="1" uncheckedValue="0">
+										</xp:checkBox>
+								</xp:td>
+							</xp:tr>
+						</xp:table>
+					</xp:panel>
+				</xp:tabPanel>
+				<xp:tabPanel label="Accesorios"
+					id="tabPanelVehAccesorios">
+					<xc:ccGrillla_Accesorios></xc:ccGrillla_Accesorios>
+				</xp:tabPanel>
+				<xp:tabPanel label="Rastreador"
+					id="tabPanelVehRastreador">
+					<xc:ccGrilla_Rastreador></xc:ccGrilla_Rastreador>
+				</xp:tabPanel>
+				<xp:tabPanel label="Inspecciones"
+					id="tabPanelVehInspecciones">
+					<xp:br></xp:br>
+					<xp:button id="buttonNewIns" styleClass="solInsAdd"
+						rendered="#{javascript:visibleBtnsInspecciones();}">
+						<xp:eventHandler event="onclick" submit="false">
+							<xp:this.script><![CDATA[var strDBPath = document.getElementById('#{id:inputTextDBPath}').value;
+var strInsKey = XSP.getElementById('#{id:inputTextInsKey}').value;
+var strUrl = "/" + strDBPath + "/xfDocInspeccion.xsp?OpenXPage&Veh=" + strInsKey;
+
+window.open(strUrl)]]></xp:this.script>
+						</xp:eventHandler>
+					</xp:button>
+					<xe:tooltip id="tooltipButtonNuevaInspeccion"
+						for="buttonNewIns" label="Nueva Inspección" position="below">
+					</xe:tooltip>
+					
+					&#160;&#160;&#160;&#160;<xp:button id="buttonLinkIns" styleClass="solInsImport" rendered="#{javascript:visibleBtnsInspecciones();}">
+						<xp:eventHandler event="onclick" submit="false">
+							<xp:this.script><![CDATA[dijit.byId("myDialogAdjuntarInspeccionEnVehiculo").show();]]></xp:this.script>
+							<xp:this.action><![CDATA[#{javascript:if(viewScope.containsKey("AdjuntarInspeccionNro")){
+	viewScope.remove("AdjuntarInspeccionNro");
+}}]]></xp:this.action>
+						</xp:eventHandler>
+</xp:button>
+					<xe:tooltip id="tooltipButtonLinkInspeccion"
+						for="buttonLinkIns" label="Importar inspección sin propuesta" position="below">
+					</xe:tooltip>
+					<xp:inputText id="inputTextDBPath"
+						style="display:none;">
+						<xp:this.defaultValue><![CDATA[#{javascript:session.evaluate("@Webdbname")}]]></xp:this.defaultValue>
+					</xp:inputText>
+					<xp:inputText id="inputTextInsKey" value="#{viewScope.VehSelectedUNID}" style="display:none">						
+					</xp:inputText>
+					<xc:ccView_Ins_Veh_Grilla></xc:ccView_Ins_Veh_Grilla>
+				</xp:tabPanel>
+			</xp:tabbedPanel>
+		</xp:div>
+	</xp:div>
+	<xc:ccDialogAdjuntarInspeccionEnVehiculo></xc:ccDialogAdjuntarInspeccionEnVehiculo>
+	
+</xp:view>

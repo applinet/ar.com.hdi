@@ -1,0 +1,922 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xe="http://www.ibm.com/xsp/coreex" enableModifiedFlag="true"
+	xmlns:debug="http://www.openntf.org/xsp/debugtoolbar">
+	<xc:ccRolDesarrollo_Data></xc:ccRolDesarrollo_Data>
+	<xp:this.beforePageLoad><![CDATA[#{javascript://Esta variable se usa en el ccAS400
+viewScope.put("docxProp", documentPropuesta);
+viewScope.put("booReqAutoriz", requiereAutorizacion(documentPropuesta));
+getWarningMessages(documentPropuesta);
+
+if(documentPropuesta.isNewNote()){
+	documentPropuesta.replaceItemValue("fechaEnvio_nro", session.createDateTime(context.getUrlParameter("FENV")));
+	sessionScope.put("TabComponenteVisible", false);
+}else{
+	if(documentPropuesta.getItemValueString("sol_patenteClave_des") != ""){
+		viewScope.put("patente", documentPropuesta.getItemValueString("sol_patenteClaveTipo_des") + " " + documentPropuesta.getItemValueString("sol_patenteClave_des"));
+	}
+	sessionScope.put("TabComponenteVisible", true);
+};
+sessionScope.wichTab="tabPNL_Principal_tab1";
+
+//Busca el workflow para la propuesta en la base Dau
+var workflow = getWorkflow(documentPropuesta.getDocument(), "Cobranzas");
+
+//Se guarda el objeto en la variable Scope
+viewScope.put("dauWorkflow", workflow);}]]></xp:this.beforePageLoad>
+	<xc:ccDialogYesNo></xc:ccDialogYesNo>
+	<xp:this.data>
+		<xp:dominoDocument formName="Propuesta" var="documentPropuesta"
+			computeWithForm="both">
+			<xp:this.queryNewDocument><![CDATA[#{javascript:viewScope.put("selectedEmailUNID",context.getUrlParameter("Mail"));}]]></xp:this.queryNewDocument>
+			<xp:this.postOpenDocument><![CDATA[#{javascript:if (documentPropuesta.isEditable()) {
+	if (userTryingToEdit () == false) {
+	//if (unBlockAllowed() == false) {
+		//No sé como cambiar el modo a lectura, tiro error para que no continue.
+		throw new java.lang.Exception("No puede EDITAR este documento.  Bloqueado por: " + viewScope.get("strLockedBy"));
+	}
+}}]]></xp:this.postOpenDocument>
+			<xp:this.querySaveDocument><![CDATA[#{javascript:propQuerySave(documentPropuesta, documentPropuesta.isNewNote());}]]></xp:this.querySaveDocument>
+		</xp:dominoDocument>
+	</xp:this.data>
+	<xp:this.resources>
+		<xp:dojoModule name="dijit.form.DateTextBox"></xp:dojoModule>
+		<xp:styleSheet href="/views.css"></xp:styleSheet>
+		<xp:styleSheet href="/forms.css"></xp:styleSheet>
+		<xp:styleSheet href="/hdi_buttons.css"></xp:styleSheet>
+		<xp:dojoModule name="dijit.Dialog"></xp:dojoModule>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+		<xp:script src="/SJS.log.BE.v01.jss" clientSide="false"></xp:script>
+		<xp:script src="/JS.control.FE.v01.js" clientSide="true"></xp:script>
+		<!--
+			El siguiente script es para arreglar un bug con las fechas que por
+			default vienen precargadas con @Today
+		-->
+		<xp:script clientSide="true">
+			<xp:this.contents><![CDATA[
+require([
+"dojo/_base/lang",
+"ibm/xsp/widget/layout/DateTextBox",
+"ibm/xsp/widget/layout/TimeTextBox",
+"ibm/xsp/widget/layout/DateTimeTextBox"
+], function(lang, DateTextBox, TimeTextBox, DateTimeTextBox){
+var a = {};
+lang.mixin(a, {
+postCreate: function(){
+this.inherited(arguments);
+}
+});
+DateTextBox.extend(a);
+TimeTextBox.extend(a);
+DateTimeTextBox.extend(a);
+});
+]]></xp:this.contents>
+		</xp:script>
+		<xp:script src="/JSS.MailingFunctions.jss" clientSide="false"></xp:script>
+		<xp:styleSheet href="/Propuestas.css"></xp:styleSheet>
+		<xp:script src="/JSS.Estados.jss" clientSide="false"></xp:script>
+		<xp:script src="/JSS.Propuestas.jss" clientSide="false"></xp:script>
+		<xp:script src="/JSS.DocumentLocking.jss" clientSide="false"></xp:script>
+		<xp:script src="/JSS.veh.general.jss" clientSide="false"></xp:script>
+		<xp:script src="/ControlAcceso.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	<xp:panel id="PNL_Left" styleClass="PropFormColumnIzq">
+		<xc:ccFxServerSideJsMessages></xc:ccFxServerSideJsMessages>
+		<xc:ccDocumentacionFaltante Titulo="Documentación faltante: "
+			docDataSource="#{javascript:documentPropuesta.getDocument()}">
+		</xc:ccDocumentacionFaltante>
+		<xp:table style="width:633.0px" id="TBL_Estado">
+			<xp:tr>
+				<xp:td style="width:45.0%">
+					<xp:label id="titulo_label1" styleClass="footerLinkItemPrint"
+						style="font-size:20pt">
+						<xp:this.value><![CDATA[#{javascript:currentDocument.isNewNote() ? 'Nueva Orden' : "Orden Nº: " + documentPropuesta.getItemValueInteger("orden_nro")}]]></xp:this.value>
+					</xp:label>
+				</xp:td>
+				<xp:td>
+					<xp:div align="right">
+						<xp:table style="width:80.0%">
+							<xp:tr>
+								<xp:td style="width:40.0%">
+									<xp:label value="Estado:" id="label1" for="estado1"
+										styleClass="accordionform textarea"></xp:label>
+								</xp:td>
+								<xp:td align="left">
+									<xp:comboBox value="#{documentPropuesta.sol_status_cod}"
+										id="sol_status_cod" readonly="true" defaultValue="5">
+										<xp:this.onchange><![CDATA[#{javascript:documentPropuesta.setValue("xsol_status_des", "Nuevo Estado");
+
+}]]></xp:this.onchange>
+										<xp:selectItems id="selectItems1">
+											<xp:this.value><![CDATA[#{javascript:var vOpciones:NotesView = getDbCfg().getView ("v.Sys.LK_EstadosOrdenados");
+vOpciones.getColumnValues(3)}]]></xp:this.value>
+										</xp:selectItems>
+									</xp:comboBox>
+								</xp:td>
+							</xp:tr>
+							<xp:tr>
+								<xp:td>
+									<xp:label value="Fecha de ingreso:" id="Label_xsol_fecha_nro"
+										for="fecha1" style="text-align:left" styleClass="firstLine td">
+									</xp:label>
+								</xp:td>
+								<xp:td align="left">
+									<xp:inputText id="fechaEnvio_nro"
+										value="#{documentPropuesta.fechaEnvio_nro}" required="true"
+										disableClientSideValidation="true" style="width:107.0px;">
+										<xp:dateTimeHelper id="dateTimeHelper1"></xp:dateTimeHelper>
+										<xp:this.converter>
+											<xp:convertDateTime type="date" locale="es_AR"
+												dateStyle="medium"></xp:convertDateTime>
+										</xp:this.converter>
+										<xp:this.validators>
+											<xp:validateRequired
+												message="La fecha de ingreso no puede quedar sin valor se completa automáticamente.">
+											</xp:validateRequired>
+										</xp:this.validators>
+									</xp:inputText>
+								</xp:td>
+							</xp:tr>
+							<xp:tr>
+								<xp:td>
+									<xp:label value="Nro. Póliza:" id="Label_xsol_poliza_nro"
+										for="xsol_poliza_nro"></xp:label>
+								</xp:td>
+								<xp:td align="left">
+									<xp:inputText value="#{documentPropuesta.sol_poliza_nro}"
+										id="xsol_poliza_nro" style="width:70.0px" defaultValue="0"
+										readonly="true">
+										<xp:this.converter>
+											<xp:convertNumber type="number"></xp:convertNumber>
+										</xp:this.converter>
+									</xp:inputText>
+								</xp:td>
+							</xp:tr>
+						</xp:table>
+					</xp:div>
+				</xp:td>
+			</xp:tr>
+		</xp:table>
+		<xp:tabbedPanel id="tabPNL_Principal" style="width:633.0px"
+			selectedTab="#{javascript:sessionScope.wichTab}">
+			<xe:tooltip id="tooltip_tabPNL_Principal_tab1" for="tabPNL_Principal_tab1"
+				label="Datos Principales" position="above"></xe:tooltip>
+			<xe:tooltip id="tooltip_tabPNL_Principal_tab2" for="tabPNL_Principal_tab2"
+				label="Vehiculos" position="above"></xe:tooltip>
+			<xe:tooltip id="tooltip_tabPNL_Principal_tab3" for="tabPNL_Principal_tab3"
+				label="Mails asociados" position="above"></xe:tooltip>
+			<xe:tooltip id="tooltip_tabPNL_Principal_tab5" for="tabPNL_Principal_tab5"
+				label="Histórico" position="above"></xe:tooltip>
+			<xe:tooltip id="tooltip_tabPNL_Principal_tab6" for="tabPNL_Principal_tab6"
+				label="Info Sistemas" position="above"></xe:tooltip>
+			<xe:tooltip id="tooltip_tabPNL_Principal_tab7" for="tabPNL_Principal_tab7"
+				label="Comercial" position="above"></xe:tooltip>
+			<xp:tabPanel id="tabPNL_Principal_tab1" image="/sol_24x24.png">
+				<xp:table styleClass="SWtablewithHdi" id="TBL_DatosPrincipales">
+					<xp:tr>
+						<xp:td colspan="2">
+							<xp:div id="divErrMsg">
+								<xp:messages id="messagesCollect" style="color:red"></xp:messages>
+							</xp:div>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:table id="TBL_Cabecera" style="width:80%">
+								<xp:tr>
+									<xp:td styleClass="SWcolorBackgroundHdiGreenLight3"
+										align="right">
+										<xp:label value="Artículo:" id="Label_xsol_articulo"
+											for="codARCD1" styleClass="accordionform textarea"></xp:label>
+									</xp:td>
+									<xp:td style="width:18.0%">
+										<xp:comboBox value="#{documentPropuesta.sol_articulo_cod}"
+											id="sol_articulo_cod" defaultValue="1203" required="true" showReadonlyAsDisabled="true">
+											<xp:this.readonly><![CDATA[#{javascript:getComponent("sol_tipoMovimiento_cod").getValue() != "1"}]]></xp:this.readonly>
+											<xp:selectItems id="selectItems_sol_articulo_cod">
+												<xp:this.value><![CDATA[#{javascript:if(documentPropuesta.isEditable()){
+	importPackage(ar.com.hdi.autos.connect);
+	var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+	jce.getSelectAS("solTB_SET621");
+}}]]></xp:this.value>
+											</xp:selectItems>
+											<xp:eventHandler event="onchange" submit="true" disableValidators="true" refreshMode="partial"
+												refreshId="Values_Rama" id="eventHandler1">
+												<xp:this.action><![CDATA[#{javascript:
+importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+var doc:NotesDocument = database.createDocument();
+doc.replaceItemValue("sol_articulo_cod", getComponent("sol_articulo_cod").getValue());
+var result = jce.getSelectAS("solTB_SET621_ramasSecundarias", doc);
+doc.recycle();
+getComponent("sol_MR_ramaSecundaria_cod").value = result;}]]></xp:this.action>
+												<xp:this.onComplete><![CDATA[document.getElementById("#{id:buttonCopyHasta}").click();]]></xp:this.onComplete>
+											</xp:eventHandler>
+										</xp:comboBox></xp:td>
+									<xp:td style="width:6.0px"></xp:td>
+									<xp:td align="right" styleClass="SWcolorBackgroundHdiGreenLight3">
+										<xp:label value="Rama:" id="Label_xsol_rama" for="codRAMA1"
+											styleClass="accordionform textarea"></xp:label>
+									</xp:td>
+									<xp:td>
+									<xp:div id="Values_Rama">
+										<xp:comboBox value="#{documentPropuesta.sol_rama_cod}"
+											id="sol_rama_cod">
+											<xp:this.readonly><![CDATA[#{javascript:getComponent("sol_tipoMovimiento_cod").getValue() != "1"}]]></xp:this.readonly>
+											<xp:selectItems id="selectItems2">
+												<xp:this.value><![CDATA[#{javascript:if(documentPropuesta.isEditable()){
+	importPackage(ar.com.hdi.autos.connect);
+	var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+	var doc:NotesDocument = database.createDocument();
+	doc.replaceItemValue("sol_articulo_cod", getComponent("sol_articulo_cod").getValue());
+	var result = jce.getSelectAS("solTB_SET621_rama", doc);
+	doc.recycle();
+	return result;
+}}]]></xp:this.value>
+											</xp:selectItems>
+										</xp:comboBox>
+										<xp:div style="display:none;">
+											<xp:inputText id="sol_MR_ramaSecundaria_cod"
+												value="#{documentPropuesta.sol_MR_ramaSecundaria_cod}"
+												rendered="true" style="width:170.0px"
+												multipleSeparator=",">
+												
+											</xp:inputText>
+										</xp:div>
+									</xp:div>
+									</xp:td>
+									<xp:td></xp:td>
+									<xp:td align="right">
+										<xp:label value="Nro. Cotización Web:" id="Label_sol_cotizacion_nro"
+											for="nroNCTZ1"></xp:label>
+									</xp:td>
+									<xp:td>
+										<xp:inputText value="#{documentPropuesta.sol_cotizacion_nro}"
+											id="sol_cotizacion_nro" style="width:70.0px" readonly="true"
+											defaultValue="0">
+											<xp:this.converter>
+												<xp:convertNumber type="number"></xp:convertNumber>
+											</xp:this.converter>
+										</xp:inputText>
+									</xp:td>
+								</xp:tr>
+								<xp:tr>
+									<xp:td styleClass="SWcolorBackgroundHdiGreenLight3"></xp:td>
+									<xp:td></xp:td>
+									<xp:td></xp:td>
+									<xp:td styleClass="SWcolorBackgroundHdiGreenLight3"></xp:td>
+									<xp:td></xp:td>
+									<xp:td></xp:td>
+									<xp:td></xp:td>
+									<xp:td>
+										<xp:span style="font-weight:bold"></xp:span>
+									</xp:td>
+								</xp:tr>
+							</xp:table>
+							<xp:table styleClass="PanelBoxDashed" style="width:80.0%"
+								id="TBL_DatosFiliatorios">
+								<xp:tr>
+									<xp:td style="width:25.0%" styleClass="SWcolorBackgroundHdiGreenLight3">
+										<xp:label value="Productor:" id="label7" for="codTIOU1"
+											styleClass="accordionform textarea"></xp:label>
+										<xc:ccDialogBusquedaProductor
+											propertyTitle="Seleccione Productor"></xc:ccDialogBusquedaProductor>
+									</xp:td>
+									<xp:td style="width:15.0%">
+										<xp:inputText id="sol_productor_cod"
+											value="#{documentPropuesta.sol_productor_cod}" required="true"
+											disableClientSideValidation="true" readonly="true">
+										</xp:inputText>
+									</xp:td>
+									<xp:td>
+										<xp:inputText id="sol_productor_des"
+											value="#{documentPropuesta.sol_productor_des}" readonly="true" />
+									</xp:td>
+								</xp:tr>
+								<xp:tr>
+									<xp:td styleClass="SWcolorBackgroundHdiGreenLight3">
+										<xp:label value="Asegurado:" id="label8" for="codTIOU1"
+											styleClass="accordionform textarea"></xp:label>
+										<xc:ccDialogBusquedaAsegurado
+											propertyTitle="Seleccione Asegurado"
+											property_booCargarDomicilio="false"
+											property_booEjecutaWsAnulFP="true">
+											<xc:this.property_codigoProductor><![CDATA[#{javascript:getComponent("sol_productor_cod").value;}]]></xc:this.property_codigoProductor>
+										</xc:ccDialogBusquedaAsegurado>
+
+										<xp:div style="display:none;">
+											<xp:inputText id="sol_requiereAprobCobranzas_cod"
+												value="#{documentPropuesta.sol_requiereAprobCobranzas_cod}"
+												disableClientSideValidation="true" readonly="true">
+											</xp:inputText>
+										</xp:div>
+										<xp:br></xp:br>
+										
+									</xp:td>
+									<xp:td>
+										<xp:div id="div_asegurado">
+											<xp:inputText id="sol_asegurado_cod"
+												value="#{documentPropuesta.sol_asegurado_cod}" required="true"
+												disableClientSideValidation="true" readonly="true">
+											</xp:inputText>
+
+										</xp:div>
+									</xp:td>
+									<xp:td>
+										<xp:inputText id="sol_asegurado_des"
+											value="#{documentPropuesta.sol_asegurado_des}" readonly="true" />
+									</xp:td>
+								</xp:tr>
+								<xp:tr>
+									<xp:td></xp:td>
+									<xp:td></xp:td>
+									<xp:td></xp:td>
+								</xp:tr>
+							</xp:table>
+							<xp:table style="width:80.0%" id="TBL_Vigencia">
+								<xp:tr>
+									<xp:td style="width:15.0%" styleClass="SWcolorBackgroundHdiGreenLight3">
+										<xp:label value="Cabecera" id="label3" for="codSTOU1"></xp:label>
+									</xp:td>
+									<xp:td>
+										<xp:label value="Desde:" id="label_sol_vigenciaDesdeCabecera_nro"
+											for="codSTOU1"></xp:label>
+									</xp:td>
+									<xp:td>
+										<xp:inputText
+											value="#{documentPropuesta.sol_vigenciaDesdeCabecera_nro}"
+											id="sol_vigenciaDesdeCabecera_nro" validator="#{MbPropuesta.validador}"
+											required="true" disableClientSideValidation="true" style="width:107.0px">
+											<xp:this.readonly><![CDATA[#{javascript:getComponent("sol_tipoMovimiento_cod").getValue() != "1" && getComponent("sol_tipoMovimiento_cod").getValue() != "2"}]]></xp:this.readonly>
+											<xp:dateTimeHelper
+												id="dateTimeHelper_sol_vigenciaDesdeCabecera_nro"></xp:dateTimeHelper>
+											<xp:this.converter>
+												<xp:convertDateTime type="date" locale="es_AR"
+													dateStyle="medium"></xp:convertDateTime>
+											</xp:this.converter>
+											<xp:this.validators>
+												<xp:validateRequired
+													message="La fecha de vigencia desde es requerida."></xp:validateRequired>
+											</xp:this.validators>
+											<xp:eventHandler event="onchange" submit="true"
+												refreshMode="partial" refreshId="sol_vigenciaDesdeOperacion_nro"
+												disableValidators="true" id="eventHandler2">
+												<xp:this.action><![CDATA[#{javascript:getComponent("sol_vigenciaDesdeOperacion_nro").setValue(getComponent("sol_vigenciaDesdeCabecera_nro").value)}]]></xp:this.action>
+											</xp:eventHandler>
+										</xp:inputText>
+									</xp:td>
+									<xp:td style="width:5.0%">
+										<xp:button id="buttonCopyHasta" styleClass="solCopyHasta"
+											rendered="#{javascript:documentPropuesta.isEditable()}">
+											<xp:eventHandler event="onclick" submit="true"
+												refreshMode="partial" disableValidators="true" refreshId="PNL_HiddenFields"
+												id="eventHandler3">
+												<xp:this.action><![CDATA[#{javascript:if(getComponent("sol_vigenciaDesdeCabecera_nro").value != null){
+var articulo = new String(getComponent("sol_articulo_cod").value);
+var vigHasta:NotesDateTime = getVigenciaHasta(session.createDateTime(getComponent("sol_vigenciaDesdeCabecera_nro").value), articulo);
+viewScope.hidden_vigenciaHastaCabecera_nro = vigHasta.getDateOnly();
+getComponent("sol_vigenciaHastaOperacion_nro").setValue(@Date(vigHasta.getDateOnly()));
+}else{
+viewScope.hidden_vigenciaHastaCabecera_nro = '';
+}}]]></xp:this.action>
+												<xp:this.onComplete><![CDATA[XSP.getElementById("#{id:sol_vigenciaHastaCabecera_nro}").value = dojo.byId("#{id:hidden_vigenciaHastaCabecera_nro}").innerHTML;
+												XSP.getElementById("#{id:sol_vigenciaHastaOperacion_nro}").value = dojo.byId("#{id:hidden_vigenciaHastaCabecera_nro}").innerHTML;
+												XSP.partialRefreshGet("#{id:sol_vigenciaHastaOperacion_nro}");]]></xp:this.onComplete>
+											</xp:eventHandler>
+										</xp:button>
+										<xp:panel id="PNL_HiddenFields">
+											<!-- Panel con campos temporales, no se visualizan -->
+											<xp:text id="hidden_vigenciaHastaCabecera_nro"
+												value="#{viewScope.hidden_vigenciaHastaCabecera_nro}" style="display:none">
+											</xp:text>
+										</xp:panel>
+										<xe:tooltip id="tooltipbuttonCopyHasta" for="buttonCopyHasta"
+											label="Actualizar Hasta" position="below"></xe:tooltip>
+									</xp:td>
+									<xp:td style="width:10.0%" styleClass="SWcolorBackgroundHdiGreenLight3">
+										<xp:label value="Hasta:" id="label10" for="codSTOU1"
+											styleClass="accordionform textarea"></xp:label>
+									</xp:td>
+									<xp:td>
+										<xp:inputText
+											value="#{documentPropuesta.sol_vigenciaHastaCabecera_nro}"
+											id="sol_vigenciaHastaCabecera_nro" required="true"
+											disableClientSideValidation="true" style="width:107.0px">
+											<xp:this.readonly><![CDATA[#{javascript:getComponent("sol_tipoMovimiento_cod").getValue() != "1" && getComponent("sol_tipoMovimiento_cod").getValue() != "2"}]]></xp:this.readonly>
+											<xp:dateTimeHelper
+												id="dateTimeHelper_sol_vigenciaHastaCabecera_nro"></xp:dateTimeHelper>
+											<xp:this.converter>
+												<xp:convertDateTime type="date" locale="es_AR"
+													dateStyle="medium"></xp:convertDateTime>
+											</xp:this.converter>
+											<xp:this.validators>
+												<xp:validateRequired
+													message="La fecha de vigencia hasta es requerida."></xp:validateRequired>
+												<xp:validateDateTimeRange
+													message="La fecha hasta debe ser mayor a la fecha desde.">
+													<xp:this.minimum><![CDATA[#{javascript:var vD:NotesDateTime = getComponent("sol_vigenciaDesdeCabecera_nro" ).getValue();
+var cal:java.util.Calendar = java.util.Calendar.getInstance();
+cal.setTime(vD);
+cal.add(java.util.Calendar.DATE, 1);  // agrego 1 dia
+cal.getTime();
+}]]></xp:this.minimum>
+												</xp:validateDateTimeRange>
+											</xp:this.validators>
+											<xp:eventHandler event="onchange" submit="true"
+												refreshMode="partial" refreshId="sol_vigenciaHastaOperacion_nro"
+												disableValidators="true" id="eventHandler4">
+												<xp:this.action><![CDATA[#{javascript:getComponent("sol_vigenciaHastaOperacion_nro").setValue(getComponent("sol_vigenciaHastaCabecera_nro").value)}]]></xp:this.action>
+											</xp:eventHandler>
+										</xp:inputText>
+									</xp:td>
+								</xp:tr>
+								<xp:tr>
+									<xp:td styleClass="SWcolorBackgroundHdiGreenLight3">
+										<xp:label value="Operacion" id="label4" for="codSTOU1"
+											styleClass="accordionform textarea"></xp:label>
+									</xp:td>
+									<xp:td>
+										<xp:label value="Desde:" id="label11" for="codSTOU1"
+											styleClass="accordionform textarea"></xp:label>
+									</xp:td>
+									<xp:td>
+										<xp:inputText
+											value="#{documentPropuesta.sol_vigenciaDesdeOperacion_nro}"
+											id="sol_vigenciaDesdeOperacion_nro" style="width:107.0px"
+											disableClientSideValidation="true">
+											<xp:this.readonly><![CDATA[#{javascript:getComponent("sol_tipoMovimiento_cod").getValue() == "1" || getComponent("sol_tipoMovimiento_cod").getValue() == "2" || (getComponent("sol_tipoMovimiento_cod").getValue() == "3" &&  getComponent("sol_tipoOperacion_cod").getValue() == "11")}]]></xp:this.readonly>
+											<xp:dateTimeHelper id="dateTimeHelper4"></xp:dateTimeHelper>
+											<xp:this.converter>
+												<xp:convertDateTime type="date"
+													dateStyle="medium"></xp:convertDateTime>
+											</xp:this.converter>
+											<xp:this.validators>
+												<xp:validateRequired
+													message="La fecha de vigencia desde de la operacion  es requerida."></xp:validateRequired>
+												<xp:validateDateTimeRange
+													message="La fecha desde de operacion no puede ser menor a la fecha desde de cabecera.">
+													<xp:this.minimum><![CDATA[#{javascript:var vD:NotesDateTime = getComponent("sol_vigenciaDesdeCabecera_nro" ).getValue();
+var cal:java.util.Calendar = java.util.Calendar.getInstance();
+cal.setTime(vD);
+cal.getTime();
+}]]></xp:this.minimum>
+												</xp:validateDateTimeRange>
+											</xp:this.validators>
+										</xp:inputText>
+									</xp:td>
+									<xp:td></xp:td>
+									<xp:td>
+										<xp:label value="Hasta:" id="label14" for="codSTOU1"
+											styleClass="accordionform textarea"></xp:label>
+									</xp:td>
+									<xp:td>
+										<xp:inputText
+											value="#{documentPropuesta.sol_vigenciaHastaOperacion_nro}"
+											id="sol_vigenciaHastaOperacion_nro" style="width:107.0px"
+											readonly="true">
+											<xp:dateTimeHelper id="dateTimeHelper5"></xp:dateTimeHelper>
+											<xp:this.converter>
+												<xp:convertDateTime type="date"
+													dateStyle="medium"></xp:convertDateTime>
+											</xp:this.converter>
+										</xp:inputText>
+									</xp:td>
+								</xp:tr>
+							</xp:table>
+							<xp:table style="width:100.0%" id="TBL_Comentarios">
+								<tr>
+									<xp:td>
+										<xp:label value="Comentarios" id="sol_comentarios_des_Label1"
+											for="sol_comentarios_des1"></xp:label>
+										</xp:td>
+								</tr>
+								<tr>
+									<xp:td>
+										<xp:inputTextarea id="sol_comentarios_des"
+											cols="45" rows="4" value="#{documentPropuesta.sol_comentarios_des}">
+										</xp:inputTextarea>
+									</xp:td>
+								</tr>
+							</xp:table>
+						</xp:td>
+						<xp:td valign="top">
+							<xp:panel id="PNL_Cabecera">
+								<xp:table styleClass="PanelBoxDashed" style="width:100.0%">
+									<xp:tr>
+										<xp:td>
+											<xp:comboBox id="sol_tipoMovimiento_cod"
+												value="#{documentPropuesta.sol_tipoMovimiento_cod}"
+												readonly="true" styleClass="ViewTitleLeft">
+												<xp:this.defaultValue><![CDATA[#{javascript:context.getUrlParameter("TIMO")}]]></xp:this.defaultValue>
+												<xp:selectItems id="selectItems3">
+													<xp:this.value><![CDATA[#{javascript:getOpcionesClave("GE_tipoMovimiento_cod");}]]></xp:this.value>
+												</xp:selectItems>
+											</xp:comboBox>
+											<xp:comboBox id="sol_tipoOperacion_cod"
+												value="#{documentPropuesta.sol_tipoOperacion_cod}" readonly="true"
+												styleClass="ViewTitleLeft">
+												<xp:this.defaultValue><![CDATA[#{javascript:context.getUrlParameter("TIOP")}]]></xp:this.defaultValue>
+												<xp:this.rendered><![CDATA[#{javascript:var result:Boolean = false;
+switch(getComponent("sol_tipoMovimiento_cod").getValue()) {
+    case "1": //NUEVA
+    case "2": //RENOVACION
+    case "5": //REHABILITACION
+    result = false;	
+    break;
+	default: //ENDOSO o ANULACIONES
+	result = true;
+	break;	
+}
+return result;}]]></xp:this.rendered>
+												<xp:selectItems id="selectItems4">
+													<xp:this.value><![CDATA[#{javascript:importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+var doc = database.createDocument();
+doc.appendItemValue("sol_tipoMovimiento_cod", getComponent("sol_tipoMovimiento_cod").getValue());
+jce.getSelectAS("solTB_SET901", doc);}]]></xp:this.value>
+												</xp:selectItems>
+											</xp:comboBox>
+										</xp:td>
+									</xp:tr>
+								</xp:table>
+							</xp:panel>
+							<br />
+							<br />
+							<br />
+							<xp:panel>
+								<xc:ccFxPatenteTrigger_V2></xc:ccFxPatenteTrigger_V2>
+							</xp:panel>
+							<xp:panel id="PNL_DatosPolizaAnterior" styleClass="PanelBox">
+								<xp:table style="width:100.0%">
+									<xp:tr>
+										<xp:td>
+											<xp:label id="labelProductorN3" value="Organizador:"
+												styleClass="ViewTitleLeft"></xp:label>
+										</xp:td>
+										<xp:td>
+											<xp:inputText id="sol_productorN3_cod" readonly="true"
+												value="#{documentPropuesta.sol_productorN3_cod}">
+											</xp:inputText>
+											<br />
+											<xp:div style="display:none">
+												<xp:inputText id="sol_productorN5_cod"
+													readonly="true" value="#{documentPropuesta.sol_productorN5_cod}">
+												</xp:inputText>
+												<xp:inputText id="sol_productorN5_des"
+													readonly="true" value="#{documentPropuesta.sol_productorN5_des}">
+												</xp:inputText>
+												<xp:inputText id="sol_productorN6_cod"
+													readonly="true" value="#{documentPropuesta.sol_productorN6_cod}">
+												</xp:inputText>
+												<xp:inputText id="sol_productorN6_des"
+													readonly="true" value="#{documentPropuesta.sol_productorN6_des}">
+												</xp:inputText>
+											</xp:div>
+										</xp:td>
+									</xp:tr>
+									<xp:tr>
+										<xp:td colspan="2">
+											<xp:inputText id="sol_productorN3_des" readonly="true"
+												value="#{documentPropuesta.sol_productorN3_des}">
+											</xp:inputText>
+										</xp:td>
+									</xp:tr>
+									<xp:tr>
+										<xp:td>
+											<xp:label id="label2" value="Comisión:" styleClass="ViewTitleLeft">
+												<xp:this.rendered><![CDATA[#{javascript:var comision = getComponent("sol_pzaAntPorcentajeComision_nro").getValue(); 
+(comision == '' || comision == null) ? false : true;}]]></xp:this.rendered>
+											</xp:label>
+										</xp:td>
+										<xp:td>
+											<xp:text escape="true" id="sol_pzaAntPorcentajeComision_nro"
+												value="#{documentPropuesta.sol_pzaAntPorcentajeComision_nro}">
+												<xp:this.converter>
+													<xp:convertNumber type="percent"></xp:convertNumber>
+												</xp:this.converter>
+												<xp:this.rendered><![CDATA[#{javascript:var comision = getComponent("sol_pzaAntPorcentajeComision_nro").getValue(); 
+(comision == '' || comision == null) ? false : true;}]]></xp:this.rendered>
+											</xp:text>
+										</xp:td>
+									</xp:tr>
+									<xp:tr>
+										<xp:td>
+											<xp:label id="label5" value="Extra Pa. Var:"
+												styleClass="ViewTitleLeft">
+												<xp:this.rendered><![CDATA[#{javascript:var epv = getComponent("sol_pzaAntExtraPrimaVariable_nro").getValue(); 
+(epv == '' || epv == null) ? false : true;}]]></xp:this.rendered>
+											</xp:label>
+										</xp:td>
+										<xp:td>
+											<xp:text escape="true" id="sol_pzaAntExtraPrimaVariable_nro"
+												value="#{documentPropuesta.sol_pzaAntExtraPrimaVariable_nro}">
+												<xp:this.converter>
+													<xp:convertNumber type="percent"></xp:convertNumber>
+												</xp:this.converter>
+												<xp:this.rendered><![CDATA[#{javascript:var epv = getComponent("sol_pzaAntExtraPrimaVariable_nro").getValue(); 
+(epv == '' || epv == null) ? false : true;}]]></xp:this.rendered>
+											</xp:text>
+										</xp:td>
+									</xp:tr>
+								</xp:table>
+							</xp:panel>
+						</xp:td>
+					</xp:tr>
+				</xp:table>
+				<!--
+					Este Event Handler no se porque esta aca?? Falta de algun lado?
+				-->
+				<xp:eventHandler event="onclick" submit="true"
+					refreshMode="partial" refreshId="tabPNL_Principal" id="eventHandler5">
+					<xp:this.action>
+						<xp:executeScript>
+							<xp:this.script><![CDATA[#{javascript:sessionScope.wichTab="tabPNL_Principal_tab1"}]]></xp:this.script>
+						</xp:executeScript>
+					</xp:this.action>
+				</xp:eventHandler>
+			</xp:tabPanel>
+			<xp:tabPanel id="tabPNL_Principal_tab2" image="/veh_24x24.png">
+				<xp:this.rendered><![CDATA[#{javascript:sessionScope.get("TabComponenteVisible")}]]></xp:this.rendered>
+				<xc:ccGrilla_Componente></xc:ccGrilla_Componente>
+				<xp:eventHandler event="onclick" submit="true"
+					refreshMode="partial" refreshId="tabPNL_Principal" id="eventHandler6">
+					<xp:this.action>
+						<xp:executeScript>
+							<xp:this.script><![CDATA[#{javascript:sessionScope.wichTab="tabPNL_Principal_tab2"}]]></xp:this.script>
+						</xp:executeScript>
+					</xp:this.action>
+				</xp:eventHandler>
+			</xp:tabPanel>
+			<xp:tabPanel id="tabPNL_Principal_tab3" image="/emls_stack24x24.png">
+				<xp:panel id="panelMailContainer" styleClass="PanelBox"
+					style="width:600.0px">
+					<xp:panel id="panelMailListing" styleClass="PanelContent"
+						style="padding-top:10.0px">
+						<xp:this.data>
+							<xp:dominoView var="viewMailCat" viewName="v.Sys.MailsLinked"
+								categoryFilter="#{javascript:documentPropuesta.getDocument().getUniversalID()}">
+							</xp:dominoView>
+						</xp:this.data>
+						<xp:pager layout="Previous Group Next" partialRefresh="true"
+							id="pager1" for="repeatMails"></xp:pager>
+						<xp:table cellpadding="5" cellspacing="0" border="0"
+							style="width:100.0%" id="TBL_MailListing">
+							<xp:tr styleClass="ViewTitle">
+								<xp:td style="font-weight:bold">Fecha</xp:td>
+								<xp:td style="font-weight:bold">Asunto</xp:td>
+								<xp:td style="font-weight:bold">Enviado A</xp:td>
+							</xp:tr>
+							<xp:repeat id="repeatMails" rows="10" var="repeatMailRow"
+								indexVar="repeatMailIndex" value="#{viewMailCat}">
+								<xp:tr id="rowInspeccion">
+									<xp:this.styleClass><![CDATA[#{javascript:if (!!viewScope.get("selectedEmailUNID")) { 
+	if (viewScope.get("selectedEmailUNID").equals(repeatMailRow.getUniversalID())) {
+		return "ViewRowSelected";
+	}
+}
+return "ViewRow";}]]></xp:this.styleClass>
+									<xp:td align="center">
+										<xp:text escape="true" id="computedField1">
+											<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatMailRow.getColumnValue("MyMailSentDate");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+											<xp:this.converter>
+												<xp:convertDateTime type="both"
+													timeStyle="short"></xp:convertDateTime>
+											</xp:this.converter>
+										</xp:text>
+									</xp:td>
+									<xp:td>
+										<xp:text escape="true" id="computedField2">
+											<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatMailRow.getColumnValue("Subject");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal.left(40);
+}}]]></xp:this.value>
+										</xp:text>
+									</xp:td>
+									<xp:td>
+										<xp:text escape="true" id="computedField3">
+											<xp:this.value><![CDATA[#{javascript:var colValue = repeatMailRow.getColumnValue("SendTo");
+
+if ( (typeof colValue).toLowerCase() == "string" ) {
+	if (colValue.equals ("")) {
+		"-";
+	}
+	else {
+		colValue;
+	}
+}
+else {
+	var strValue = colValue.elementAt(0);
+	for (var i=1; i<colValue.size(); i++) {
+		strValue += "\n" + colValue.elementAt (i);
+	}
+}
+
+}]]></xp:this.value>
+										</xp:text>
+									</xp:td>
+									<xp:eventHandler event="onclick" submit="true"
+										refreshMode="partial"
+										refreshId='#{javascript:if (!compositeData.property_PantallaDividida) return ("mailContainer");
+else return ("idCCGeneralMail");
+
+/*
+No podemos actualizar siempre el mailContainer porque cuando estamos en la pantalla dividida, 
+queda el ccGeneralMail 2 veces, por un lado en el ccProp, y por otro en el panel derecho
+de la pantalla dividida.  En ese caso, el ccGeneralMail del ccProp queda oculto y el otro 
+visibile.  Cuando le decis que te actualice el id mailContainer, considera al del ccProp unicamente
+y te tira un error porque está oculto.
+*/}'
+										id="eventHandler7">
+										<xp:this.action><![CDATA[#{javascript:/*
+Tiene que ser FULL Update para que tb se actualice la Clase CSS de esta fila.
+*/
+viewScope.put("selectedEmailUNID", repeatMailRow.getUniversalID())}]]></xp:this.action>
+									</xp:eventHandler>
+									<xp:eventHandler event="onmouseout" submit="true"
+										refreshMode="partial" refreshId="panelMailListing" id="eventHandler8">
+									</xp:eventHandler>
+								</xp:tr>
+							</xp:repeat>
+						</xp:table>
+					</xp:panel>
+				</xp:panel>
+				<xp:eventHandler event="onclick" submit="true"
+					refreshMode="partial" refreshId="tabPNL_Principal" id="eventHandler9">
+					<xp:this.action>
+						<xp:executeScript>
+							<xp:this.script><![CDATA[#{javascript:sessionScope.wichTab="tabPNL_Principal_tab3"}]]></xp:this.script>
+						</xp:executeScript>
+					</xp:this.action>
+				</xp:eventHandler>
+			</xp:tabPanel>
+			<xp:tabPanel label="Otros Datos" id="tabPNL_Principal_tab4"
+				rendered="false">
+				<xp:eventHandler event="onclick" submit="true"
+					refreshMode="partial" refreshId="tabPNL_Principal" id="eventHandler10">
+					<xp:this.action>
+						<xp:executeScript>
+							<xp:this.script><![CDATA[#{javascript:sessionScope.wichTab="tabPNL_Principal_tab4"}]]></xp:this.script>
+						</xp:executeScript>
+					</xp:this.action>
+				</xp:eventHandler>
+			</xp:tabPanel>
+			<xp:tabPanel id="tabPNL_Principal_tab7" image="/reseller_account24x24.png">
+				<xp:this.rendered><![CDATA[#{javascript:getIsGroupMember("spwAU.N2.COME.USR_CRU")}]]></xp:this.rendered>
+				<xc:ccLogComercial docToEditCCLog="#{javascript:documentPropuesta}"></xc:ccLogComercial>
+				<xp:eventHandler event="onclick" submit="true"
+					refreshMode="partial" refreshId="tabPNL_Principal" id="eventHandler13">
+					<xp:this.action>
+						<xp:executeScript>
+							<xp:this.script><![CDATA[#{javascript:sessionScope.wichTab="tabPNL_Principal_tab7"}]]></xp:this.script>
+						</xp:executeScript>
+					</xp:this.action>
+				</xp:eventHandler>
+			</xp:tabPanel>
+			<xp:tabPanel id="tabPNL_Principal_tab5" image="/comment24x24.png">
+				<xp:panel id="PNL_"
+					rendered="#{javascript:!compositeData.property_PantallaDividida;}">
+					<xc:ccGrilla_Prop_Relacionadas></xc:ccGrilla_Prop_Relacionadas>
+				</xp:panel>
+				<xc:ccLog docToEditCCLog="#{javascript:documentPropuesta}"></xc:ccLog>
+				<xp:eventHandler event="onclick" submit="true"
+					refreshMode="partial" refreshId="tabPNL_Principal" id="eventHandler11">
+					<xp:this.action>
+						<xp:executeScript>
+							<xp:this.script><![CDATA[#{javascript:sessionScope.wichTab="tabPNL_Principal_tab5"}]]></xp:this.script>
+						</xp:executeScript>
+					</xp:this.action>
+				</xp:eventHandler>
+			</xp:tabPanel>
+			<xp:tabPanel id="tabPNL_Principal_tab6" image="/accesorios24x24.png">
+				<xp:this.rendered><![CDATA[#{javascript:getIsGroupMember("spwAU.N5.ADMI.USR_CRUD")}]]></xp:this.rendered>
+				<xp:table style="width:533.0px" id="table1">
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Nro. Solicitud:"
+								id="Label_orden_nro" for="xorden_nro"
+								styleClass="accordionform textarea">
+							</xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:inputText
+								value="#{documentPropuesta.orden_nro}" id="orden_nro"
+								disableClientSideValidation="true">
+								<xp:this.converter>
+									<xp:convertNumber type="number"
+										integerOnly="true">
+									</xp:convertNumber>
+								</xp:this.converter>
+							</xp:inputText>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Nro. SuperPóliza:"
+								id="Label_sol_superpoliza_nro" for="nroSPOL1">
+							</xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:inputText
+								value="#{documentPropuesta.sol_superpoliza_nro}"
+								id="sol_superpoliza_nro" style="width:140px" defaultValue="0">
+								<xp:this.converter>
+									<xp:convertNumber type="number"
+										integerOnly="true">
+									</xp:convertNumber>
+								</xp:this.converter>
+							</xp:inputText>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td style="width:74.0px">
+							<xp:label value="Nro. Suplemento:"
+								id="Label_sol_superpolizaSuplemento_nro"
+								for="sol_superpolizaSuplemento_nro">
+							</xp:label>
+						</xp:td>
+						<xp:td style="width:197.0px">
+							<xp:inputText
+								value="#{documentPropuesta.sol_superpolizaComplemento_nro}"
+								style="width:200.0px" id="sol_superpolizaSuplemento_nro">
+								<xp:this.converter>
+									<xp:convertNumber type="number"
+										integerOnly="true">
+									</xp:convertNumber>
+								</xp:this.converter>
+							</xp:inputText>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Póliza Multirrama:"
+								id="Label_sol_polizaMultirrama_cod"
+								for="sol_polizaMultirrama_cod">
+							</xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:inputText
+								value="#{documentPropuesta.sol_polizaMultirrama_cod}"
+								id="sol_polizaMultirrama_cod" style="width:160.0px">
+							</xp:inputText>
+						</xp:td>
+					</xp:tr>
+				</xp:table>
+				<xc:ccGrilla_Dau></xc:ccGrilla_Dau>
+				<xp:eventHandler event="onclick" submit="true"
+					refreshMode="partial" refreshId="tabPNL_Principal" id="eventHandler12">
+					<xp:this.action>
+						<xp:executeScript>
+							<xp:this.script><![CDATA[#{javascript:sessionScope.wichTab="tabPNL_Principal_tab6"}]]></xp:this.script>
+						</xp:executeScript>
+					</xp:this.action>
+				</xp:eventHandler>
+			</xp:tabPanel>
+		</xp:tabbedPanel>
+		<xp:panel id="PNL_ccAB"
+			rendered="#{javascript:!compositeData.property_PantallaDividida;}">
+			<xc:CCAB_FrmPropuestas></xc:CCAB_FrmPropuestas>
+			<xp:div style="display:none;">
+				<xp:inputText id="sol_Icono_cod" value="#{documentPropuesta.sol_Icono_cod}"
+					disableClientSideValidation="true">
+				</xp:inputText>
+			</xp:div>
+				
+		</xp:panel>
+	</xp:panel>
+	<xp:panel id="PNL_Right" styleClass="PropFormColumnDer">
+		<xc:ccDocumentLocked></xc:ccDocumentLocked>
+		<xp:this.rendered><![CDATA[#{javascript:var docxProp:NotesXspDocument = viewScope.get("docxProp");
+if (docxProp =! null) return true;
+return false;
+
+/*Este div se muestra si la xpages es = xfdocPropuesta.xsp
+print("path=" + facesContext.getExternalContext().getRequestServletPath());
+facesContext.getExternalContext().getRequestServletPath() == "/xfdocPropuesta.xsp";
+*/}]]></xp:this.rendered>
+		<xc:ccGeneralMail></xc:ccGeneralMail>
+	</xp:panel>
+	<xc:ccKeepSessionAlive></xc:ccKeepSessionAlive>
+
+	<xp:eventHandler event="onClientLoad" submit="false">
+		<xp:this.script><![CDATA[//WebFacing boton Cancelar/Salir: como se relodea la pagina del webfacing al Salir me fijo si esta en un iframe  
+if(self==top){//Este CustomControl es loaded en xfdocPropuesta - No hacer nada
+    //alert(' La pagina no se encuentra en un iframe');
+}else{ //Este CustomControl es loaded en xfDividirPantalla, esta queriendo cerrar el webfacing
+    //alert('Esta en iframe, en dividir pantalla');
+    window.open("Blank?OpenPage","_self");
+    
+    //document.getElementById ("iframeAs400").src = "http://www.hdi.com.ar"; //No funciona
+    //top.document.getElementById ("iframeAs400").src = "http://www.hdi.com.ar"; // para llamar una pagina en el iframe del webfacing
+    //location.href = "http://www.hdi.com.ar"; // hace lo mismo que top.document
+}]]></xp:this.script>
+	</xp:eventHandler>
+</xp:view>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view
+	xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xp:this.resources>
+		<xp:dojoModule
+			name="dijit.Dialog"></xp:dojoModule>
+	</xp:this.resources>
+	<xp:panel>
+		<xp:link
+			escape="true"
+			id="banner_btn_login"
+			styleClass="loginLink"
+			style="text-align:center">
+			<xp:this.rendered>
+			<![CDATA[#{javascript:
+      var strLoginURL:String;
+      var strLogoutURL:String;
+      var contextPath = facesContext.getExternalContext().getRequest().getContextPath();
+      var requestURI = facesContext.getExternalContext().getRequest().getRequestURI();
+ 
+      strLoginURL = contextPath + "?login&redirectto=" + requestURI;
+      strLogoutURL = contextPath + "?logout&redirectto=" + contextPath;
+      return (@UserName() == "Anonymous")?true:false;}]]>
+			</xp:this.rendered>
+			<xp:eventHandler
+				event="onclick"
+				submit="false">
+				<xp:this.script><![CDATA[javascript:dijit.byId("#{id:showLoginDialog}").show();]]></xp:this.script>
+			</xp:eventHandler>
+			<p
+				align="center">
+				<xp:image
+					id="image1"
+					url="/user_group_new.png">
+					<xp:this.alt><![CDATA[Ingresar al Speedway]]></xp:this.alt>
+					<xp:this.title><![CDATA[Ingresar al Speedway]]></xp:this.title>
+				</xp:image>
+			</p>
+		</xp:link>
+		<xp:div
+			dojoType="dijit.Dialog"
+			id="showLoginDialog"
+			style="overflow:auto;"
+			title="Speedway">
+			<xp:this.dojoAttributes>
+				<xp:dojoAttribute
+					name="href"
+					value="#{javascript:strLoginURL}" />
+			</xp:this.dojoAttributes>
+		</xp:div>
+	</xp:panel>
+</xp:view>

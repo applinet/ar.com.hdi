@@ -1,0 +1,104 @@
+'++LotusScript Development Environment:2:5:(Options):0:74
+%REM
+	Library LS.AS400Connection
+	Created Sep 10, 2013 by Fernando Rodriguez/axin
+	Description: 
+		-Utiliza docConfigODBCcon que solo tiene = nombre conector, usuario y password (lectura y escritura)
+		-Para utilizarla, declaro en mi funcion una variable global As ODBCConnection
+		-Llamo a esta funcion pasandole mi conexion y el tipo de acceso
+		-El tipo de acceso se define en los documentos de tablas no en docConfigODBCcon 
+	
+	Parametros: 
+		ODBCcon= conexion que recibo
+		TipoAcceso= read / write 
+		docConfigODBCcon = documento con nombre odbc, usuario y password
+%END REM
+Option Public
+Option Declare
+
+
+'++LotusScript Development Environment:2:5:(Forward):0:1
+Declare Class Ping
+Declare Sub Initialize
+Declare Function testPing(IP As String)As Variant
+Declare Function ConectarAS(ODBCcon As ODBCConnection, TipoAcceso As String, docConfigODBCcon As NotesDocument) As boolean
+
+'++LotusScript Development Environment:2:5:(Declarations):0:10
+Private Const TIMEOUT = 500
+ 
+Private Type ICMP_OPT
+Replacement As Long
+OptionsData As Long
+End Type
+ 
+Private Type ICMP_ECHO_REPLY
+Address As Long
+status As Long
+RoundTripTime As Long
+DataSize As Long
+DataPointer As Long
+Options As ICMP_OPT
+Data As String * 250
+End Type
+ 
+Declare Private Function IcmpCreateFile Lib "icmp.dll" () As Long
+Declare Private Function IcmpCloseHandle Lib "icmp.dll" (ByVal IcmpHandle As Long) As Long
+Declare Private Function IcmpSendEcho Lib "icmp.dll" (ByVal IcmpHandle As Long, ByVal DestinationAddress As Long, ByVal RequestData As String, ByVal RequestSize As Long, ByVal RequestOptions As Long,ReplyBuffer As ICMP_ECHO_REPLY, ByVal ReplySize As Long, ByVal REPLY As Long) As Long
+Declare Private Function inet_addr Lib "wsock32" (ByVal s As String) As Long
+Class Ping
+	Private ECHO As ICMP_ECHO_REPLY 
+	Public Function Ping ( IP As String ) As Variant
+		Ping = False
+		If IcmpCreateFile() Then
+			Call IcmpSendEcho ( IcmpCreateFile(),inet_addr ( IP ), "", 0, 0, ECHO, Len ( ECHO ), TIMEOUT )
+			If ECHO.status = 0 Then
+				Ping = True
+				Call IcmpCloseHandle ( IcmpCreateFile() )
+			End If
+		End If
+	End Function
+End Class
+'++LotusScript Development Environment:2:2:Initialize:1:10
+Sub Initialize
+	
+End Sub
+
+
+'++LotusScript Development Environment:2:1:testPing:5:8
+%REM
+	Function testPing
+	Description: Comments for Function
+%END REM
+Function testPing(IP As String)As Variant
+	Dim Ping As New Ping
+	testPing = Ping.Ping ( IP )
+'	MsgBox Ping.Ping ( IP )
+End Function
+
+'++LotusScript Development Environment:2:1:ConectarAS:1:8
+Function ConectarAS(ODBCcon As ODBCConnection, TipoAcceso As String, docConfigODBCcon As NotesDocument) As boolean
+	ConectarAS = False
+	If Not testPing(docConfigODBCcon.odbc_DataSource_des(0)) Then
+		Print "Test ping is not working"
+		Exit Function	
+	End If 
+	
+	
+	Select Case TipoAcceso
+		Case "read":
+			Call ODBCcon.ConnectTo(docConfigODBCcon.odbc_DataSource_des(0),docConfigODBCcon.odbc_LectUser_des(0),docConfigODBCcon.odbc_LectPass_des(0))
+		Case "write":
+			Call ODBCcon.ConnectTo(docConfigODBCcon.odbc_DataSource_des(0),docConfigODBCcon.odbc_EscrUser_des(0),docConfigODBCcon.odbc_EscrPass_des(0))
+	End Select
+	
+	If Not (ODBCcon.Isconnected()) Then
+		MessageBox "LS.AS400Connection ****** Error *******" 
+		MessageBox "LS.AS400Connection=" + ODBCcon.Getextendederrormessage()
+		Exit Function	
+	End If
+	ConectarAS = True
+End Function
+
+
+
+

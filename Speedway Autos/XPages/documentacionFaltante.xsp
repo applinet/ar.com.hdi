@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex">
+
+	<xp:table role="presentation">
+
+
+<xp:tr>
+							<xp:td><xp:label value="Elegir Tags:"></xp:label></xp:td>
+							<xp:td>
+								<xe:djextListTextBox id="djextListTextBoxTags" multipleSeparator="," multipleTrim="true" value="#{viewScope.mailTags}"
+									title="Clasificación" displayLabel="false">
+								</xe:djextListTextBox>
+								<xe:valuePicker id="valuePickerClasificar" for="djextListTextBoxTags" pickerText="Clasificar"
+									dojoType="extlib.dijit.PickerCheckbox" dialogTitle="Clasificar..">
+									<xe:this.dataProvider>
+										<xe:simpleValuePicker>
+											<xe:this.valueList><![CDATA[DNI
+Nro Chasis
+Nro Motor
+Factura 0km
+CUIT
+Puertas
+Ventanas
+Perro
+Gato]]></xe:this.valueList>
+										</xe:simpleValuePicker>
+									</xe:this.dataProvider>
+								</xe:valuePicker>
+							</xp:td>
+							<xp:td>
+								
+								
+							</xp:td>
+						</xp:tr>
+
+</xp:table>
+
+
+
+
+
+	<xp:label value="#{javascript:database.getFilePath()}" id="label1"></xp:label></xp:view>

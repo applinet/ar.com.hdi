@@ -1,0 +1,23 @@
+.PanelBox, .PanelBoxHeader {
+	float:left;
+}
+.PanelBoxHeader {
+	clear:both;
+	width:100%;
+}
+.PanelBoxHeaderVeh, .PanelBoxHeaderProp {
+	float:left;
+	border:1px solid #1B8D3D;
+	width:40%;
+	margin-right: 10px;
+}
+.PanelTitle {
+	padding:5px;
+	background-color: #36B75C;
+	font-weight: bold;
+	font-size: 12px;
+	font-family: Verdana;
+}
+.ColInsInspector {
+	width: 200px;
+}

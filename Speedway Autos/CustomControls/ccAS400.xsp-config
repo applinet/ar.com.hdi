@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config>
+  <faces-config-extension>
+    <namespace-uri>http://www.ibm.com/xsp/custom</namespace-uri>
+    <default-prefix>xc</default-prefix>
+  </faces-config-extension>
+  <composite-component>
+    <component-type>ccAS400</component-type>
+    <composite-name>ccAS400</composite-name>
+    <composite-file>/ccAS400.xsp</composite-file>
+    <composite-extension>
+      <designer-extension>
+        <in-palette>true</in-palette>
+      </designer-extension>
+    </composite-extension>
+    <property>
+      <property-name>propertyIframeSrc</property-name>
+      <property-class>string</property-class>
+      <display-name>Source del Iframe</display-name>
+    </property>
+  </composite-component>
+</faces-config>

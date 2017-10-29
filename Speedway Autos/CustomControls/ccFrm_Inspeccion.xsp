@@ -1,0 +1,1576 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:xp_1="http://www.ibm.com/xsp/coreex"
+	style="float:left;" xmlns:debug="http://www.openntf.org/xsp/debugtoolbar">
+	
+	<xp:this.beforePageLoad><![CDATA[#{javascript:if (document1.isNewNote() == false) return;
+
+loadInitialData (document1);}]]></xp:this.beforePageLoad>
+	<xp:this.data>
+		<xp:dominoDocument var="document1" formName="f.Inspeccion" computeWithForm="both">
+			<xp:this.postSaveDocument><![CDATA[#{javascript:insPostSave (document1.getDocument())}]]></xp:this.postSaveDocument>
+			<xp:this.querySaveDocument><![CDATA[#{javascript:insQuerySave (document1, true);}]]></xp:this.querySaveDocument>
+			<xp:this.postOpenDocument><![CDATA[#{javascript:if (document1.isEditable()) {
+	if (allowInspeccionEdit ()) {
+		lockDocument("");
+	}
+	else {
+		throw new java.lang.Exception("No puede EDITAR este documento");
+	}
+}}]]></xp:this.postOpenDocument>
+		</xp:dominoDocument>
+		<xp:dominoView var="mails" viewName="v.Sys.MailsLinked">
+			<xp:this.categoryFilter><![CDATA[#{javascript:document1.getDocument().getItemValueString("ins_Componente_cod");}]]></xp:this.categoryFilter>
+		</xp:dominoView>
+	</xp:this.data>
+	<xp:this.resources>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+		<xp:script src="/JSS.Validation.jss" clientSide="false"></xp:script>
+		<xp:script src="/JSS.MailingFunctions.jss" clientSide="false"></xp:script>
+		<xp:styleSheet href="/views.css"></xp:styleSheet>
+		<xp:styleSheet href="/forms.css"></xp:styleSheet>
+		<xp:script src="/JSS.Inspeccion.jss" clientSide="false"></xp:script>
+		<xp:script src="/JSS.Estados.jss" clientSide="false"></xp:script>
+		<xp:script src="/JSS.InsValidation.jss" clientSide="false"></xp:script>
+		<xp:script src="/JSS.veh.general.jss" clientSide="false"></xp:script>
+		<xp:script src="/JSS.DocumentLocking.jss" clientSide="false"></xp:script>
+	</xp:this.resources>
+	<xp:span rendered="false" style="font-size:8pt;font-family:Verdana;color:rgb(255,0,0)"></xp:span>
+	<xp:panel id="PNL_Sys" style="border-style:dotted;border-width:thin;margin-bottom:20.0px" styleClass="PanelSys">
+		<xp:this.rendered><![CDATA[#{javascript:if (viewScope.get("booOcultarSys") == true) return true;
+else return false;}]]></xp:this.rendered>
+		<xp:panel id="PNL_Sys_Title" styleClass="PanelTitle">Campos del Sistema</xp:panel>
+		<xp:panel id="PNL_Sys_Content" styleClass="PanelContent" style="width:100%">
+			<xp:table style="margin-top:10.0px;width:100%" id="TBL_Sys_Fields" styleClass="TableFields">
+				<xp:tr>
+					<xp:td style="width:200.0px">
+						<xp:label id="label3" for="ins_Consecutivo_nro1" value="Acciones"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:button value="Set Tipo Comun" id="buttonSysTipoComun">
+							<xp:eventHandler event="onclick" submit="true" refreshMode="complete" immediate="false" save="true" id="eventHandler7">
+								<xp:this.action><![CDATA[#{javascript:var docInspeccion:NotesXspDocument = document1;
+docInspeccion.replaceItemValue("ins_Tipo_cod", "10");
+docInspeccion.replaceItemValue("ins_Tipo_des", "Comun");
+}]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+						<xp:button value="Set Tipo Previa" id="buttonSysTipoPrevia">
+							<xp:eventHandler event="onclick" submit="true" refreshMode="complete" immediate="false" save="true" id="eventHandler8">
+								<xp:this.action><![CDATA[#{javascript:var docInspeccion:NotesXspDocument = document1;
+docInspeccion.replaceItemValue("ins_Tipo_cod", "20");
+docInspeccion.replaceItemValue("ins_Tipo_des", "Previa");
+}]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+						<xp:button value="Set Tipo Productor" id="buttonSysProductor">
+							<xp:eventHandler event="onclick" submit="true" refreshMode="complete" immediate="false" save="true" id="eventHandler9">
+								<xp:this.action><![CDATA[#{javascript:var docInspeccion:NotesXspDocument = document1;
+docInspeccion.replaceItemValue("ins_Tipo_cod", "30");
+docInspeccion.replaceItemValue("ins_Tipo_des", "Productor");
+}]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+						<xp:br></xp:br>
+						<xp:button value="A Borrador" id="buttonSysABorrador">
+							<xp:eventHandler event="onclick" submit="true" refreshMode="complete" immediate="false" save="true" id="eventHandler10">
+								<xp:this.action><![CDATA[#{javascript:var docInspeccion:NotesXspDocument = document1;
+setInsEstado (docInspeccion.getDocument(), "10", "Sys: A Borrador")}]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+						<xp:button value="A Comercial" id="buttonSysAComercial">
+							<xp:eventHandler event="onclick" submit="true" refreshMode="complete" id="eventHandler11">
+								<xp:this.action>
+									<xp:actionGroup condition="#{javascript:validateInsAComercial();}">
+										<xp:executeScript>
+											<xp:this.script><![CDATA[#{javascript:var docInspeccion:NotesXspDocument = document1;
+setInsEstado (docInspeccion.getDocument(), "80", "Sys: Enviada a Comercial")
+
+//Necesito grabar para que el Evaluate del mailing vea los campos con los últimos cambios
+docInspeccion.save();
+
+var itemLog:NotesItem = docInspeccion.getDocument().getFirstItem("ins_Log_des");
+var strCode:String = docInspeccion.getItemValueString("ins_Componente_cod");
+var strClave:String = "InspeccionEnviarComercial";
+var strAction:String = "Enviar a Comercial";
+if (sendMailWithCfg (strClave, true, strAction, "", docInspeccion.getDocument())) {
+	setLog (itemLog, "Mail a Comercial Enviado");
+}
+else setLog (itemLog, "Mail a Comercial NO Enviado");
+}]]></xp:this.script>
+										</xp:executeScript>
+										<xp:saveDocument var="document1"></xp:saveDocument>
+									</xp:actionGroup>
+								</xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+						<xp:button value="A Inspeccionada" id="buttonSysAInspeccionada">
+							<xp:eventHandler event="onclick" submit="true" refreshMode="complete" immediate="false" save="true" id="eventHandler12">
+								<xp:this.action><![CDATA[#{javascript:var docInspeccion:NotesXspDocument = document1;
+setInsEstado (docInspeccion.getDocument(), "30", "Sys: Inspeccionada")}]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+						<xp:button value="Simular Rta de Ins" id="buttonSimRtaIns">
+							<xp:eventHandler event="onclick" submit="true" refreshMode="complete" id="eventHandler13">
+								<xp:this.action><![CDATA[#{javascript:var agSimula:NotesAgent = session.getCurrentDatabase().getAgent("a.SimularRtaIns");
+
+var strNoteId:String = document1.getDocument().getNoteID();
+
+agSimula.run(strNoteId);
+
+insPostSave (document1)}]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+						<xp:br></xp:br>
+						<xp:button value="Enviar Mail a Mail-In" id="buttonEnviarAMailIN"></xp:button>
+						<xp:br></xp:br>
+						<xp:button value="CheckOutDoc" id="checkOut">
+							<xp:eventHandler event="onclick" submit="true" refreshMode="norefresh">
+								<xp:this.action><![CDATA[#{javascript:var dbDocLock:NotesDatabase = getDbDocLock ();
+//var dbDocLock:NotesDatabase = database;
+if (dbDocLock == null) return (print("DB NULL"));
+if (dbDocLock.isOpen() == false) return (print("DB not opened"));
+print (dbDocLock.getReplicaID());
+var agDocLock:NotesAgent = dbDocLock.getAgent("a.CheckOut");
+if (agDocLock == null) return (print("agent NULL"));
+agDocLock.runWithDocumentContext(document1.getDocument());}]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:button>
+						<xp:br></xp:br>
+						<xp:label id="label7">
+							<xp:this.value><![CDATA[#{javascript:importPackage(ar.com.hdi.autos.utilidades);
+
+var strUser:String = session.getUserNameObject().getCommon();
+var strUnid:String = context.getUrlParameter("documentId");
+
+var booIsLocked:boolean = DocLock.isLocked(strUnid);
+
+if (booIsLocked == false) return("El documento NO se encuentra bloqueado");
+
+var strLockedBy:String = DocLock.getLock (strUnid);
+return ("El documento sólo puede ser desbloqueado por: " + strLockedBy);}]]></xp:this.value>
+						</xp:label>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Form:" id="form_Label1" for="form1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{document1.Form}" id="form1"></xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Consecutivo Nro:" id="ins_Consecutivo_nro_Label1" for="ins_Consecutivo_nro1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{document1.ins_Consecutivo_nro}" id="ins_Consecutivo_nro1">
+							<xp:this.converter>
+								<xp:convertNumber></xp:convertNumber>
+							</xp:this.converter>
+						</xp:text>
+						<xp:label value="Será asignado luego de grabar la inspección" id="label2"
+							style="font-family:Verdana;font-size:8pt;color:rgb(64,128,128)" for="ins_Componente_nro1">
+							<xp:this.rendered><![CDATA[#{javascript:if (@IsNewDoc()) return true;
+else return false;}]]></xp:this.rendered>
+						</xp:label>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="UNID de Propuesta:" id="ins_UNID_Prop_Cod_Label1" for="ins_Prop_Cod1"></xp:label>
+					</xp:td>
+					<xp:td id="td1">
+						<xp:text value="#{document1.ins_PropUnid_des}" id="ins_PropUnid_des1"></xp:text>
+						<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.action><![CDATA[#{javascript:if (document1.isEditable()) {
+	lockDocument("");
+}}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Código de Vehiculo:" id="ins_Veh_cod_Label1" for="ins_Veh_cod1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text id="ins_Veh_cod1" value="#{document1.ins_Veh_cod}" for="dateTimeHelper1"></xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="UNID del Mail Previa:" id="ins_PreviaMailUnid_des_Label1" for="ins_PreviaMailUnid_des1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{document1.ins_PreviaMailUnid_des}" id="ins_PreviaMailUnid_des1"></xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="UNID del Mail Productor:" id="ins_ProdMailUnid_des_Label1" for="ins_ProdMailUnid_des1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{document1.ins_ProdMailUnid_des}" id="ins_ProdMailUnid_des1"></xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Nro de Inspección:" id="ins_Contador_nro_Label1" for="ins_Contador_nro1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{document1.ins_Contador_nro}" id="ins_Contador_nro1">
+							<xp:this.converter>
+								<xp:convertNumber></xp:convertNumber>
+							</xp:this.converter>
+						</xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Código de Inspección:" id="ins_Componente_cod_Label1" for="ins_Componente_cod1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{document1.ins_Componente_cod}" id="ins_Componente_cod1"></xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Tipo de Inspección - Código:" id="ins_Tipo_cod_Label1" for="ins_Tipo_cod1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text id="ins_Tipo_cod1" value="#{document1.ins_Tipo_cod}"></xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Estado - Código:" id="ins_iEst_cod_Label1" for="ins_iEst_cod1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{document1.ins_iEst_cod}" id="ins_iEst_cod1"></xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Estado a Regresar:" id="ins_EstRegreso_des_Label1" for="ins_EstRegreso_des1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{document1.ins_iEstRegreso_cod}" id="ins_iEstRegreso_cod1"></xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="¿Se llegó a un Estado Final?" id="ins_Final_des_Label1" for="ins_Final_des1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{document1.ins_Final_des}" id="ins_Final_des1"></xp:text>
+					</xp:td>
+				</xp:tr>
+				<xp:tr>
+					<xp:td>
+						<xp:label value="Productor Mail:" id="ins_ProdMail_des_Label1" for="ins_ProdMail_des1"></xp:label>
+					</xp:td>
+					<xp:td>
+						<xp:text value="#{document1.ins_ProdMail_des}" id="ins_ProdMail_des1"></xp:text>
+					</xp:td>
+				</xp:tr>
+			</xp:table>
+		</xp:panel>
+	</xp:panel>
+	<xp:panel id="PNL_Actions_Sys" styleClass="PanelActions">
+		<xp:this.rendered><![CDATA[#{javascript:return false;
+//isUserSystem ()}]]></xp:this.rendered>
+		<xp:button id="buttonTestMail" value="Test Mail">
+			<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+				<xp:this.action><![CDATA[#{javascript:var docInspeccion:NotesXspDocument = document1;
+sendMailWithCfg ("InspeccionEnviarInspector", true, docInspeccion.getItemValueString("ins_Componente_cod"), "Enviar Inspección", docInspeccion.getDocument());}]]></xp:this.action>
+			</xp:eventHandler>
+		</xp:button>
+		<xp:button value="Mostrar Sys" id="buttonMostrarSys">
+			<xp:this.rendered><![CDATA[#{javascript:if (viewScope.get("booOcultarSys") == true) return false;
+else return true;}]]></xp:this.rendered>
+			<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+				<xp:this.action><![CDATA[#{javascript:viewScope.put ("booOcultarSys", true);}]]></xp:this.action>
+			</xp:eventHandler>
+		</xp:button>
+		<xp:button value="Ocultar Sys" id="buttonOcultarSys">
+			<xp:this.rendered><![CDATA[#{javascript:if (viewScope.get("booOcultarSys") == true) return true;
+else return false;}]]></xp:this.rendered>
+			<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+				<xp:this.action><![CDATA[#{javascript:viewScope.put ("booOcultarSys", false);}]]></xp:this.action>
+			</xp:eventHandler>
+		</xp:button>
+	</xp:panel>
+	<xp:panel id="PNL_Actions_Autos" style="margin-bottom:10.0px" styleClass="PanelActions">
+		<xp:div id="divErrMsg">
+		<xp:messages id="messages1"></xp:messages>
+		</xp:div>
+		<xp:br></xp:br>
+		
+	</xp:panel>
+	<xp:panel id="PNL_Left" styleClass="FormColumn">
+		<xp:panel id="PNL_DocLock" styleClass="FormColumn" style="margin-bottom:10.0px">
+			
+			<xp:panel id="PNL_DocLockContainer" styleClass="PanelBox">
+				
+			<xp:table style="width:100.0%">
+			<xp:tr>
+				<xp:td>
+					<xp:button id="buttonEditar" value="Editar" rendered="#{javascript:return (sePuedeEditar (currentDocument));}">
+						<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.action>
+								<xp:actionGroup>
+									<xp:executeScript>
+										<xp:this.script><![CDATA[#{javascript:lockDocument("");}]]></xp:this.script>
+									</xp:executeScript><xp:changeDocumentMode mode="edit"></xp:changeDocumentMode>
+									
+								</xp:actionGroup>
+							</xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xp:button id="buttonEliminar" value="Eliminar" style="margin-left:20.0px" rendered="#{javascript:return sePuedeEliminar (document1);}">
+						<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.script><![CDATA[return window.confirm("¿Eliminar inspección?");]]></xp:this.script>
+							<xp:this.action><![CDATA[#{javascript://Primero se ejecuta el JS del Client.
+eliminarInspeccion(document1);}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xp:button id="buttonGrabar" value="Grabar">
+						<xp:this.rendered><![CDATA[#{javascript:if (currentDocument.isEditable() == false) return false;
+
+return true;}]]></xp:this.rendered>
+						<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.action>
+								<xp:actionGroup condition="#{javascript:validateInsSave();}">
+									<xp:executeScript>
+										<xp:this.script><![CDATA[#{javascript:var docInspeccion:NotesXspDocument = document1;
+itemLog = docInspeccion.getDocument().getFirstItem("ins_Log_des");
+setLog (itemLog, "Inspección Grabada");
+if(!docInspeccion.isNewNote()) unLockDocument("");}]]></xp:this.script>
+									</xp:executeScript>
+									<xp:saveDocument var="document1"></xp:saveDocument>
+								</xp:actionGroup>
+							</xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xp:button value="Finalizar" id="buttonFinalizar" rendered="#{javascript:return sePuedeFinalizar (document1)}" style="margin-left:20.0px">
+						<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.action>
+								<xp:actionGroup condition="#{javascript:validateInsFinalizar();}">
+									<xp:executeScript>
+										<xp:this.script><![CDATA[#{javascript:/*
+1- Determinamos el nuevo estado
+2- Calculamos el Valor de la Inspección
+3- Actualizamos el Vehiculo
+4- Acciones a Realizar si la Cobertura Aprobada es distinta a la Cobertura Solicitada
+FIN- Enviamos Mails
+*/
+
+var docInspeccion:NotesXspDocument = document1;
+itemLog:NotesItem = docInspeccion.getDocument().getFirstItem("ins_Log_des");
+var strCode:String = docInspeccion.getItemValueString("ins_Componente_cod");
+var strClave:String = "";
+var strAction:String = "";
+var strCobAprobDes:String = docInspeccion.getItemValueString("ins_iCobAprob_des");
+var strCobAprob:String = docInspeccion.getItemValueString("ins_iCobAprob_cod");
+var strCobSolic:String = docInspeccion.getItemValueString("ins_vehCobSol_cod");
+var strTipo:String = docInspeccion.getItemValueString("ins_Tipo_cod");
+var strRtdo:String = docInspeccion.getItemValueString("ins_iRtdo_cod");
+
+//1- Determinamos el nuevo estado
+var strNuevoEstado:String = "";
+if (strRtdo.equals ("10")) strNuevoEstado = "40";
+if (strRtdo.equals ("20")) strNuevoEstado = "50";
+if (strRtdo.equals ("30")) strNuevoEstado = "60";
+if (strRtdo.equals ("40")) strNuevoEstado = "70";
+
+setInsEstado (docInspeccion.getDocument(), strNuevoEstado, "Finalizada")
+
+
+//2- Calculamos el Valor de la Inspección
+// FPR 20140702 - Si es de Productor no buscar el valor 
+if(strTipo != "30"){
+	myInspector = swInspector (docInspeccion);
+	var intValorIns:Integer;
+	var strInspectorMail:String = myInspector.getMail;	
+	var strInspectorEnviar:String = myInspector.getEnviar;
+	
+	if (strRtdo.equals ("10")) intValorIns = myInspector.getValRea;
+	if (strRtdo.equals ("20")) intValorIns = myInspector.getValRea;
+	if (strRtdo.equals ("30")) intValorIns = myInspector.getValReaNo;
+	if (strRtdo.equals ("40")) intValorIns = myInspector.getValFactNo;
+
+	docInspeccion.replaceItemValue("ins_iValor_nro", intValorIns);
+}
+
+
+
+
+//3- Actualizamos el vehiculo
+var strVeh:String = docInspeccion.getItemValueString("ins_Veh_cod");
+var vVehiculos:NotesView = getDbVeh().getView ("v.Sys.Veh");
+var docVeh:NotesDocument = vVehiculos.getDocumentByKey(strVeh);
+if (docVeh == null) {
+	throw new java.lang.Exception("El código de vehiculo no fue encontrado: " + strVeh); 
+}
+//Cambia estado de la inspección en el vehiculo
+var strVehEstado:String = "";
+if (strRtdo.equals ("10")) strVehEstado = "A";
+else strVehEstado = "R";
+if (!strCobAprob.equals (strCobSolic)) strVehEstado = "S";
+docVeh.replaceItemValue("veh_status_ins", strVehEstado);
+
+if (strRtdo.equals ("10")){//Si la inspeccion es Aprobada y Finalizada
+	//Cargamos en vehiculo la cobertura aprobada, suma asegurada y franquicia
+	docVeh.replaceItemValue("veh_cobertura_cod", strCobAprob);
+	docVeh.replaceItemValue("veh_cobertura_des", strCobAprobDes);
+	var fqcia:String = getFranquiciaWs(wrapDocument(docVeh));
+	docVeh.replaceItemValue("veh_franquiciaInforma_opt", "0");
+	if(!fqcia.equals("")){
+		docVeh.replaceItemValue("veh_franquiciaValor_nro", parseFloat(fqcia));
+	}else{
+		docVeh.replaceItemValue("veh_franquiciaValor_nro", 0);
+	}		
+	//Actualizo Suma Asegurada. Si Cobertura = A -->0 sino Suma Asegurada
+	if(strCobAprob.equals('A')){
+		docVeh.replaceItemValue("veh_sumaAsegurada_nro", 0);	
+	}else{
+		var sa:String = getSumaAseguradaTablas(docVeh);
+		if(!sa.equals("[]")) {
+			docVeh.replaceItemValue("veh_sumaAsegurada_nro", parseFloat(sa));
+			
+		}	 
+	}
+}
+//Asignamos la cobertura aprobada
+docVeh.replaceItemValue("veh_insCobertura_cod", strCobAprob);
+docVeh.replaceItemValue("veh_insCobertura_des", strCobAprobDes);
+docVeh.save();
+
+//Buscamos mail del productor.
+var strProdCod:String = docInspeccion.getItemValueString("ins_Prod_cod");
+if (!strProdCod.equals ("")) {
+	var vProductores:NotesView = getDbProductores ().getView ("v.Sys.CT.Code");
+	var docProductor:NotesDocument = vProductores.getDocumentByKey(strProdCod);
+	if (docProductor!=null) {
+		docInspeccion.replaceItemValue("ins_ProdMail_des", @Unique (docProductor.getItemValue("procesoEmail")))
+		docProductor.recycle();
+	}
+}
+
+//Necesito grabarlo para que el envio de mails tome los campos con los datos actualizados.
+//Tener en cuenta que se envia más de 1 mail en este botón
+docInspeccion.save();
+
+//4- Acciones a Realizar si la Cobertura Aprobada es distinta a la Cobertura Solicitada
+if (!strCobAprob.equals (strCobSolic) && strCobSolic !="") {
+	
+	strClave = "InspeccionFin-CobAprobNoSolic";
+	strAction = "Finalizada - Diferencia en Cobertura";
+	if (sendMailWithCfg (strClave, true, strCode, strAction, docInspeccion.getDocument())) {
+		setLog (itemLog, "Mail Fin - Difiere Cobertura - Enviado");
+	}
+	else setLog (itemLog, "Mail Fin - Difiere Cobertura - NO Enviado");
+	
+}
+
+//FIN- Enviamos Mails
+strClave = "InspeccionFinalizada";
+strAction = "Finalizada";
+if (sendMailWithCfg (strClave, true, strCode, strAction, docInspeccion.getDocument())) {
+	setLog (itemLog, "Mail Finalizada Enviado");
+}
+else setLog (itemLog, "Mail Finalizada NO Enviado");
+
+
+//Si es PREVIA
+if (strTipo.equals ("20")) {
+	strClave = "InspeccionFin-Previa";
+	strAction = "Finalizada Previa";
+	if (sendMailWithCfg (strClave, true, strCode, strAction, docInspeccion.getDocument())) {
+		setLog (itemLog, "Mail Finalizada Previa Enviado");
+	}
+	else setLog (itemLog, "Mail Finalizada Previa NO Enviado");
+}
+//Si es COMUN
+if (strTipo.equals ("10")) {
+	//Si fue rechazada o no realizada
+	if (strRtdo.equals ("20") || strRtdo.equals ("30")) {
+		strClave = "InspeccionFin-RechNoRea";
+		strAction = "Finalizada - Rechazada o No Realizada";
+		if (sendMailWithCfg (strClave, true, strCode, strAction, docInspeccion.getDocument())) {
+			setLog (itemLog, "Mail Finalizada - Rechazada o No Realizada - Enviado");
+		}
+		else setLog (itemLog, "Mail Finalizada - Rechazada o No Realizada - NO Enviado");
+	}
+}}]]></xp:this.script>
+									</xp:executeScript>
+									<xp:saveDocument var="document1"></xp:saveDocument>
+								</xp:actionGroup>
+							</xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xp:button value="Clonar" id="buttonClonar" style="margin-left:20.0px">
+						<xp:this.rendered><![CDATA[#{javascript://return sePuedeClonar (document1)
+return false;}]]></xp:this.rendered><xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.action><![CDATA[#{javascript:insClonar (document1.getDocument())}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xp:button value="Abrir Propuesta" id="buttonAbrirProp" style="margin-left:20.0px">
+						<xp:this.rendered><![CDATA[#{javascript:var strProp:String = context.getUrlParameter("AbrirProp");
+//2da condición del sgte IF puede ser eliminada si se quiere controlar según el parámetro recibido por URL
+if (strProp.equals ("1") == false && false) return false;
+
+return tieneVehiculo (document1);}]]></xp:this.rendered>
+						<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.action><![CDATA[#{javascript:var docIns:NotesDocument = document1.getDocument();
+
+var strVeh:String = docIns.getItemValueString("ins_Veh_cod");
+var vVehiculos:NotesView = getDbVeh().getView ("v.Sys.Veh");
+var docVeh:NotesDocument = vVehiculos.getDocumentByKey(strVeh);
+
+if (docVeh == null) {
+	throw new java.lang.Exception("El código de vehiculo no fue encontrado: " + strVeh + " - " + sessionScope.get("strVehDbPath")); 
+}
+
+var strPropuestaUNID:String = docVeh.getItemValueString("idPadre_cod");
+var docProp:NotesDocument = getDbPropuestas().getDocumentByUNID(strPropuestaUNID);
+	
+if (docProp == null) {
+	throw new java.lang.Exception("El código de la propuesta no fue encontrado: -" + strPropuesta + "-"); 
+}
+
+context.redirectToPage("xfdocPropuesta.xsp?documentId=" + docProp.getUniversalID() + "&action=openDocument", true);
+}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button></xp:td>
+				<xp:td>
+					<xc:ccDocumentLocked><xc:this.rendered><![CDATA[#{javascript:!isInsEstadoFinal(getComponent("ins_iEst_cod1").getValue());}]]></xc:this.rendered></xc:ccDocumentLocked></xp:td>
+			</xp:tr>
+		</xp:table></xp:panel>
+		</xp:panel>
+		<xp:panel id="PNL_Comercial" styleClass="PanelBox">
+			<xp:this.rendered><![CDATA[#{javascript:var docInspeccion:NotesXspDocument = document1;
+var strEstadoActual:String = docInspeccion.getItemValueString("ins_iEst_cod");
+
+if (isUserComercial () && strEstadoActual == "80") {
+	return true;
+}
+
+return false;}]]></xp:this.rendered>
+			<xp:panel id="PNL_Comercial_Title" styleClass="PanelTitle">Comercial</xp:panel>
+			<xp:panel id="PNL_Comercial_Content" styleClass="PanelContent">
+				<xp:table id="TBL_Comercial_Fields">
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Mensaje a Autos:" id="ins_inputComAutos_des_Label1" for="ins_inputComAutos_des1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:inputTextarea value="#{document1.ins_inputComAutos_des}" id="ins_inputComAutos_des1" styleClass="FieldComentarios">
+							</xp:inputTextarea>
+						</xp:td>
+						<xp:td>
+							<xp:button value="Devolver Inspección" id="buttonDevolverInsp">
+								<xp:this.rendered><![CDATA[#{javascript:if (currentDocument.isEditable() == false) return false;
+return true;}]]></xp:this.rendered>
+								<xp:eventHandler event="onclick" submit="true" refreshMode="complete" immediate="false" save="true">
+									<xp:this.action><![CDATA[#{javascript:var docInspeccion:NotesXspDocument = document1;
+var strEstadoNuevo:String = docInspeccion.getItemValueString("ins_iEstRegreso_cod");
+setInsEstado (docInspeccion.getDocument(), strEstadoNuevo, "Inspección Devuelta")
+
+//Necesito grabar para que el Evaluate del mailing vea los campos con los últimos cambios
+docInspeccion.save();
+var itemLog:NotesItem = docInspeccion.getDocument().getFirstItem("ins_Log_des");
+var strCode:String = docInspeccion.getItemValueString("ins_Componente_cod");
+var strClave:String = "InspeccionDevolverDeComercialHaciaAutos";
+var strAction:String = "Devolver Inspección de Comercial Hacia Autos";
+if (sendMailWithCfg (strClave, true, strCode, strAction, docInspeccion.getDocument())) {
+	setLog (itemLog, "Mail Devolver Enviado");
+}
+else setLog (itemLog, "Mail Devolver NO Enviado");}]]></xp:this.action>
+								</xp:eventHandler>
+							</xp:button>
+							<xp:button id="button1" value="Editar">
+								<xp:this.rendered><![CDATA[#{javascript://Si es usario de Autos o System, no es necesario mostrar este Editar porque ya se muestra el Editar general.
+if (isUserAutos () || isUserSystem ()) return false;
+
+if (currentDocument.isEditable() == false) return true;
+
+return false;}]]></xp:this.rendered>
+								<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+									<xp:this.action>
+										<xp:changeDocumentMode mode="edit"></xp:changeDocumentMode>
+									</xp:this.action>
+								</xp:eventHandler>
+							</xp:button>
+						</xp:td>
+					</xp:tr>
+				</xp:table>
+			</xp:panel>
+		</xp:panel>
+		<xp:panel id="PNL_Enviar" styleClass="PanelBox">
+			<xp:panel styleClass="PanelTitle" id="PNL_Enviar_Title">Enviar Inspección</xp:panel>
+			<xp:panel id="PNL_Enviar_Content" styleClass="PanelContent">
+				<xp:panel id="PNL_Enviar_Inspector">
+					<xp:table style="width:100.0%" id="TBL_Enviar_Inspector">
+						<xp:tr>
+							<xp:td style="width:130.0px">
+								<xp:label value="Mensaje a Inspector" id="labelMsjInspector" for="MsjParaInspector"></xp:label>
+							</xp:td>
+							<xp:td>
+								<xp:inputTextarea id="ins_inputComIns_des1" styleClass="FieldComentarios" value="#{document1.ins_inputComIns_des}"
+									disabled="#{javascript:return !sePuedeEnviarInspector (document1);}">
+								</xp:inputTextarea>
+							</xp:td>
+							<xp:td>
+								<xp:button value="A Inspector" id="buttonEnviarInspector">
+									<xp:this.rendered><![CDATA[#{javascript:if (sePuedeEnviarInspector (document1)) {
+	return document1.isEditable()
+}
+return false;}]]></xp:this.rendered>
+									<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+										<xp:this.action>
+											<xp:actionGroup condition="#{javascript:validateInsEnviar();}">
+												<xp:executeScript>
+													<xp:this.script><![CDATA[#{javascript:/*
+1- Buscamos al inspector
+2- Busca el Vehiculo Asociado
+3- Cambia estado del vehiculo
+4- Asigna nuevo estado
+5- Asigna fecha de envio
+6- Envia el Mail al Inspector
+*/
+
+var docInspeccion:NotesXspDocument = document1;
+var itemLog:NotesItem = docInspeccion.getDocument().getFirstItem("ins_Log_des");
+
+//1- Buscamos al inspector
+myInspector = swInspector (docInspeccion);
+var strInspectorMail:String = myInspector.getMail;	
+var strInspectorEnviar:String = myInspector.getEnviar;
+
+if (strInspectorEnviar.equals("1")) {
+	//El Inspector está marcado para que se le envie la inspección.
+	//Sólo se valida items del vehiculo para este tipo de inspectores.
+	
+	var strVeh:String = docInspeccion.getItemValueString("ins_Veh_cod");
+	//2- Busca el Vehiculo Asociado
+	var vVehiculos:NotesView = getDbVeh().getView ("v.Sys.Veh");
+	var docVeh:NotesDocument = vVehiculos.getDocumentByKey(strVeh);
+	if (docVeh == null) {
+		throw new java.lang.Exception("El código de vehiculo no fue encontrado: " + strVeh); 
+	}
+	
+	//3- Cambia estado de la inspección en el vehiculo
+	docVeh.replaceItemValue("veh_status_ins", "P");
+	docVeh.save();
+}
+
+//4- Asigna nuevo estado y 5- Asigna fecha de envio
+setInsEstado (docInspeccion.getDocument(), "20", "Enviada a Inspector")
+docInspeccion.setValue("ins_iEnvioFecha_dat", @Now());
+
+//Necesito grabarlo para que el envio de mails tome los campos con los datos actualizados.
+insQuerySave (docInspeccion, false);
+docInspeccion.save();
+
+
+if (strInspectorEnviar.equals("1")) {
+	//6- Envia mail al Inspector
+	var strCode:String = docInspeccion.getItemValueString("ins_Componente_cod");
+	var strClave:String = "InspeccionEnviarInspector";
+	var strAction:String = "Enviar a Inspector";
+	if (sendMailWithCfg (strClave, true, strCode, strAction, docInspeccion.getDocument())) {
+		setLog (itemLog, "Mail a Inspector Enviado");
+	}
+	else setLog (itemLog, "Mail a Inspector NO Enviado");
+}
+
+
+
+}]]></xp:this.script>
+												</xp:executeScript>
+												<xp:saveDocument var="document1"></xp:saveDocument>
+											</xp:actionGroup>
+										</xp:this.action>
+									</xp:eventHandler>
+								</xp:button>
+							</xp:td>
+						</xp:tr>
+					</xp:table>
+				</xp:panel>
+				<xp:panel id="PNL_Enviar_Productor">
+					<xp:this.rendered><![CDATA[#{javascript:if (document1.isNewNote()) return false;
+return true;}]]></xp:this.rendered>
+					<xp:table id="TBL_Enviar_Productor" style="width:100%">
+						<xp:tr>
+							<xp:td style="width:130.0px">
+								<xp:label value="Mensaje a Productor" id="ins_inputComProd_des_Label1" for="ins_inputComProd_des1"></xp:label>
+							</xp:td>
+							<xp:td>
+								<xp:inputTextarea value="#{document1.ins_inputComProd_des}" id="ins_inputComProd_des1"
+									styleClass="FieldComentarios">
+								</xp:inputTextarea>
+							</xp:td>
+							<td>
+								<xp:button value="A Productor" id="buttonAProductor" rendered="#{javascript:return document1.isEditable()}">
+									<xp:eventHandler event="onclick" submit="true" refreshMode="complete" immediate="false" save="true">
+										<xp:this.action><![CDATA[#{javascript:var docInspeccion:NotesXspDocument = document1;
+var itemLog:NotesItem = docInspeccion.getDocument().getFirstItem("ins_Log_des");
+
+//Necesito grabar para que el Evaluate del mailing vea los campos con los últimos cambios
+docInspeccion.save();
+var strCode:String = docInspeccion.getItemValueString("ins_Componente_cod");
+var strClave:String = "InspeccionEnviarProductor";
+var strAction:String = "Enviar a Productor";
+if (sendMailWithCfg (strClave, true, strCode, strAction, docInspeccion.getDocument())) {
+	setLog (itemLog, "Mail a Productor Enviado");
+}
+else setLog (itemLog, "Mail a Productor NO Enviado");
+}]]></xp:this.action>
+									</xp:eventHandler>
+								</xp:button>
+							</td>
+						</xp:tr>
+					</xp:table>
+				</xp:panel>
+				<xp:panel id="PNL_Enviar_Comercial">
+					<xp:table id="TBL_Enviar_Comercial" style="width:100%">
+						<xp:tr>
+							<xp:td style="width:130.0px">
+								<xp:label value="Mensaje a Comercial" id="labelMsjComercial" for="MsjParaComercial"></xp:label>
+							</xp:td>
+							<xp:td>
+								<xp:inputTextarea id="ins_inputComComer_des1" styleClass="FieldComentarios" value="#{document1.ins_inputComComer_des}"
+									disabled="#{javascript:return !sePuedeEnviarComercial (document1)}">
+								</xp:inputTextarea>
+							</xp:td>
+							<xp:td>
+								<xp:button value="A Comercial" id="buttonAComercial">
+									<xp:this.rendered><![CDATA[#{javascript:if (sePuedeEnviarComercial (document1)) {
+	return document1.isEditable();
+}
+return false;}]]></xp:this.rendered>
+									<xp:eventHandler event="onclick" submit="true" refreshMode="complete" id="eventHandler3">
+										<xp:this.action>
+											<xp:actionGroup condition="#{javascript:validateInsAComercial();}">
+												<xp:executeScript>
+													<xp:this.script><![CDATA[#{javascript:var docInspeccion:NotesXspDocument = document1;
+var itemLog:NotesItem = docInspeccion.getDocument().getFirstItem("ins_Log_des");
+
+setInsEstado (docInspeccion.getDocument(), "80", "Enviada a Comercial")
+
+//Necesito grabar para que el Evaluate del mailing vea los campos con los últimos cambios
+docInspeccion.save();
+var strCode:String = docInspeccion.getItemValueString("ins_Componente_cod");
+var strClave:String = "InspeccionEnviarComercial";
+var strAction:String = "Enviar a Comercial";
+if (sendMailWithCfg (strClave, true, strCode, strAction, docInspeccion.getDocument())) {
+	setLog (itemLog, "Mail a Comercial Enviado");
+}
+else setLog (itemLog, "Mail a Comercial NO Enviado");
+}]]></xp:this.script>
+												</xp:executeScript>
+												<xp:saveDocument var="document1"></xp:saveDocument>
+											</xp:actionGroup>
+										</xp:this.action>
+									</xp:eventHandler>
+								</xp:button>
+							</xp:td>
+						</xp:tr>
+						<xp:tr>
+							<xp:td style="padding-left:10.0px">
+								<xp:label value="Tipo de Problema:" id="ins_iProb_cod_Label1" for="ins_iProb_cod1"></xp:label>
+							</xp:td>
+							<xp:td>
+								<xp:comboBox value="#{document1.ins_iProb_cod}" id="ins_iProb_cod1"
+									disabled="#{javascript:return !sePuedeEnviarComercial (document1)}">
+									<xp:this.readonly><![CDATA[#{javascript:if (allowInspeccionEdit () == false) return true;
+return false;}]]></xp:this.readonly>
+									<xp:this.converter>
+										<xp:customConverter getAsString="#{javascript:@Trim (value)}" getAsObject="#{javascript:@Trim (value)}">
+										</xp:customConverter>
+									</xp:this.converter>
+									<xp:selectItem itemLabel=" " id="selectItem5"></xp:selectItem>
+									<xp:selectItems id="selectItems5">
+										<xp:this.value><![CDATA[#{javascript:var vOpciones:NotesView = getDbCfg().getView ("v.Sys.Opciones.Clave");
+var entryCol:NotesViewEntryCollection = vOpciones.getAllEntriesByKey("Inspeccion-ProblemaTipo")
+var entryOpt:NotesViewEntry = entryCol.getFirstEntry();
+var docOpt:NotesDocument;
+
+var arrOpts:Array = new Array ();
+
+while (entryOpt != null) {
+	docOpt = entryOpt.getDocument();
+	
+	arrOpts.push(docOpt.getItemValueString("opt_Nombre_des") + "|" + docOpt.getItemValueString("opt_Codigo_des"));
+	
+	entryOpt = entryCol.getNextEntry(entryOpt);
+}
+arrOpts}]]></xp:this.value>
+									</xp:selectItems>
+									<xp:eventHandler event="onchange" submit="true" refreshMode="partial" refreshId="ins_iProb_des1"
+										id="eventHandler6">
+										<xp:this.action><![CDATA[#{javascript:var strCode:String = getComponent ("ins_iProb_cod1").getValue();
+
+if (@Trim (strCode).equals("")) {
+	document1.setValue("ins_iProb_des", "");
+}
+else {
+	var vOpciones:NotesView = getDbCfg().getView ("v.Sys.Opciones.ClaveCodigo");
+	var docOpt:NotesDocument = vOpciones.getDocumentByKey("Inspeccion-ProblemaTipo" + strCode);
+	document1.setValue("ins_iProb_des", docOpt.getItemValueString("opt_Nombre_des"));
+}}]]></xp:this.action>
+									</xp:eventHandler>
+								</xp:comboBox>
+								<xp:text value="#{document1.ins_iProb_des}" id="ins_iProb_des1" style="display:none"></xp:text>
+							</xp:td>
+							<xp:td></xp:td>
+						</xp:tr>
+					</xp:table>
+				</xp:panel>
+			</xp:panel>
+		</xp:panel>
+		<xp:panel id="PNL_Propuesta" styleClass="PanelBox">
+			<xp:panel styleClass="PanelTitle" id="PNL_Prop_Title">
+				Propuesta Nro:&#160;
+				<xp:text value="#{document1.ins_Prop_nro}" id="ins_Prop_nro1">
+					<xp:this.converter>
+						<xp:convertNumber type="number"></xp:convertNumber>
+					</xp:this.converter>
+				</xp:text>
+			</xp:panel>
+			<!-- <xp:div id="div_asegurado" styleClass="PanelContent"> -->
+			<xp:panel id="TBL_DatosFiliatorios" styleClass="PanelContent">
+			<xp:div id="div_asegurado" styleClass="PanelContent">
+			<xp:panel id="PNL_Prop_Content" styleClass="PanelContent" style="width:97.0%;padding-bottom:5.0px">
+				<xp:table style="margin-top:4.0px" cellpadding="2" id="TBL_Prop_Fields" styleClass="TableFields">
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Productor:   " id="ins_Prod_des_Label1" for="ins_Prod_des1"></xp:label>
+							<xc:ccDialogBusquedaProductor propertyTitle="Seleccione Productor"><xc:this.rendered><![CDATA[#{javascript:if (getComponent("ins_Prop_nro1").getValue() == null)return true;
+if (getComponent("ins_Prop_nro1").getValue() == "")return true;
+return false;}]]></xc:this.rendered></xc:ccDialogBusquedaProductor></xp:td>
+						<xp:td colspan="3">
+							
+							
+						
+							
+							
+							
+							
+														
+							
+							(<xp:inputText id="sol_productor_cod" value="#{document1.ins_Prod_cod}" required="true" disableClientSideValidation="true"
+								readonly="true">
+							</xp:inputText>)&#160;
+							<xp:inputText id="sol_productor_des" value="#{document1.ins_Prod_des}" readonly="true" /></xp:td>
+						
+						
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Asegurado:  " id="ins_Aseg_des_Label1" for="sol_asegurado_des"></xp:label>
+							<xc:ccDialogBusquedaAsegurado propertyTitle="Seleccione Asegurado" property_booCargarDomicilio="true">
+								<xc:this.property_codigoProductor><![CDATA[#{javascript:getComponent("sol_productor_cod").value;}]]></xc:this.property_codigoProductor>
+								<xc:this.rendered><![CDATA[#{javascript:if (getComponent("ins_Prop_nro1").getValue() == null)return true;
+if (getComponent("ins_Prop_nro1").getValue() == "")return true;
+return false;}]]></xc:this.rendered>
+							</xc:ccDialogBusquedaAsegurado>
+						</xp:td>
+						<xp:td colspan="3">
+							(
+							
+							
+							<xp:inputText id="sol_asegurado_cod" value="#{document1.ins_Aseg_cod}" required="true" disableClientSideValidation="true" readonly="true">
+							</xp:inputText>)&#160;<xp:inputText id="sol_asegurado_des" value="#{document1.ins_Aseg_des}" readonly="true" />
+							
+							
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td style="width:100.0px">
+							
+							<xp:button id="button2" value="Editar Dirección" style="font-size:8pt">
+								<xp:this.rendered><![CDATA[#{javascript:if (!currentDocument.isEditable()) return false;
+if (!getComponent("ins_AsegDomDir_des1").isReadonly()) return false; 
+if (getComponent("ins_Prop_nro1").getValue() == null)return true;
+if (getComponent("ins_Prop_nro1").getValue() == "")return true;
+return false;}]]></xp:this.rendered>
+								<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="div_asegurado">
+									<xp:this.action><![CDATA[#{javascript:var compDir = getComponent("ins_AsegDomDir_des1");
+compDir.setReadonly(false);
+var compCodPostal = getComponent("ins_AsegDomCodPostal_des1");
+compCodPostal.setReadonly(false);
+var compLoc = getComponent("ins_AsegDomLoc_des1");
+compLoc.setReadonly(false);
+var compPcia = getComponent("ins_AsegDomProv_des1");
+compPcia.setReadonly(false);}]]></xp:this.action>
+								</xp:eventHandler>
+							</xp:button>
+							<xp:label value="Dirección" id="label8" for="sol_asegurado_des"><xp:this.rendered><![CDATA[#{javascript:if(!currentDocument.isEditable()) return true;
+if(!getComponent("ins_AsegDomDir_des1").isReadonly() && currentDocument.isEditable()) return true;
+return false;}]]></xp:this.rendered></xp:label></xp:td>
+						<xp:td>
+							<xp:inputText value="#{document1.ins_AsegDomDir_des}" id="ins_AsegDomDir_des1" readonly="true">
+							</xp:inputText>
+						</xp:td>
+						<xp:td>
+							<xp:label id="labelCP" for="sol_asegurado_des" value="CP" style="text-align:center"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:inputText value="#{document1.ins_AsegDomCodPostal_des}" id="ins_AsegDomCodPostal_des1">
+							<xp:this.readonly><![CDATA[#{javascript://sePuedeEditarPropuesta (document1) == false
+return true;}]]></xp:this.readonly></xp:inputText>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Localidad" id="label10" for="sol_asegurado_des"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:inputText value="#{document1.ins_AsegDomLoc_des}" id="ins_AsegDomLoc_des1">
+							<xp:this.readonly><![CDATA[#{javascript://sePuedeEditarPropuesta (document1) == false
+return true;}]]></xp:this.readonly></xp:inputText>
+						</xp:td>
+						<xp:td>
+							<xp:label value="Provincia" id="label11" for="sol_asegurado_des" style="padding-left:5.0px"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:inputText value="#{document1.ins_AsegDomProv_cod}" id="ins_AsegDomProv_cod1"
+								readonly="#{javascript:sePuedeEditarPropuesta (document1) == false}" style="display:none;">
+							</xp:inputText>
+							<xp:inputText value="#{document1.ins_AsegDomProv_des}" id="ins_AsegDomProv_des1">
+							<xp:this.readonly><![CDATA[#{javascript://sePuedeEditarPropuesta (document1) == false
+return true;}]]></xp:this.readonly></xp:inputText>
+						</xp:td>
+					</xp:tr>
+				</xp:table>
+			</xp:panel>
+			</xp:div>
+		</xp:panel>
+		<xp:panel id="PNL_Veh" styleClass="PanelBox">
+			<xp:panel id="PNL_Veh_Title" styleClass="PanelTitle">Vehículo</xp:panel>
+			<xp:panel id="PNL_Veh_Content" styleClass="PanelContent">
+				<xp:table style="width:100.0%" id="TBL_Veh_Fields" styleClass="TableFields">
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Número:" id="ins_Veh_nro_Label1" for="ins_Veh_nro1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:text value="#{document1.ins_Veh_nro}" id="ins_Veh_nro1">
+								<xp:this.converter>
+									<xp:convertNumber type="number"></xp:convertNumber>
+								</xp:this.converter>
+							</xp:text>
+						</xp:td>
+						<xp:td></xp:td>
+						<xp:td>
+							<xp:panel id="PanelDatosVehiculos">
+								<xp:this.rendered><![CDATA[#{javascript:sePuedeEditarVehiculo (document1) && document1.isEditable()}]]></xp:this.rendered>
+								<xp:panel id="PNL_DlgCmpContainer">
+									<xp:panel id="PNL_DlgCmpVisibility">
+										<xp:this.rendered><![CDATA[#{javascript:return true;
+
+if (viewScope.get("displayDlgCmp") == null) return false;
+if (viewScope.get("displayDlgCmp") != "1") return false;
+return true;}]]></xp:this.rendered><xp:button id="buttonBuscarVehiculo" value="+">
+		<xp:this.rendered><![CDATA[#{javascript:if (getComponent("ins_Prop_nro1").getValue() == null)return true;
+if (getComponent("ins_Prop_nro1").getValue() == "")return true;
+return false;}]]></xp:this.rendered><xp:eventHandler event="onclick" submit="true" id="eventHandler14" refreshMode="partial" refreshId="buttonBuscarVehiculo">
+			<xp:this.action><![CDATA[#{javascript:viewScope.newVeh_Dialog.accionInvocada = "Alta";
+viewScope.newVeh_Dialog.patente = "Ingresar Patente";
+viewScope.newVeh_Dialog.showInputComponente = "false";
+viewScope.newVeh_Dialog.buttonValidarVehiculoVisible = false;
+viewScope.newVeh_Dialog.dialogComponenteTitle = "Vehículo";
+viewScope.PNL_CargaDatosVehiculos = false;
+viewScope.VehSelectedUNID = "";
+
+
+viewScope.put("PNL_Veh_modelo_cod",false);
+viewScope.put("PNL_Veh_submodelo_cod",false);
+viewScope.put("PNL_Veh_anio_cod",false);
+viewScope.PNL_DialogCabeceraDatosVehiculosRead = false;
+getComponent('dialogComponente').show();
+getComponent("veh_marca_cod").setValue("- Seleccionar -");
+getComponent("veh_modelo_cod").setValue("- Seleccionar -");
+getComponent("veh_submodelo_cod").setValue("- Seleccionar -");
+getComponent("veh_anio_cod").setValue("- Seleccionar -");}]]></xp:this.action>
+		</xp:eventHandler>
+	</xp:button>
+										<xc:ccDialogNuevoComponente property_sol_asegurado_cod="0"></xc:ccDialogNuevoComponente>
+									</xp:panel>
+								</xp:panel>
+							</xp:panel>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Marca:" id="ins_VehMarca_cod_Label1" for="ins_VehMarca_cod1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:inputText value="#{document1.ins_VehMarca_cod}" id="ins_VehMarca_cod1" rendered="false" readonly="true">
+							</xp:inputText>
+							<xp:inputText value="#{document1.ins_VehMarca_des}" id="ins_VehMarca_des1" readonly="true"></xp:inputText>
+						</xp:td>
+						<xp:td>
+							<xp:label value="Año:" id="ins_VehAnio_cod_Label1" for="ins_VehAnio_cod1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:inputText value="#{document1.ins_VehAnio_cod}" id="ins_VehAnio_cod1" readonly="true"></xp:inputText>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Modelo:" id="ins_VehModelo_cod_Label1" for="ins_VehModelo_cod1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:inputText value="#{document1.ins_VehModelo_cod}" id="ins_VehModelo_cod1" rendered="false" readonly="true">
+							</xp:inputText>
+							<xp:inputText value="#{document1.ins_VehModelo_des}" id="ins_VehModelo_des1" readonly="true"></xp:inputText>
+						</xp:td>
+						<td>
+							<xp:label value="SubModelo:" id="ins_VehSubModelo_cod_Label1" for="ins_VehSubModelo_cod1"></xp:label>
+						</td>
+						<td>
+							<xp:inputText value="#{document1.ins_VehSubModelo_cod}" id="ins_VehSubModelo_cod1" rendered="false" readonly="true">
+							</xp:inputText>
+							<xp:inputText value="#{document1.ins_VehSubModelo_des}" id="ins_VehSubModelo_des1" readonly="true"></xp:inputText>
+						</td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Patente - Nro.:" id="ins_VehPatNro_des_Label1" for="ins_VehPatNro_des1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:inputText value="#{document1.ins_VehPatNro_des}" id="ins_VehPatNro_des1" readonly="true"></xp:inputText>
+						</xp:td>
+						<xp:td>
+							<xp:label value="Cobertura:" id="label12" for="ins_iCobAprob_cod1"></xp:label></xp:td>
+						<xp:td>
+							<xp:inputText value="#{document1.ins_vehCobSol_cod}" id="ins_vehCobSol_cod1" rendered="false" readonly="true">
+							</xp:inputText>
+							<xp:inputText value="#{document1.ins_vehCobSol_des}" id="ins_vehCobSol_des1" readonly="true"></xp:inputText></xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Chasis:" id="ins_VehChasis_des_Label1" for="ins_VehChasis_des1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:inputText value="#{document1.ins_VehChasis_des}" id="ins_VehChasis_des1" readonly="true"></xp:inputText>
+						</xp:td>
+						<xp:td>
+							<xp:label value="Motor:" id="ins_VehMotor_des_Label1" for="ins_VehMotor_des1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:inputText value="#{document1.ins_VehMotor_des}" id="ins_VehMotor_des1" readonly="true"></xp:inputText>
+						</xp:td>
+					</xp:tr>
+				</xp:table>
+			</xp:panel>
+		</xp:panel>
+		<xp:panel id="PNL_MailListing" styleClass="PanelBox">
+			<xp:this.rendered><![CDATA[#{javascript:if (document1.isNewNote()) return false;
+return insTieneMailsVinculados(document1.getDocument());}]]></xp:this.rendered>
+			<xp:panel id="PNL_MailListing_Content" styleClass="PanelContent" style="padding-top:10.0px">
+				<xp:pager layout="Previous Group Next" partialRefresh="true" id="pager1" for="repeatMails"></xp:pager>
+				<xp:table cellpadding="5" cellspacing="0" border="0" style="width:100.0%" id="TBL_MailListing">
+					<xp:tr styleClass="ViewTitle">
+						<xp:td style="font-weight:bold">Fecha</xp:td>
+						<xp:td style="font-weight:bold">
+							Asunto
+							
+							</xp:td>
+						<xp:td style="font-weight:bold">Enviado A</xp:td>
+					</xp:tr>
+					<xp:repeat id="repeatMails" rows="10" value="#{mails}" var="repeatMailRow" indexVar="repeatMailIndex">
+						<xp:tr id="rowInspeccion">
+							<xp:this.styleClass><![CDATA[#{javascript:if (!!viewScope.get("selectedEmailUNID")) { 
+	if (viewScope.get("selectedEmailUNID").equals(repeatMailRow.getUniversalID())) {
+		return "ViewRowSelected";
+	}
+}
+return "ViewRow";}]]></xp:this.styleClass>
+							<xp:td align="center">
+								<xp:text escape="true" id="computedField1">
+									<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatMailRow.getColumnValue("MyMailSentDate");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+									<xp:this.converter>
+										<xp:convertDateTime type="both" timeStyle="short"></xp:convertDateTime>
+									</xp:this.converter>
+								</xp:text>
+							</xp:td>
+							<xp:td>
+								<xp:text escape="true" id="computedField2">
+									<xp:this.value><![CDATA[#{javascript:var strVal:String = repeatMailRow.getColumnValue("Subject");
+if (strVal.equals ("")) {
+	"-";
+}
+else {
+	strVal;
+}}]]></xp:this.value>
+								</xp:text>
+							</xp:td>
+							<xp:td>
+								<xp:text escape="true" id="computedField3">
+									<xp:this.value><![CDATA[#{javascript:var colValue = repeatMailRow.getColumnValue("SendTo");
+
+if ( (typeof colValue).toLowerCase() == "string" ) {
+	if (colValue.equals ("")) {
+		"-";
+	}
+	else {
+		colValue;
+	}
+}
+else {
+	var strValue = colValue.elementAt(0);
+	for (var i=1; i<colValue.size(); i++) {
+		strValue += "\n" + colValue.elementAt (i);
+	}
+}
+
+}]]></xp:this.value>
+								</xp:text>
+							</xp:td>
+							<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="PNL_MailDoc">
+								<xp:this.action><![CDATA[#{javascript:/*
+Tiene que ser FULL Update para que tb se actualice la Clase CSS de esta fila.
+*/
+viewScope.put("selectedEmailUNID", repeatMailRow.getUniversalID())}]]></xp:this.action>
+							</xp:eventHandler>
+							<xp:eventHandler event="onmouseout" submit="true" refreshMode="partial" refreshId="PNL_MailListing"></xp:eventHandler>
+						</xp:tr>
+					</xp:repeat>
+				</xp:table>
+			</xp:panel>
+		</xp:panel>
+		</xp:panel>
+	</xp:panel>
+	<xp:panel id="PNL_Right" styleClass="FormColumn">
+		<xp:panel id="PNL_Relev" styleClass="PanelBox">
+			<xp:panel id="PNL_Relev_Title" styleClass="PanelTitle">Relevamiento</xp:panel>
+			<xp:panel id="PNL_Relev_Content" styleClass="PanelContent">
+				<xp:table id="TBL_Relev_Fields" style="width:100.0%">
+					<xp:tr>
+						<xp:td style="width:90.0px">
+							<xp:label value="Inspector:" id="label1" for="ins_Inspect_des1"></xp:label>
+						</xp:td>
+						<xp:td colspan="3">
+							<xp:comboBox value="#{document1.ins_Inspect_opt}" id="ins_Inspect_opt1">
+								<xp:this.readonly><![CDATA[#{javascript:if (allowInspeccionEdit () == false) return true;
+if (sePuedeEditarRelevamiento(document1) == false) return true;
+return false;}]]></xp:this.readonly>
+								<xp:this.converter>
+									<xp:customConverter getAsString="#{javascript:@Trim (value)}" getAsObject="#{javascript:@Trim (value)}">
+									</xp:customConverter>
+								</xp:this.converter>
+								<xp:selectItem itemLabel=" " id="selectItem1"></xp:selectItem>
+								<xp:selectItems id="selectItems1">
+									<xp:this.value><![CDATA[#{javascript:var vInspec:NotesView = getDbInspectores().getView ("People");
+var entryCol:NotesViewEntryCollection = vInspec.getAllEntries();
+var entryInspec:NotesViewEntry = entryCol.getFirstEntry();
+
+var arrInspec:Array = new Array ();
+var vecCol:Vector;
+
+while (entryInspec != null) {
+	
+	arrInspec.push(@Trim (entryInspec.getColumnValues().firstElement().toString()));
+	
+	entryInspec = entryCol.getNextEntry(entryInspec);
+}
+arrInspec}]]></xp:this.value>
+								</xp:selectItems>
+								<xp:eventHandler event="onchange" submit="true" refreshMode="partial" id="eventHandler1"
+									refreshId="ins_InspectMail_des1">
+									<xp:this.action><![CDATA[#{javascript:var insNom = document1.getItemValue("ins_Inspect_opt");
+
+if (@Trim (insNom.elementAt (0)).equals("")) {
+	document1.setValue("ins_InspectMail_des", "");
+}
+else {
+	myInspector = swInspector (docInspeccion);
+	document1.setValue("ins_InspectMail_des", myInspector.getMail);
+}}]]></xp:this.action>
+								</xp:eventHandler>
+							</xp:comboBox>
+							<xp:text value="#{document1.ins_InspectMail_des}" id="ins_InspectMail_des1" style="display:none"></xp:text>
+							&#160;&#160;
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:label value="A Coordinar" id="label4" for="ins_Inspect_des1"></xp:label>
+							<xp:br></xp:br>
+							<xp:label value="por Inspector:" id="label5" for="ins_Inspect_des1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:radio text="Sí" id="radioCoordInspectorSi" value="#{document1.ins_iCoordInspector_des}"
+								groupName="radioCoordInspector" selectedValue="1">
+								<xp:this.readonly><![CDATA[#{javascript:if (allowInspeccionEdit () == false) return true;
+if (sePuedeEditarRelevamiento(document1) == false) return true;
+return false;}]]></xp:this.readonly>
+							</xp:radio>
+							<xp:radio text="No" id="radioCoordInspectorNo" groupName="radioCoordInspector"
+								value="#{document1.ins_iCoordInspector_des}" selectedValue="0">
+								<xp:this.readonly><![CDATA[#{javascript:if (allowInspeccionEdit () == false) return true;
+if (sePuedeEditarRelevamiento(document1) == false) return true;
+return false;}]]></xp:this.readonly>
+							</xp:radio>
+						</xp:td>
+						<xp:td>
+							<xp:label value="Fecha Combinada:" id="ins_iFecha_dat_Label1" for="ins_iFecha_dat1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:inputText value="#{document1.ins_iFecha_dat}" id="ins_iFecha_dat1" style="width:90.0px">
+								<xp:this.readonly><![CDATA[#{javascript:if (allowInspeccionEdit () == false) return true;
+if (sePuedeEditarRelevamiento(document1) == false) return true;
+return false;}]]></xp:this.readonly>
+								<xp:dateTimeHelper id="dateTimeHelper1"></xp:dateTimeHelper>
+								<xp:this.converter>
+									<xp:convertDateTime type="date" dateStyle="short"></xp:convertDateTime>
+								</xp:this.converter>
+							</xp:inputText>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Lugar:" id="ins_iLugar_des_Label1" for="ins_iLugar_des1"></xp:label>
+						</xp:td>
+						<xp:td colspan="3">
+							<xp:inputTextarea value="#{document1.ins_iLugar_des}" id="ins_iLugar_des1" styleClass="FieldComentarios">
+								<xp:this.readonly><![CDATA[#{javascript:if (allowInspeccionEdit () == false) return true;
+if (sePuedeEditarRelevamiento(document1) == false) return true;
+return false;}]]></xp:this.readonly>
+							</xp:inputTextarea>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Télefono:" id="ins_iTel_des_Label1" for="ins_iTel_des1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:inputText value="#{document1.ins_iTel_des}" id="ins_iTel_des1">
+								<xp:this.readonly><![CDATA[#{javascript:if (allowInspeccionEdit () == false) return true;
+if (sePuedeEditarRelevamiento(document1) == false) return true;
+return false;}]]></xp:this.readonly>
+							</xp:inputText>
+						</xp:td>
+						<xp:td>
+							<xp:label value="Desde - Hasta:" id="ins_iHoraDesde_dat_Label1" for="ins_iHoraDesde_dat1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:table cellpadding="0" cellspacing="0">
+								<xp:tr>
+									<xp:td>
+										<xp:inputText value="#{document1.ins_iHoraDesde_dat}" id="ins_iHoraDesde_dat1" autocomplete="on"
+											defaultValue="#{javascript:@Time(0,0,0)}" style="width:60.0px">
+											<xp:this.readonly><![CDATA[#{javascript:if (allowInspeccionEdit () == false) return true;
+if (sePuedeEditarRelevamiento(document1) == false) return true;
+return false;}]]></xp:this.readonly>
+											<xp:dateTimeHelper id="dateTimeHelper2"></xp:dateTimeHelper>
+											<xp:this.converter>
+												<xp:convertDateTime type="time" timeStyle="short"></xp:convertDateTime>
+											</xp:this.converter>
+										</xp:inputText>
+									</xp:td>
+									<xp:td style="padding-left:10.0px">
+										<xp:inputText value="#{document1.ins_iHoraHasta_dat}" id="ins_iHoraHasta_dat1"
+											defaultValue="#{javascript:@Time(0,0,0)}" style="width:60.0px">
+											<xp:this.readonly><![CDATA[#{javascript:if (allowInspeccionEdit () == false) return true;
+if (sePuedeEditarRelevamiento(document1) == false) return true;
+return false;}]]></xp:this.readonly>
+											<xp:dateTimeHelper id="dateTimeHelper3"></xp:dateTimeHelper>
+											<xp:this.converter>
+												<xp:convertDateTime type="time" timeStyle="short"></xp:convertDateTime>
+											</xp:this.converter>
+										</xp:inputText>
+									</xp:td>
+								</xp:tr>
+							</xp:table>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Ver A:" id="ins_iVerA_des_Label1" for="ins_iVerA_des1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:inputText value="#{document1.ins_iVerA_des}" id="ins_iVerA_des1">
+								<xp:this.readonly><![CDATA[#{javascript:if (allowInspeccionEdit () == false) return true;
+if (sePuedeEditarRelevamiento(document1) == false) return true;
+return false;}]]></xp:this.readonly>
+							</xp:inputText>
+						</xp:td>
+						<xp:td>
+							<xp:label value="De Parte De:" id="ins_iDeParteDe_des_Label1" for="ins_iDeParteDe_des1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:inputText value="#{document1.ins_iDeParteDe_des}" id="ins_iDeParteDe_des1">
+								<xp:this.readonly><![CDATA[#{javascript:if (allowInspeccionEdit () == false) return true;
+if (sePuedeEditarRelevamiento(document1) == false) return true;
+return false;}]]></xp:this.readonly>
+							</xp:inputText>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Comentarios:" id="ins_iCom_des_Label1" for="ins_iCom_des1"></xp:label>
+						</xp:td>
+						<xp:td colspan="3">
+							<xp:inputTextarea value="#{document1.ins_iCom_des}" id="ins_iCom_des1" styleClass="FieldComentarios">
+								<xp:this.readonly><![CDATA[#{javascript:if (allowInspeccionEdit () == false) return true;
+if (sePuedeEditarRelevamiento(document1) == false) return true;
+return false;}]]></xp:this.readonly>
+							</xp:inputTextarea>
+						</xp:td>
+					</xp:tr>
+				</xp:table>
+			</xp:panel>
+		</xp:panel>
+		<xp:panel id="PNL_Inspeccion" styleClass="PanelBox">
+			<xp:panel id="PNL_INS_Title" styleClass="PanelTitle">Inspección</xp:panel>
+			<xp:panel id="PNL_INS_Content" styleClass="PanelContent">
+				<xp:table cellpadding="2" id="TBL_INS_Fields">
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Consecutivo:" id="ins_Consecutivo_des_Label1" for="ins_Consecutivo_des1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:text value="#{document1.ins_Consecutivo_des}" id="ins_Consecutivo_des1"></xp:text>
+						</xp:td>
+						<xp:td>
+							<xp:label value="Estado:" id="label6" for="ins_iEst_des1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:text value="#{document1.ins_iEst_des}" id="ins_iEst_des1"></xp:text>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Tipo:" id="ins_Tipo_des_Label1" for="ins_Tipo_des1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:text value="#{document1.ins_Tipo_des}" id="ins_Tipo_des1"></xp:text>
+						</xp:td>
+						<xp:td>
+							<xp:label value="Fecha de Envío:" id="ins_iEnvioFecha_dat_Label1" for="ins_iEnvioFecha_dat1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:text value="#{document1.ins_iEnvioFecha_dat}" id="ins_iEnvioFecha_dat1">
+								<xp:this.converter>
+									<xp:convertDateTime type="both" dateStyle="short" timeStyle="short"></xp:convertDateTime>
+								</xp:this.converter>
+							</xp:text>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Valor:" id="ins_iValor_nro_Label1" for="ins_iFcValor_nro1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:text value="#{document1.ins_iValor_nro}" id="ins_iValor_nro1">
+								<xp:this.converter>
+									<xp:convertNumber></xp:convertNumber>
+								</xp:this.converter>
+							</xp:text>
+						</xp:td>
+						<xp:td>
+							<xp:label value="Factura - Nro:" id="ins_iFcNro_des_Label1" for="ins_iFcNro_des1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:text value="#{document1.ins_iFcNro_des}" id="ins_iFcNro_des1"></xp:text>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Resultado:" id="ins_iRtdo_cod_Label1" for="ins_iRtdo_cod1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:comboBox value="#{document1.ins_iRtdo_cod}" id="ins_iRtdo_cod1">
+								<xp:this.readonly><![CDATA[#{javascript:if (allowInspeccionEdit () == false) return true;
+if (sePuedeEditarInspeccion (document1) == false) return true;
+return false;}]]></xp:this.readonly>
+								<xp:this.converter>
+									<xp:customConverter getAsString="#{javascript:@Trim (value)}" getAsObject="#{javascript:@Trim (value)}">
+									</xp:customConverter>
+								</xp:this.converter>
+								<xp:selectItem itemLabel=" " id="selectItem2"></xp:selectItem>
+								<xp:selectItems id="selectItems2">
+									<xp:this.value><![CDATA[#{javascript:var vOpciones:NotesView = getDbCfg().getView ("v.Sys.Opciones.Clave");
+var entryCol:NotesViewEntryCollection = vOpciones.getAllEntriesByKey("Inspeccion-Rtdo")
+var entryOpt:NotesViewEntry = entryCol.getFirstEntry();
+var docOpt:NotesDocument;
+
+var arrOpts:Array = new Array ();
+
+while (entryOpt != null) {
+	docOpt = entryOpt.getDocument();
+	
+	arrOpts.push(docOpt.getItemValueString("opt_Nombre_des") + "|" + docOpt.getItemValueString("opt_Codigo_des"));
+	
+	entryOpt = entryCol.getNextEntry(entryOpt);
+}
+arrOpts}]]></xp:this.value>
+								</xp:selectItems>
+								<xp:eventHandler event="onchange" submit="true" refreshMode="partial" refreshId="ins_iRtdo_des1" id="eventHandler2">
+									<xp:this.action><![CDATA[#{javascript:var strRtdoCode:String = getComponent ("ins_iRtdo_cod1").getValue();
+
+if (@Trim (strRtdoCode).equals("")) {
+	document1.setValue("ins_iRtdo_des", "");
+}
+else {
+	var vOpciones:NotesView = getDbCfg().getView ("v.Sys.Opciones.ClaveCodigo");
+	var docOpt:NotesDocument = vOpciones.getDocumentByKey("Inspeccion-Rtdo" + strRtdoCode);
+	document1.setValue("ins_iRtdo_des", docOpt.getItemValueString("opt_Nombre_des"));
+}}]]></xp:this.action>
+								</xp:eventHandler>
+							</xp:comboBox>
+							<xp:text value="#{document1.ins_iRtdo_des}" id="ins_iRtdo_des1" style="display:none"></xp:text>
+						</xp:td>
+						<xp:td>
+							<xp:label value="Motivo de No Realizado:" id="ins_iRtdoNoRea_cod_Label1" for="ins_iRtdoNoRea_cod1"
+								style="padding-left:0.0px">
+							</xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:comboBox value="#{document1.ins_iRtdoNoRea_cod}" id="ins_iRtdoNoRea_cod1">
+								<xp:this.readonly><![CDATA[#{javascript:if (allowInspeccionEdit () == false) return true;
+if (sePuedeEditarInspeccion (document1) == false) return true;
+return false;}]]></xp:this.readonly>
+								<xp:this.converter>
+									<xp:customConverter getAsString="#{javascript:@Trim (value)}" getAsObject="#{javascript:@Trim (value)}">
+									</xp:customConverter>
+								</xp:this.converter>
+								<xp:selectItem itemLabel=" " id="selectItem3"></xp:selectItem>
+								<xp:selectItems id="selectItems3">
+									<xp:this.value><![CDATA[#{javascript:var vOpciones:NotesView = getDbCfg().getView ("v.Sys.Opciones.Clave");
+var entryCol:NotesViewEntryCollection = vOpciones.getAllEntriesByKey("Inspeccion-Rtdo-NoRea")
+var entryOpt:NotesViewEntry = entryCol.getFirstEntry();
+var docOpt:NotesDocument;
+
+var arrOpts:Array = new Array ();
+
+while (entryOpt != null) {
+	docOpt = entryOpt.getDocument();
+	
+	arrOpts.push(docOpt.getItemValueString("opt_Nombre_des") + "|" + docOpt.getItemValueString("opt_Codigo_des"));
+	
+	entryOpt = entryCol.getNextEntry(entryOpt);
+}
+arrOpts}]]></xp:this.value>
+								</xp:selectItems>
+								<xp:eventHandler event="onchange" submit="true" refreshMode="partial" refreshId="ins_iRtdoNoRea_des1"
+									id="eventHandler5">
+									<xp:this.action><![CDATA[#{javascript:var strRtdoCode:String = getComponent ("ins_iRtdoNoRea_cod1").getValue();
+
+if (@Trim (strRtdoCode).equals("")) {
+	document1.setValue("ins_iRtdoNoRea_des", "");
+}
+else {
+	var vOpciones:NotesView = getDbCfg().getView ("v.Sys.Opciones.ClaveCodigo");
+	var docOpt:NotesDocument = vOpciones.getDocumentByKey("Inspeccion-Rtdo-NoRea" + strRtdoCode);
+	document1.setValue("ins_iRtdoNoRea_des", docOpt.getItemValueString("opt_Nombre_des"));
+}}]]></xp:this.action>
+								</xp:eventHandler>
+							</xp:comboBox>
+							<xp:text value="#{document1.ins_iRtdoNoRea_des}" id="ins_iRtdoNoRea_des1" style="display:none"></xp:text>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>
+							<xp:label value="Cobertura Aprobada:" id="ins_iCobAprob_cod_Label1" for="ins_iCobAprob_cod1"></xp:label>
+						</xp:td>
+						<xp:td>
+							<xp:comboBox value="#{document1.ins_iCobAprob_cod}" id="ins_iCobAprob_cod1">
+								<xp:this.readonly><![CDATA[#{javascript:if (allowInspeccionEdit () == false) return true;
+if (sePuedeEditarInspeccion (document1) == false) return true;
+return false;}]]></xp:this.readonly>
+								<xp:this.converter>
+									<xp:customConverter getAsString="#{javascript:@Trim (value)}" getAsObject="#{javascript:@Trim (value)}">
+									</xp:customConverter>
+								</xp:this.converter>
+								<xp:selectItem itemLabel=" " id="selectItem4"></xp:selectItem>
+								<xp:selectItems id="selectItems4">
+									<xp:this.value><![CDATA[#{javascript:importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+jce.getSelectAS("vehTB_SET22599");}]]></xp:this.value>
+								</xp:selectItems>
+								<xp:eventHandler event="onchange" submit="true" refreshMode="partial" refreshId="ins_iCobAprob_des1"
+									id="eventHandler4">
+									<xp:this.action><![CDATA[#{javascript:var strCobCode:String = getComponent ("ins_iCobAprob_cod1").getValue();
+
+if (@Trim (strCobCode).equals("")) {
+	document1.setValue("ins_iCobAprob_des", "");
+}
+else {		
+	document1.setValue("ins_iCobAprob_des", getSelectedValueFromAlias('ins_iCobAprob_cod1'));
+}}]]></xp:this.action>
+								</xp:eventHandler>
+							</xp:comboBox>
+							<xp:text value="#{document1.ins_iCobAprob_des}" id="ins_iCobAprob_des1" style="display:none"></xp:text>
+						</xp:td>
+						<xp:td>
+							
+						</xp:td>
+						<xp:td>
+							
+							
+							
+						</xp:td>
+					</xp:tr>
+				</xp:table>
+				<xp:panel id="PNL_History" styleClass="Panel"
+					style="margin-top:10.0px;border-style:dotted;border-color:rgb(192,192,192);border-width:1px;padding-bottom:5.0px;padding-top:5.0px;padding-left:5.0px;width:100.0%">
+					<xp:this.rendered><![CDATA[#{javascript:if (document1.getDocument().getItemValueString("ins_Log_des").equals("")) return false;
+return true;}]]></xp:this.rendered>
+					<xp:text escape="true" id="computedField5" value="#{document1.ins_Log_des}" styleClass="FieldHistory">
+						<xp:this.rendered><![CDATA[#{javascript:return document1.getDocument().getItemValue("ins_Log_des").size() < 2}]]></xp:this.rendered>
+					</xp:text>
+					<xp:panel id="PNL_History_MasDe1" styleClass="Panel"
+						style="padding-left:5.0px;padding-top:5.0px;width:98.0%;padding-right:5.0px">
+						<xp:this.rendered><![CDATA[#{javascript:return document1.getDocument().getItemValue("ins_Log_des").size() >= 2}]]></xp:this.rendered>
+						<xp:panel id="PNL_History_Pager" styleClass="PanelPager" style="margin-right:5.0px">
+							<xp:this.rendered><![CDATA[#{javascript:return document1.getDocument().getItemValue("ins_Log_des").size() > 8}]]></xp:this.rendered>
+							<xp:pager partialRefresh="true" id="pagerLog" for="repeatLog" layout="Previous Group Next"></xp:pager>
+						</xp:panel>
+						<xp:panel id="PNL_History_Repeater" styleClass="Panel">
+							<xp:repeat id="repeatLog" rows="8" value="#{document1.ins_Log_des}" var="logRepeat" indexVar="logIndex">
+								<xp:panel id="PNL_Log" styleClass="FieldHistory">
+									<xp:text escape="true" id="computedField4">
+										<xp:this.value><![CDATA[#{document1.ins_Log_des[logIndex]}]]></xp:this.value>
+									</xp:text>
+								</xp:panel>
+							</xp:repeat>
+						</xp:panel>
+					</xp:panel>
+				</xp:panel>
+			</xp:panel>
+		</xp:panel>
+		<xp:panel id="PNL_MailDoc" style="float:left;width:95%;">
+			<xp:panel id="PNL_MailDocVisibility" style="width:100%" styleClass="Panel">
+				<xp:this.rendered><![CDATA[#{javascript:/*if (!!viewScope.get("selectedEmailUNID")) return true;
+else return false;*/
+
+var strUnid:String = viewScope.get("selectedEmailUNID");
+
+if (strUnid == null || strUnid.equals ("")) {
+	strUnid = context.getUrlParameter("Previa");
+}
+if (strUnid == null || strUnid.equals ("")) {
+	strUnid = context.getUrlParameter("Productor");
+}
+if (strUnid == null || strUnid.equals ("")) {
+	return false;
+}
+else return true;}]]></xp:this.rendered>
+				<xc:ccGeneralMail></xc:ccGeneralMail>
+			</xp:panel>
+		</xp:panel>
+	</xp:panel>
+	<xp:panel id="PNL_AltaVeh" style="position:absolute; left:40px; top:100px; "></xp:panel>
+</xp:view>

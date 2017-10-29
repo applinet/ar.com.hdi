@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<note class='view' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.0'
+ replicaid='03257E5A006E447C'>
+<noteinfo noteid='fc2' unid='2753D3B7807FB85603257DCC0049167F' sequence='19'>
+<created><datetime>20150113T101818,87-03</datetime></created>
+<modified><datetime>20170829T080850,71-03</datetime></modified>
+<revised><datetime>20170829T080850,70-03</datetime></revised>
+<lastaccessed><datetime>20170829T080850,70-03</datetime></lastaccessed>
+<addedtofile><datetime>20150604T170445,37-03</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name
+>CN=Fernando Rodriguez/O=axin</name><name>CN=Domino Administrator/O=SEGUROS</name><name
+>CN=Pepe Administrator/O=axin</name><name>CN=Fernando Rodriguez/O=axin</name><name
+>CN=Domino Administrator/O=SEGUROS</name><name>CN=Pepe Administrator/O=axin</name><name
+>CN=Domino It Administrator/O=APPLINET</name></updatedby>
+<wassignedby><name>CN=Domino It Administrator/O=APPLINET</name></wassignedby>
+<item name='$FormulaClass' sign='true'><text>1</text></item>
+<item name='TmpViewDesignCollation' sign='true'><text>es-AR</text></item>
+<item name='$TITLE' sign='true'><text>(Sys\Inspecciones\vLK_Patente)|v.Sys.Ins.vLK_Patente</text></item>
+<item name='$Index' sign='true'><text/></item>
+<item name='$Formula' summary='true' sign='true'><formula compiled='true'>
+dgAFAEIAPQAEABEAEwAJAAQAaW5zX1ZlaFBhdE5yb19kZXNpbnNfQ29uc2VjdXRpdm9fZGVzJENv
+bmZsaWN0JFJFRgAEAAQAAAAgAAUABABGb3JtAQAMAGYuSW5zcGVjY2lvbgoCAwAHAA4ACAAJTDFT
+MlMzUw==
+</formula></item>
+<item name='$Collation' summary='true'>
+<rawitemdata type='2'>
+OAACAABECGYHAAARAIFmABEAEwBpbnNfVmVoUGF0TnJvX2Rlc2luc19Db25zZWN1dGl2b19kZXM=
+</rawitemdata></item>
+<item name='$ViewFormat' summary='true' sign='true'>
+<rawitemdata type='5'>
+AQACAAIACAAAAFZDAwQRABAAAAAAAFAABQEACgABAAAAAAAAAAICAAAAVkMFABMAFAAAAAAAcAAB
+AAAKAAAAAAAAAAAAAgIAAABpbnNfVmVoUGF0TnJvX2Rlc1ZlaGljdWxvIFBhdGVudGVpbnNfQ29u
+c2VjdXRpdm9fZGVzTqNtZXJvIGRlIEluc3BlY2Npom4mAAEAAAABAQAJAQAACgEBDgoAAAEArSsB
+AAEAAQAAAAAAAAAAAFdDAQEACQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//AAAAAAAAAAAAAAAA
+AABXQwEBAAkAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAD//wAAAAAAAAAAAAAAAAAAQgAAAAAAAQD/
+//8ABQD///8AAQAAAAAAAAAAAAAAAAABAP///wABAP///wAAAAEAAAAAAAEAAAAAAAEAAAAAAAAA
+CAAAAAAAAQA=
+</rawitemdata></item>
+<item name='$Fonts'><textlist><text>5</text><text>38</text><text>Verdana</text></textlist></item>
+<item name='$Comment' sign='true'><text/></item>
+<item name='$Flags'><text>Y</text></item>
+<item name='$DesignerVersion' sign='true'><text>8.5.3</text></item></note>
+

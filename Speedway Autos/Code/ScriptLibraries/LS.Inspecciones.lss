@@ -1,0 +1,199 @@
+'++LotusScript Development Environment:2:5:(Options):0:74
+%REM
+	Library LS.Inspecciones
+	Created Jun 25, 2013 by Diego L/axin
+	Description: Comments for Library
+%END REM
+Option Public
+Option Declare
+
+
+Use "LS.Estados"
+Use "LS.Mailing"
+
+'++LotusScript Development Environment:2:5:(Forward):0:1
+Declare Function adjuntarRtaDeIns (docMail_param As NotesDocument) As Boolean
+Declare Function getConsecutivoFromSubject (strSubject_param As String) As String
+Declare Function isMailDeInspeccion (strAsunto_param As String) As Boolean
+
+'++LotusScript Development Environment:2:5:(Declarations):0:10
+
+
+
+'++LotusScript Development Environment:2:1:adjuntarRtaDeIns:5:8
+%REM
+	Function adjuntarRtaDeIns
+	Description: Le pasas un mail y lo considera como respuesta a una inspección.
+%END REM
+Function adjuntarRtaDeIns (docMail_param As NotesDocument) As Boolean
+	MessageBox"Adjunta Respuesta de Inspección"
+	On Error GoTo errHandler
+	
+	Dim dbIns As NotesDatabase
+	Dim strInsCons As String
+	Dim vIns As NotesView
+	Dim docMatchingIns As NotesDocumentCollection
+	Dim docIns As NotesDocument
+	Dim myEstado As Estado
+	Dim varLog As Variant
+	Dim strNewLog_array (1 To 1) As String
+	Dim strInsCode As String
+	Dim strInsTipo As String
+	
+	
+	'Initializations
+	adjuntarRtaDeIns = False
+	
+	Set dbIns = getInsDB ()
+	If dbIns.Isopen = False Then Error 9999, "No se encontró la base de inspecciones" 
+	
+	strInsCons = getConsecutivoFromSubject (docMail_param.Getitemvalue("Subject")(0))
+	If strInsCons = "0" Then Exit Function
+	
+	Set vIns = dbIns.Getview("v.Sys.Ins.Cons")
+	If vIns Is Nothing Then Error 9999, "No se encontró la vista v.Sys.Ins.Cons"
+	
+	Set docMatchingIns = vIns.Getalldocumentsbykey(strInsCons, True)
+	'"No se encontró la inspección con consecutivo: " + strInsCons
+	If docMatchingIns.count = 0 Then GoTo devolverFalso
+	
+	'"Se encontraron más de 1 inspección correspondiente al consecutivo: " + strInsCons
+	If docMatchingIns.count > 1 Then Exit Function
+	
+	Set docIns = docMatchingIns.Getfirstdocument()
+	
+	strInsCode = docIns.Getitemvalue("ins_Componente_cod")(0)
+	strInsTipo = docIns.Getitemvalue("ins_Tipo_cod")(0)
+	
+	'Main Function Logic
+	
+	varLog = docIns.Getitemvalue("ins_Log_des")
+	
+	' Si la inspección está finalizada, el mail se adjunta, pero no se modifica el estado	
+	If Trim(docIns.getitemvalue("ins_Final_des")(0)) = "" Then
+		'Tomo la inspección, actualizo el estado y agrego la fecha en que se pasó al estado 30
+		Set myEstado = New Estado ("f.Inspeccion30")
+		Call docIns.Replaceitemvalue("ins_iEst_cod", "30")
+		Call docIns.Replaceitemvalue("ins_iEst_des", myEstado.getEstadoNombre())
+		Call docIns.Replaceitemvalue("ins_iFechaInspeccionada_dat", Now)
+		strNewLog_array(1) = CStr (Format$ (Now, "d/m/yy h:n AM/PM")) + " - Respuesta recibida por mostrador - Se asignó el estado " + myEstado.getEstadoNombre()
+	Else
+		strNewLog_array(1) = CStr (Format$ (Now, "d/m/yy h:n AM/PM")) + " - Respuesta recibida por mostrador - Se adjuntó a la inspección, no se cambia el estado"
+	End If
+
+	varLog = ArrayAppend (strNewLog_array, varLog)
+	Call docIns.Replaceitemvalue("ins_Log_des", varLog)
+	Call docIns.Save(False, False)
+	
+	'Vínculo el mail a la inspección
+	Call docMail_param.replaceItemValue("MyMailSentDate", docMail_param.Created)
+	Call docMail_param.replaceItemValue("MyMailCode", Evaluate("@Unique"))
+	Call docMail_param.replaceItemValue("MyMailCat", strInsCode)
+	Call docMail_param.replaceItemValue("MyMailAction", "Mail recibido por mostrador - adjuntarRtaDeIns")
+	Call docMail_param.replaceItemValue("Form", "MemoLinked")
+	Call docMail_param.Save (False, False)
+	
+	Call sendMailWithCfg ("InspeccionRtaRecibida-Todas", True, strInsCode, "Se recibió Respuesta de Inspección", docIns)
+	'Si es PREVIA, envio mail al productor	
+	If (strInsTipo = "20") Then		
+		Call sendMailWithCfg ("InspeccionRtaRecibida-Previa", True, strInsCode, "Se recibió Respuesta de Inspección Previa", docIns)
+	End If
+	
+	adjuntarRtaDeIns = True
+	
+	Exit Function
+devolverFalso:
+	adjuntarRtaDeIns = False
+	Exit Function
+errHandler:	
+	Error Err, Error$ + Chr (13) + CStr (GetThreadInfo (LSI_THREAD_PROC)) + " - Line " + CStr (Erl)
+	Exit Function
+	
+End Function
+
+'++LotusScript Development Environment:2:1:getConsecutivoFromSubject:6:8
+%REM
+	Function getInsNumberFromSubject
+	Description: Le pasas el asunto de un mail y te devuelve el nùmero de inspección
+	o cero si no lo encuentra
+%END REM
+Function getConsecutivoFromSubject (strSubject_param As String) As String
+	On Error GoTo errHandler
+	
+	Dim dbCfg As NotesDatabase
+	Dim docProfile As NotesDocument
+	Dim strIni As String
+	Dim strFin As String
+	Dim intIniIndex As Integer
+	Dim intFinIndex As Integer
+	Dim intIniLen As Integer
+	Dim intConsStart As Integer
+	Dim strCons As String
+	
+	Set dbCfg = getCfgDB ()
+	If dbCfg.Isopen = False Then Error 9999, "No se encontró la base de Configuración" 
+	Set docProfile = dbCfg.Getprofiledocument("f.p.InsCfg")
+	
+	strIni = docProfile.Getitemvalue("insCfg_AsuntoInsNroTxtIni_des")(0)
+	strFin = docProfile.Getitemvalue("insCfg_AsuntoInsNroTxtFin_des")(0)
+	
+	getConsecutivoFromSubject = "0"
+	
+	If (strIni = "" Or strFin = "") Then Exit Function
+	
+	%REM
+		Supongamos recibimos en subject: Inspección Número ##303933## asignada
+		Y que strClave es Inspección Número
+		Y que INI y FIN son ##
+	%END REM
+	
+	intIniLen = Len (strIni) 'Dá 2
+	intIniIndex = InStr (strSubject_param, strIni) 'Dá 19
+	intFinIndex = InStr (intIniIndex+intIniLen, strSubject_param, strFin) '27
+	If (intIniIndex > 0 And intFinIndex > 0) Then
+		intConsStart = intIniIndex + intIniLen 'Dá 21
+		strCons = Left$ (strSubject_param, intFinIndex-1) 'Devuelve -> Inspección Número ##303933
+		strCons = Right$ (strCons, Len (strCons) - intConsStart + 1) '26 - 21 + 1 = 6
+		getConsecutivoFromSubject = strCons
+	End If 
+	
+		
+	Exit Function
+errHandler:
+	Error Err, Error$ + Chr (13) + CStr (GetThreadInfo (LSI_THREAD_PROC)) + " - Line " + CStr (Erl)
+	Exit Function
+End Function
+
+'++LotusScript Development Environment:2:1:isMailDeInspeccion:5:8
+%REM
+	Function isMailDeInspeccion
+	Description: Comments for Function
+%END REM
+Function isMailDeInspeccion (strAsunto_param As String) As Boolean
+	On Error GoTo errHandler
+	
+	Dim dbCfg As NotesDatabase
+	Dim docProfile As NotesDocument
+	Dim strClave As String
+		
+	isMailDeInspeccion = False
+	Set dbCfg = getCfgDB ()
+	If dbCfg.Isopen = False Then Error 9999, "No se encontró la base de Configuración" 
+	Set docProfile = dbCfg.Getprofiledocument("f.p.InsCfg")
+	strClave = docProfile.Getitemvalue("insCfg_AsuntoInsClave_des")(0)
+	
+	If strClave = "" Then Exit Function
+	If strAsunto_param = "" Then Exit Function
+		
+	If (InStr (strAsunto_param, strClave) > 0) Then
+		If (getConsecutivoFromSubject (strAsunto_param) <> "0") Then
+			isMailDeInspeccion = True
+		End If
+	End If
+	
+	
+	Exit Function
+errHandler:
+	Error Err, Error$ + Chr (13) + CStr (GetThreadInfo (LSI_THREAD_PROC)) + " - Line " + CStr (Erl)
+	Exit Function
+End Function

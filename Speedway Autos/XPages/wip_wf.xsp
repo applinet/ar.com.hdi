@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom" xmlns:xe="http://www.ibm.com/xsp/coreex"
+	xmlns:xf="http://www.ibm.com/xsp/xflow" xmlns:debug="http://www.openntf.org/xsp/debugtoolbar">
+	<debug:toolbar defaultCollapsed="false" collapseTo="left"></debug:toolbar>
+	<xf:simpleWorkflow id="simpleWorkflow1">
+		<xf:this.process>
+			<xf:wkSimpleManagerApprovalProcess></xf:wkSimpleManagerApprovalProcess>
+		</xf:this.process>
+	</xf:simpleWorkflow>
+	
+	<xf:commonWorkflow id="commonWorkflow1" workflowEngineName="WorkflowEngineName" labelProcessAction="labelProcessAction"
+		actionHandler="actionHandler">
+	</xf:commonWorkflow>
+	<xp:panel loaded='true' id="dbgPanel" style="padding-left:20px">
+		<xp:link escape="true" id="link1">
+			<xp:this.text><![CDATA[#{javascript:var v=getComponent('dumpObject1').isRendered()
+return v ? "Hide Workflow Debug" : "Show Workflow Debug"}]]></xp:this.text>
+			<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="dbgPanel">
+				<xp:this.action><![CDATA[#{javascript:getComponent('dumpObject1').toggleRendered()}]]></xp:this.action>
+			</xp:eventHandler>
+		</xp:link>
+		&#160;&#160;
+		<xp:link escape="true" id="link2">
+			<xp:this.text><![CDATA[#{javascript:var v=getComponent('dumpObject2').isRendered()
+return v ? "Hide Document" : "Show Document"}]]></xp:this.text>
+			<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="dbgPanel">
+				<xp:this.action><![CDATA[#{javascript:getComponent('dumpObject2').toggleRendered()}]]></xp:this.action>
+			</xp:eventHandler>
+		</xp:link>
+		<xe:dumpObject id="dumpObject1" objectNames="workflowContext" rendered="false"></xe:dumpObject>
+		<xe:dumpObject id="dumpObject2" objectNames="document1" rendered="false"></xe:dumpObject>
+	</xp:panel>
+</xp:view>

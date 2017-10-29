@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex" disableTheme="true"
+	xmlns:debug="http://www.openntf.org/xsp/debugtoolbar">
+	<xp:this.resources>
+		<xp:styleSheet href="/.ibmxspres/dojoroot/dojox/grid/resources/claroGrid.css"></xp:styleSheet>
+		<xp:dojoModule name="dojo.store.JsonRest"></xp:dojoModule>
+		<xp:dojoModule name="dojo.data.ObjectStore"></xp:dojoModule>
+		<xp:styleSheet href="/dojoDataGrid.css"></xp:styleSheet>
+	</xp:this.resources>
+	<xp:this.beforePageLoad><![CDATA[#{javascript:var colArray:Array = multiFTSearch(compositeData.multiFTSearch_strQuery, compositeData.multiFTSearch_strTipoBusqueda);
+docsToJSonInsp(colArray);}]]></xp:this.beforePageLoad>
+	<xe:restService id="restService1" pathInfo="data">
+		<xe:this.service>
+			<xe:customRestService contentType="application/json" requestVar="customData2" requestContentType="application/json">
+				<xe:this.doGet><![CDATA[#{javascript:var temp = viewScope.get("searchFTIdata");
+return temp;}]]></xe:this.doGet>
+			</xe:customRestService>
+		</xe:this.service>
+	</xe:restService>
+	<script>
+		var pagina = window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1);var jsonStore = new dojo.store.JsonRest(
+		{target:pagina +"/data"} ); var dataStore = dojo.data.ObjectStore({objectStore: jsonStore});
+	</script>
+	<link rel="stylesheet" href="/.dojo/dijit/themes/claro/claro.css" />
+	<body class="claro">
+		<xp:panel style="margin-left:2.0%;margin-right:2.0%" id="panelGrid">
+			<div class="lotusMessage lotusConfirm">
+				<span id="Contador" class="displayRowCount" style="font-weight:bold;font-size:12pt;color:rgb(0,102,0);display: inline;"></span>
+				<xp:button id="button1"
+					style="display:inline-block;margin-left:1.0%;background-color:rgb(231,248,243);font-size:8pt;color:rgb(176,176,176)" value="Actualizar Total">
+					<xp:eventHandler event="onclick" submit="false">
+						<xp:this.script><![CDATA[ var myGrid = dijit.byId('#{id:djxDataGrid1}');
+ dojo.query('.displayRowCount')[0].innerHTML = 'Total: ' + myGrid.rowCount]]></xp:this.script>
+					</xp:eventHandler>
+				</xp:button>
+			</div>
+			<xe:djxDataGrid id="djxDataGrid1" store="dataStore"
+				style="width: 100%; height:300px; position: relative;"
+				loadingMessage="Cargando.....por favor aguarde un momento."
+				autoHeight="14">
+				<xe:this.dojoAttributes>
+					<xp:dojoAttribute name="class" value="tundra"></xp:dojoAttribute>
+					<xp:dojoAttribute name="autoWidth" value="true"></xp:dojoAttribute>
+				</xe:this.dojoAttributes>
+				<xe:this.onRowDblClick><![CDATA[var grid = dijit.byId('#{id:djxDataGrid1}');
+var index = grid.selection.selectedIndex;
+var item = grid.getItem(index);
+var unid = item["ins_idInsp_cod"];
+var path = item["ins_pathDb"];
+var tempServer='#{javascript:@DbName()[0]}';
+var idx = tempServer.indexOf("/O=");
+var server = tempServer.substr(3, idx-3);
+var url = "http://" + server + "/" + path + "/" + "xfDocInspeccion.xsp?documentId=" + unid +"&action=openDocument";
+window.document.location.href = url;
+]]></xe:this.onRowDblClick>
+				<xe:this.errorMessage><![CDATA["Por favor actualice la página. No se pudo cargar el contenido...."]]></xe:this.errorMessage>
+				<xe:djxDataGridColumn
+					id="djxDataGridColumnInspeccion_nro" label="Nro Inspección"
+					field="ins_Consecutivo_des" width="15%">
+				</xe:djxDataGridColumn>
+				<xe:djxDataGridColumn id="djxDataGridColumnOrden_nro"
+					field="ins_Prop_nro" label="Nro Orden" width="10%">
+				</xe:djxDataGridColumn>
+				<xe:djxDataGridColumn id="djxDataGridColumnAsegurado"
+					field="ins_Aseg_des" label="Asegurado" width="30%">
+				</xe:djxDataGridColumn>
+				<xe:djxDataGridColumn id="djxDataGridColumnProductor"
+					field="ins_productor" label="Productor" width="30%">
+				</xe:djxDataGridColumn>
+				<xe:djxDataGridColumn id="djxDataGridColumnEstado"
+					field="ins_iEst_des" label="Estado" width="15%">
+				</xe:djxDataGridColumn>
+
+
+
+			</xe:djxDataGrid>
+			<xp:eventHandler event="onClientLoad" submit="false">
+				<xp:this.script><![CDATA[var t=setTimeout(function(){
+    var myGrid = dijit.byId('#{id:djxDataGrid1}');
+    dojo.query('.displayRowCount')[0].innerHTML = 'Total: ' + myGrid.rowCount;
+  }
+,1500);]]></xp:this.script>
+			</xp:eventHandler>
+		</xp:panel>
+	</body>
+	<xp:br></xp:br>
+	<xp:panel id="strQuery" styleClass="lotusMessage lotusConfirm">
+		<xp:this.rendered><![CDATA[#{javascript:var v:Array = database.queryAccessRoles(session.getEffectiveUserName());
+@IsMember("[Desarrollo]", v)}]]></xp:this.rendered>
+		strQuery:
+		<xp:label id="label2" value="#{javascript:compositeData.multiFTSearch_strQuery}"></xp:label>
+	</xp:panel>
+	<xp:panel id="strTipoBusqueda" styleClass="lotusMessage lotusConfirm">
+		strTipoBusqueda:
+		<xp:this.rendered><![CDATA[#{javascript:var v:Array = database.queryAccessRoles(session.getEffectiveUserName());
+@IsMember("[Desarrollo]", v)}]]></xp:this.rendered>
+		<xp:label id="label3" value="#{javascript:compositeData.multiFTSearch_strTipoBusqueda}"></xp:label>
+	</xp:panel>
+	<xp:panel id="data" styleClass="lotusMessage lotusConfirm">
+		viewScope.searchFTIdata:
+		<xp:this.rendered><![CDATA[#{javascript:var v:Array = database.queryAccessRoles(session.getEffectiveUserName());
+@IsMember("[Desarrollo]", v)}]]></xp:this.rendered>
+		<xp:label id="label1">
+			<xp:this.value><![CDATA[#{javascript:viewScope.get("searchFTIdata")}]]></xp:this.value>
+		</xp:label>
+	</xp:panel>
+	<xp:eventHandler event="onClientLoad" submit="false">
+		<xp:this.script><![CDATA[dijit.byId('#{id:djxDataGrid1}').canSort = function(col){
+  return false;
+};]]></xp:this.script>
+	</xp:eventHandler>
+</xp:view>

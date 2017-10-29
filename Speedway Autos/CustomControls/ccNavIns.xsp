@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view
+	xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xe="http://www.ibm.com/xsp/coreex">
+	<xe:navigator id="navigatorAutomoviles">
+		<xe:this.treeNodes>
+			<xe:basicLeafNode label="Todas"
+				href="/viewIns_Todas.xsp?OpenXPage">
+
+				<xe:this.selected><![CDATA[#{javascript:compositeData.ccPropEstado.equals ("TODAS")}]]></xe:this.selected>
+			</xe:basicLeafNode>
+
+			<xe:basicLeafNode label="Borrador"
+				href="/viewIns_Borrador.xsp?OpenXPage" submitValue="10">
+
+
+				<xe:this.selected><![CDATA[#{javascript:compositeData.ccPropEstado.equals ("10")}]]></xe:this.selected>
+			</xe:basicLeafNode>
+
+
+
+
+			<xe:basicLeafNode label="Enviadas"
+				href="/viewIns_Enviadas.xsp?OpenXPage">
+				<xe:this.selected><![CDATA[#{javascript:compositeData.ccPropEstado.equals ("20")}]]></xe:this.selected>
+			</xe:basicLeafNode>
+
+			<xe:basicLeafNode label="Inspeccionadas"
+				href="/viewIns_Inspeccionadas.xsp?OpenXPage">
+				<xe:this.selected><![CDATA[#{javascript:compositeData.ccPropEstado.equals ("30")}]]></xe:this.selected>
+			</xe:basicLeafNode>
+			<xe:basicLeafNode label="Aprobadas"
+				href="/viewIns_Aprobadas.xsp?OpenXPage">
+				<xe:this.selected><![CDATA[#{javascript:compositeData.ccPropEstado.equals ("40")}]]></xe:this.selected>
+			</xe:basicLeafNode>
+			<xe:basicLeafNode label="Rechazadas"
+				href="/viewIns_Rechazadas.xsp?OpenXPage">
+				<xe:this.selected><![CDATA[#{javascript:compositeData.ccPropEstado.equals ("50")}]]></xe:this.selected>
+			</xe:basicLeafNode>
+			<xe:basicLeafNode label="No Realizadas"
+				href="/viewIns_NoRealizadas.xsp?OpenXPage">
+				<xe:this.selected><![CDATA[#{javascript:compositeData.ccPropEstado.equals ("60")}]]></xe:this.selected>
+			</xe:basicLeafNode>
+
+			<xe:basicLeafNode label="No Facturables"
+				href="/viewIns_NoFacturables.xsp?OpenXPage">
+				<xe:this.selected><![CDATA[#{javascript:compositeData.ccPropEstado.equals ("70")}]]></xe:this.selected>
+			</xe:basicLeafNode>
+			<xe:basicLeafNode label="En Comercial"
+				href="/viewIns_EnComercial.xsp?OpenXPage">
+				<xe:this.selected><![CDATA[#{javascript:compositeData.ccPropEstado.equals ("80")}]]></xe:this.selected>
+			</xe:basicLeafNode>
+			<xe:separatorTreeNode></xe:separatorTreeNode>
+			<xe:basicLeafNode label="Sin Propuesta"
+				href="/viewIns_SinPropuesta.xsp?OpenXPage">
+				<xe:this.selected><![CDATA[#{javascript:compositeData.ccPropEstado.equals ("SINPROP")}]]></xe:this.selected>
+			</xe:basicLeafNode>
+			<xe:basicLeafNode label="Sin Factura"
+				href="/viewIns_SinFactura.xsp?OpenXPage">
+				<xe:this.selected><![CDATA[#{javascript:compositeData.ccPropEstado.equals ("SINFACT")}]]></xe:this.selected>
+			</xe:basicLeafNode>
+			<xe:basicLeafNode label="Con Factura"
+				href="/viewIns_ConFactura.xsp?OpenXPage">
+				<xe:this.selected><![CDATA[#{javascript:compositeData.ccPropEstado.equals ("CONFACT")}]]></xe:this.selected>
+			</xe:basicLeafNode>
+			<xe:basicLeafNode label="Facturas"
+				href="/viewIns_Facturas.xsp?OpenXPage">
+				<xe:this.selected><![CDATA[#{javascript:compositeData.ccPropEstado.equals ("FACTURAS")}]]></xe:this.selected>
+			</xe:basicLeafNode>
+		</xe:this.treeNodes>
+	</xe:navigator>
+</xp:view>

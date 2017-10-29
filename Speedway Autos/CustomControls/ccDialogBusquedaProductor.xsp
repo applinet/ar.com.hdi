@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex" xmlns:xpt="http://www.openntf.org/xsp/xpt" xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xp:image url="/AG_add_button24x24.png" id="image1" style="height:20.0px;width:20.0px">
+		<xp:this.rendered><![CDATA[#{javascript:if(getComponent("sol_tipoMovimiento_cod") == null && currentDocument.isEditable()) return true; 
+currentDocument.isEditable() && (getComponent("sol_tipoMovimiento_cod").getValue() == "1" || getComponent("sol_tipoMovimiento_cod").getValue() == "2" || (getComponent("sol_tipoMovimiento_cod").getValue() == "3" &&  getComponent("sol_tipoOperacion_cod").getValue() == "70"))}]]></xp:this.rendered>
+		<xp:eventHandler event="onclick" submit="true" refreshMode="partial" immediate="true" refreshId="divCargaPatente">
+			<xp:this.action>
+				<![CDATA[#{javascript:getComponent('dialogPatente').show()}]]>
+			</xp:this.action>
+			<xp:this.onStart><![CDATA[XSP.startAjaxLoading()]]></xp:this.onStart>
+			<xp:this.onComplete><![CDATA[XSP.endAjaxLoading()]]></xp:this.onComplete>
+			<xp:this.onError><![CDATA[XSP.endAjaxLoading()]]></xp:this.onError>
+		</xp:eventHandler>
+	</xp:image>
+	<xp:div id="divCargaPatente">
+		<xe:dialog id="dialogPatente" title="#{javascript:compositeData.propertyTitle}">
+			<xp:div id="divValidacion">
+				<xp:table style="margin-left:1.0%;margin-top:1.0%;margin-bottom:1.0%;width:314.0px">
+					<xp:tr>
+						<xp:td valign="top" colspan="2" style="height:auto">
+							<xe:djFilteringSelect id="dijitsol_productor_cod" required="true" defaultValue=" " hasDownArrow="true" autoComplete="false"
+								style="width:95.0%">
+								<xe:this.dojoAttributes>
+									<xp:dojoAttribute name="placeHolder" value="Nombre"></xp:dojoAttribute>
+								</xe:this.dojoAttributes>
+								<xp:selectItems id="selectItems4" rendered="false">
+									<xp:this.value><![CDATA[#{javascript:importPackage(ar.com.hdi.autos.connect);
+var jce:GetArrayFromQueryAS400 = new GetArrayFromQueryAS400();
+var doc:NotesDocument = database.createDocument();
+jce.getSelectAS("solTB_SEHNI299", doc);}]]></xp:this.value>
+								</xp:selectItems>
+							</xe:djFilteringSelect>
+							<tr />
+						</xp:td>
+					</xp:tr>
+				</xp:table>
+				<xp:panel id="PNL_ErrorMessages"></xp:panel>
+			</xp:div>
+			<xp:panel style="text-align:right" id="PNL_bonButtons">
+				<xp:button value="Aceptar" id="buttonValidar" styleClass="lotusAction">
+					<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="sol_productor_cod">
+						<xp:this.onComplete><![CDATA[XSP.partialRefreshGet("#{id:TBL_DatosFiliatorios}");]]></xp:this.onComplete>
+						<xp:this.action><![CDATA[#{javascript:var dfnomb = new String(getComponent("dijitsol_productor_cod").value);
+SplitName = dfnomb.split("~");
+getComponent("sol_productor_des").value= SplitName[0];
+getComponent("sol_productor_cod").value= SplitName[1];
+getComponent("sol_asegurado_cod").value = "0";
+
+if(viewScope.containsKey("docxProp")){ //Solo para propuestas, recordar que esto tambien se usa en inspecciones
+	var vecNivelCodigo:java.util.Vector = new java.util.Vector ();
+	vecNivelCodigo.add(true);
+	vecNivelCodigo.add("1");		
+	vecNivelCodigo.add(SplitName[1]);		
+	var vecResultado:java.util.Vector = getNivelSuperiorProductor(vecNivelCodigo);
+	
+	while (vecResultado.elementAt(0)) {
+		if(vecResultado.elementAt(1).toString() == "3"){
+			getComponent("sol_productorN3_cod").value = vecResultado.elementAt(2);
+			getComponent("sol_productorN3_des").value = vecResultado.elementAt(3);
+		}else if(vecResultado.elementAt(1).toString() == "5"){
+			getComponent("sol_productorN5_cod").value = vecResultado.elementAt(2);
+			getComponent("sol_productorN5_des").value = vecResultado.elementAt(3);
+		}else if(vecResultado.elementAt(1).toString() == "6"){
+			getComponent("sol_productorN6_cod").value = vecResultado.elementAt(2);
+			getComponent("sol_productorN6_des").value = vecResultado.elementAt(3);
+		}
+		vecResultado = getNivelSuperiorProductor(vecResultado);
+	}
+}
+getComponent('dialogPatente').hide();}]]></xp:this.action>
+						<xp:this.script><![CDATA[var dfnomb = new String(dijit.byId('#{id:dijitsol_productor_cod}').get('displayedValue'));
+SplitName = dfnomb.split("~");
+XSP.getElementById("#{id:sol_productor_des}").value = SplitName[0];
+XSP.getElementById("#{id:sol_productor_cod}").value = SplitName[1];]]></xp:this.script>
+					</xp:eventHandler>
+				</xp:button>
+			</xp:panel>
+			<br />
+		</xe:dialog>
+	</xp:div>
+</xp:view>

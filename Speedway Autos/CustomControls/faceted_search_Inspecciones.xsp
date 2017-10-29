@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" dojoParseOnLoad="true" dojoTheme="true" xmlns:debug="http://www.openntf.org/xsp/debugtoolbar"
+	xmlns:xe="http://www.ibm.com/xsp/coreex" xmlns:xc="http://www.ibm.com/xsp/custom">
+	<xp:this.resources>
+		<xp:dojoModule name="dojox.widget.Standby"></xp:dojoModule>
+		<xp:styleSheet href="/app.css"></xp:styleSheet>
+		<xp:script src="/JSS.Search.jss" clientSide="false"></xp:script>
+		<xp:script src="/GeneralFunctions.jss" clientSide="false"></xp:script>
+		<xp:styleSheet href="/hdi_buttons.css"></xp:styleSheet>
+	</xp:this.resources>
+	<xp:this.beforePageLoad><![CDATA[#{javascript:viewScope.put("ins_iEst_des","");
+viewScope.put("web_icon_cod","");
+viewScope.put("ins_Inspect_opt","");
+viewScope.put("ins_VehPatNro_des","");
+viewScope.put("ins_iEnvioFechaDesde_dat","");
+viewScope.put("ins_iEnvioFechaHasta_dat","");
+viewScope.put("ins_iFechaDesde_dat","");
+viewScope.put("ins_iFechaHasta_dat","");
+viewScope.put("radioAsegurado","");
+viewScope.put("ins_Aseg_des","");
+viewScope.put("ins_Aseg_cod","");
+viewScope.put("radioProductor","");
+viewScope.put("ins_Prod_des","");
+viewScope.put("ins_Prod_cod","");
+
+var strTipoBusqueda:String = "ftiCompleto";
+if(sessionScope.searchQry == null){
+	var strQuery:String = "";
+	if(strTipoBusqueda.contains("~")){ // search syntax
+		 var arrTipoBusqueda = strTipoBusqueda.split("~");
+		 strQuery = arrTipoBusqueda[1] + " " + strQuery;
+		 strTipoBusqueda = arrTipoBusqueda[0];
+	}
+	sessionScope.searchQry = (viewScope.searchQry || new java.util.HashMap());
+	sessionScope.searchQry.put("strQuery", strQuery); //Valor a Buscar
+	sessionScope.searchQry.put("strTipoBusqueda", strTipoBusqueda) //Vista 
+}else{
+	sessionScope.searchQry.put("strTipoBusqueda", strTipoBusqueda) //Vista 
+}}]]></xp:this.beforePageLoad>
+	<xp:this.beforeRenderResponse><![CDATA[#{javascript:buildOrderQueryInsp();}]]></xp:this.beforeRenderResponse>
+	<xp:div styleClass="lotusColLeft" style="background-color:rgb(204,235,214)">
+		<xp:div styleClass="lotusInner">
+			<xp:div style="padding: 0 12px 0 12px" id="divOperacion">
+				<h3 style="font-size:1.2em;">
+					<xp:span style="color:rgb(0,128,64);text-decoration:underline;font-weight:bold">Inspecciones</xp:span>
+					&#160;&#160;&#160;&#160;&#160;&#160;&#160;<xp:button id="buttonNewIns" styleClass="solAdd">
+						<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.action><![CDATA[#{javascript:context.redirectToPage("facetedSearch.xsp", true);}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:button>
+					<xe:tooltip id="tooltipButtonInspeccion" for="buttonNewIns" label="Busqueda de Ordenes" position="below"></xe:tooltip>
+				</h3>
+				<p style="padding-top:6px;">
+					<xp:span style="font-weight:bold">Estado</xp:span>
+					<xp:br></xp:br>
+					<xp:comboBox id="ins_iEst_des" value="#{viewScope.ins_iEst_des}" defaultValue="">
+						<xp:selectItems>
+							<xp:this.value><![CDATA[#{javascript:var vOpciones:NotesView = getDbCfg().getView ("v.Sys.LK_EstadosInspOrdenados");
+var lookup = vOpciones.getColumnValues(2);
+if (!lookup) {
+	return "No se encontraron estados|"
+} else {
+	if (lookup && typeof lookup == "string") { lookup = new Array(lookup);}
+	var ulookup = @Unique(lookup);
+	//var sortList = ulookup.sort();
+	return ("Todos|,"+ulookup.join(",")).split(",");
+}}]]></xp:this.value>
+						</xp:selectItems>
+					</xp:comboBox>
+				</p>
+				<p style="padding-top:6px;">
+					<xp:span style="font-weight:bold">Inspector</xp:span>
+					<xp:br></xp:br>
+					<xp:comboBox id="ins_Inspect_opt" value="#{viewScope.ins_Inspect_opt}" defaultValue="">
+						<xp:selectItems>
+							<xp:this.value><![CDATA[#{javascript:var vInspec:NotesView = getDbInspectores().getView ("People");
+var entryCol:NotesViewEntryCollection = vInspec.getAllEntries();
+var entryInspec:NotesViewEntry = entryCol.getFirstEntry();
+
+var lookup:Array = new Array ();
+var vecCol:Vector;
+
+while (entryInspec != null) {
+	
+	lookup.push(@Trim (entryInspec.getColumnValues().firstElement().toString()));
+	
+	entryInspec = entryCol.getNextEntry(entryInspec);
+}
+if (!lookup) {
+	return "No se encontraron estados|"
+} else {
+	if (lookup && typeof lookup == "string") { lookup = new Array(lookup);}
+	var ulookup = @Unique(lookup);
+	//var sortList = ulookup.sort();
+	return ("Todos|,"+ulookup.join(",")).split(",");
+}
+}]]></xp:this.value>
+						</xp:selectItems>
+						<xp:eventHandler event="onchange" submit="true" refreshMode="partial" refreshId="divOperacion">
+							<xp:this.action><![CDATA[#{javascript:var tipoMovimiento:String = getComponent("ins_Inspect_opt").getValue();
+viewScope.put("PNL_Operacion",false);
+switch(tipoMovimiento) {   
+    case "3": //ENDOSO
+    case "4": //ANULACION
+    	viewScope.put("PNL_Operacion",true);        
+		break;
+	default: 
+		viewScope.put("PNL_Operacion",false);	
+}
+}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:comboBox>
+				</p>
+				
+				<p style="padding-top:6px;">
+					<xp:span style="font-weight:bold">Fecha de Envío</xp:span>
+					<xp:table style="width:100.0%">
+						<xp:tr>
+							<xp:td>Desde&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</xp:td>
+							<xp:td>Hasta</xp:td>
+						</xp:tr>
+						<xp:tr>
+							<xp:td>
+								<xp:inputText id="ins_iEnvioFechaDesde_dat" style="width:90%;" value="#{viewScope.ins_iEnvioFechaDesde_dat}" type="datetime">
+									<xp:this.converter>
+										<xp:convertDateTime type="date"></xp:convertDateTime>
+									</xp:this.converter>
+									<xp:dateTimeHelper></xp:dateTimeHelper>
+								</xp:inputText>
+							</xp:td>
+							<xp:td>
+								<xp:inputText id="ins_iEnvioFechaHasta_dat" style="width:90%;" value="#{viewScope.ins_iEnvioFechaHasta_dat}" type="datetime">
+									<xp:this.converter>
+										<xp:convertDateTime type="date"></xp:convertDateTime>
+									</xp:this.converter>
+									<xp:dateTimeHelper></xp:dateTimeHelper>
+								</xp:inputText>
+							</xp:td>
+						</xp:tr>
+					</xp:table>
+					</p>
+					<p style="padding-top:6px;">
+					<xp:span style="font-weight:bold">Fecha de Realización</xp:span>
+					<xp:table style="width:100.0%">
+						<xp:tr>
+							<xp:td>Desde&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</xp:td>
+							<xp:td>Hasta</xp:td>
+						</xp:tr>
+						<xp:tr>
+							<xp:td>
+								<xp:inputText id="ins_iFechaDesde_dat" style="width:90%;" value="#{viewScope.ins_iFechaDesde_dat}" type="datetime">
+									<xp:this.converter>
+										<xp:convertDateTime type="date"></xp:convertDateTime>
+									</xp:this.converter>
+									<xp:dateTimeHelper></xp:dateTimeHelper>
+								</xp:inputText>
+							</xp:td>
+							<xp:td>
+								<xp:inputText id="ins_iFechaHasta_dat" style="width:90%;" value="#{viewScope.ins_iFechaHasta_dat}" type="datetime">
+									<xp:this.converter>
+										<xp:convertDateTime type="date"></xp:convertDateTime>
+									</xp:this.converter>
+									<xp:dateTimeHelper></xp:dateTimeHelper>
+								</xp:inputText>
+							</xp:td>
+						</xp:tr>
+					</xp:table>
+					</p>
+					<p style="padding-top:6px;"><xp:span style="font-weight:bold">Patente</xp:span>
+					<xp:br></xp:br>
+					<xp:inputText id="ins_VehPatNro_des" style="width:40%;" value="#{viewScope.ins_VehPatNro_des}">							
+						</xp:inputText>	
+				</p>
+				<p style="padding-top:6px;">
+					<xp:span style="font-weight:bold">Asegurado</xp:span>
+					<xp:radioGroup id="radioGroup1" value="#{viewScope.radioAsegurado}" styleClass="radio">
+						<xp:selectItem itemLabel="Código" itemValue="cod"></xp:selectItem>
+						<xp:selectItem itemLabel="Nombre" itemValue="des"></xp:selectItem>
+						<xp:eventHandler event="onchange" submit="true" refreshMode="partial" refreshId="PNL_radioAsegurado">
+							<xp:this.action><![CDATA[#{javascript:viewScope.ins_Aseg_cod = "";
+viewScope.ins_Aseg_des = "";}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:radioGroup>
+					<xp:panel id="PNL_radioAsegurado">
+						<xp:inputText id="ins_Aseg_des" style="width:100%;" value="#{viewScope.ins_Aseg_des}">
+							<xp:this.rendered><![CDATA[#{javascript:viewScope.radioAsegurado == "des"}]]></xp:this.rendered>
+							<xp:eventHandler event="onkeypress" submit="false">
+								<xp:this.script><![CDATA[getEvent = event.keyCode;
+if (getEvent == "13") {
+document.getElementById("#{id:btnBuscar}").click()
+}]]></xp:this.script>
+							</xp:eventHandler>
+						</xp:inputText>
+						<xp:inputText id="ins_Aseg_cod" style="width:100%;" value="#{viewScope.ins_Aseg_cod}">
+							<xp:this.rendered><![CDATA[#{javascript:viewScope.radioAsegurado == "cod"}]]></xp:this.rendered>
+							<xp:eventHandler event="onkeypress" submit="false">
+								<xp:this.script><![CDATA[getEvent = event.keyCode;
+if (getEvent == "13") {
+document.getElementById("#{id:btnBuscar}").click()
+}]]></xp:this.script>
+							</xp:eventHandler>
+						</xp:inputText>
+					</xp:panel>
+				</p>
+				<p style="padding-top:6px;">
+					<xp:span style="font-weight:bold">Productor</xp:span>
+					<xp:radioGroup id="radioGroup2" value="#{viewScope.radioProductor}" styleClass="radio">
+						<xp:selectItem itemLabel="Código" itemValue="cod"></xp:selectItem>
+						<xp:selectItem itemLabel="Nombre" itemValue="des"></xp:selectItem>
+						<xp:eventHandler event="onchange" submit="true" refreshMode="partial" refreshId="PNL_radioProductor">
+							<xp:this.action><![CDATA[#{javascript:viewScope.ins_Prod_cod = "";
+viewScope.ins_Prod_des = "";}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:radioGroup>
+					<xp:panel id="PNL_radioProductor">
+						<xp:inputText id="ins_Prod_des" style="width:100%;" value="#{viewScope.ins_Prod_des}">
+							<xp:this.rendered><![CDATA[#{javascript:viewScope.radioProductor == "des"}]]></xp:this.rendered>
+							<xp:eventHandler event="onkeypress" submit="false">
+								<xp:this.script><![CDATA[getEvent = event.keyCode;
+if (getEvent == "13") {
+document.getElementById("#{id:btnBuscar}").click()
+}]]></xp:this.script>
+							</xp:eventHandler>
+						</xp:inputText>
+						<xp:inputText id="ins_Prod_cod" style="width:100%;" value="#{viewScope.ins_Prod_cod}">
+							<xp:this.rendered><![CDATA[#{javascript:viewScope.radioProductor == "cod"}]]></xp:this.rendered>
+							<xp:eventHandler event="onkeypress" submit="false">
+								<xp:this.script><![CDATA[getEvent = event.keyCode;
+if (getEvent == "13") {
+document.getElementById("#{id:btnBuscar}").click()
+}]]></xp:this.script>
+							</xp:eventHandler>
+						</xp:inputText>
+					</xp:panel>
+				</p>
+				<xp:div styleClass="lotusBtnContainer" style="margin-top:18px;">
+					<xp:link escape="true" text="Buscar" id="btnBuscar" outerStyleClass="lotusBtn" title="Buscar Propuestas" style="width:80%;">
+						<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="namesPanel">
+							<xp:this.onStart><![CDATA[addStandby();]]></xp:this.onStart>
+							<xp:this.onComplete><![CDATA[removeStandby();]]></xp:this.onComplete>
+						</xp:eventHandler>
+					</xp:link>
+					<br />
+					<br />
+					<xp:link escape="true" text="Limpiar Busqueda" id="btnBuscarLimpiar" outerStyleClass="lotusBtn" title="Referscar busqueda" style="width:80%;">
+						<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.action><![CDATA[#{javascript:viewScope.put("ins_iEst_des","");
+viewScope.put("web_icon_cod","");
+viewScope.put("ins_Inspect_opt","");
+viewScope.put("ins_VehPatNro_des","");
+viewScope.put("ins_iEnvioFechaDesde_dat","");
+viewScope.put("ins_iEnvioFechaHasta_dat","");
+viewScope.put("ins_iFechaDesde_dat","");
+viewScope.put("ins_iFechaHasta_dat","");
+viewScope.put("radioAsegurado","");
+viewScope.put("ins_Aseg_des","");
+viewScope.put("ins_Aseg_cod","");
+viewScope.put("radioProductor","");
+viewScope.put("ins_Prod_des","");
+viewScope.put("ins_Prod_cod","");
+viewScope.remove("PNL_Operacion");}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:link>
+					<xp:link escape="true" text="Update Index" id="UpdateIndex" outerStyleClass="lotusBtn" title="Referscar busqueda" style="width:80%;">
+						<xp:this.rendered><![CDATA[#{javascript:getIsGroupMember("spwAU.N5.ADMI.USR_CRUD")}]]></xp:this.rendered>
+						<xp:eventHandler event="onclick" submit="true" refreshMode="complete">
+							<xp:this.action><![CDATA[#{javascript:session.sendConsoleCommand(context.getUrl().getHost(), "load updall -F " + facesContext.getExternalContext().getRequest().getContextPath());}]]></xp:this.action>
+						</xp:eventHandler>
+					</xp:link>
+				</xp:div>
+			</xp:div>
+		</xp:div>
+	</xp:div>
+	<xp:div styleClass="lotusContent" style="padding-left:5.0%">
+		<xp:div id="divProcessing" style="margin:18px 0 18px 0;padding-left:24px;" styleClass="displayNone" rendered="#{javascript:context.getUserAgent().isIE()}">
+			<xp:image url="/loading.gif" id="imgLoading" height="64px" width="64px"></xp:image>
+		</xp:div>
+		<xp:panel id="namesPanel">
+			<xc:ccSearchGridInspecciones>
+				<xc:this.multiFTSearch_strQuery><![CDATA[#{javascript:return (sessionScope.searchQry == null)? "" : sessionScope.searchQry.strQuery;}]]></xc:this.multiFTSearch_strQuery>
+				<xc:this.multiFTSearch_strTipoBusqueda><![CDATA[#{javascript:return (sessionScope.searchQry == null)? "" : sessionScope.searchQry.strTipoBusqueda;}]]></xc:this.multiFTSearch_strTipoBusqueda>
+			</xc:ccSearchGridInspecciones>
+		</xp:panel>
+	</xp:div>
+	<xp:scriptBlock rendered="#{javascript:!context.getUserAgent().isIE();}">
+		<xp:this.value><![CDATA[
+		var standby;
+
+		function addStandby() {
+			standby = new dojox.widget.Standby({target:'#{id:namesPanel}'});
+			document.body.appendChild(standby.domNode);
+			standby.startup();
+			standby.show();
+		}
+		
+		function removeStandby() {
+			standby.hide();
+			dojo.destroy(standby.domNode);
+		}]]></xp:this.value>
+	</xp:scriptBlock>
+	<xp:scriptBlock rendered="#{javascript:context.getUserAgent().isIE();}">
+		<xp:this.value><![CDATA[
+		var standby;
+
+		function addStandby() {
+			dojo.addClass(dojo.byId('#{id:namesPanel}'),'displayNone');
+			dojo.removeClass(dojo.byId('#{id:divProcessing}'),'displayNone');
+		}
+		
+		function removeStandby() {
+			dojo.addClass(dojo.byId('#{id:divProcessing}'),'displayNone');
+			dojo.removeClass(dojo.byId('#{id:namesPanel}'),'displayNone');
+		}]]></xp:this.value>
+	</xp:scriptBlock>
+</xp:view>
